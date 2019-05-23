@@ -21,7 +21,21 @@ def test_data_dir():
     
 @pytest.fixture
 def test_pkg_data(test_data_dir):
-    jsonFile = os.path.join(test_data_dir, 'pkgData.json')
+    jsonFile = os.path.join(test_data_dir, 'pkgData_min.json')
     with open(jsonFile, 'r') as json_file_hand:
         datastore = json.load(json_file_hand)
     return datastore
+
+@pytest.fixture
+def test_org_data(test_data_dir):
+    '''
+    returns an organization data structure that can be used for testing
+    '''
+    jsonFile = os.path.join(test_data_dir, 'ownerOrg.json')
+    with open(jsonFile, 'r') as json_file_hand:
+        org_data = json.load(json_file_hand)
+    return org_data
+
+@pytest.fixture
+def test_group_data():
+    pass
