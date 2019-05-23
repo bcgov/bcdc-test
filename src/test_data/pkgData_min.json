@@ -1,0 +1,40 @@
+{  
+   "sector":"Natural Resources",
+   "name":"airphoto-centroids-test3",
+   "title":"Airphoto Centroids test3",
+   "private":false,
+   "license_id":"22",
+   "notes":"__A set of points representing the centre points of all individual air photo frames catalogued in the provincial collection, dating back to 1963.__\r\n\r\n",
+   "state":"active",
+   "type":"Geographic",
+   "tag_string": "taggystring",
+   "org": "d2e433a1-b785-4d03-8a2b-392069175eb4",
+   "owner_org": "d2e433a1-b785-4d03-8a2b-392069175eb4",
+   "resource_status": "completed",
+   "groups": [],
+   "tags":[  
+      {  
+         "vocabulary_id":null,
+         "name":"aerial imagery"
+      },
+      {  
+         "vocabulary_id":null,
+         "name":"airphoto centers"
+      },
+      {  
+         "vocabulary_id":null,
+         "name":"airphoto centroids"
+      },
+      {  
+         "vocabulary_id":null,
+         "name":"imagery"
+      }
+   ],
+   "security_class":"LOW-PUBLIC",
+   "iso_topic_string":"imageryBaseMapsEarthCover",
+   "view_audience":"Public",
+   "edc_state":"PUBLISHED",
+   "metadata_visibility":"Public",
+   "download_audience":"Public",
+   "sub_org": "e51a8106-11c7-4436-a967-7cee18bfb159"
+}
