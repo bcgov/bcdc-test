@@ -20,8 +20,8 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def test_verify_test_package_org(create_get_org):
-    logger.debug("got the org: %s", create_get_org)
+# def test_verify_test_package_org(create_get_org):
+#     logger.debug("got the org: %s", create_get_org)
 
 def test_add_package(test_pkg_data, ckan_url, ckan_apitoken):
     '''
