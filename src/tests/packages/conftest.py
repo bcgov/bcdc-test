@@ -11,6 +11,7 @@ import sys
 from fixtures.load_config import *
 from fixtures.load_data import *
 
+
 logger = logging.getLogger(__name__)
 
 @pytest.fixture()

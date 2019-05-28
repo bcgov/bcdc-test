@@ -22,6 +22,11 @@ def test_verify_read_orgs(ckan_url):
     #pp.pprint(pkgList)
     assert pkgList
     
-    
-
+def test_add_organization(test_org_data, ckan_url, ckan_apitoken):
+    remoteApi = ckanapi.RemoteCKAN(ckan_url, ckan_apitoken)
+     
+    #orgList = remoteApi.action.organization_list_for_user()
+    #logger.debug("orgList: %s", orgList)
+    pkg_create = remoteApi.action.organization_create(**test_org_data)
+    logger.debug("org return data: %s", pkg_create)
 

@@ -75,3 +75,15 @@ def test_add_package(test_pkg_data, ckan_url, ckan_apitoken):
         raise e
     logger.debug("finished adding record")
     
+def test_verify_package_count(ckan_url):
+    '''
+    verify the count reported by package_search matches packages
+    returned by package_list
+    '''
+    # verify that the pkg_search and package_list report the same
+    # total number of packages
+    remoteApi = ckanapi.RemoteCKAN(ckan_url)    
+    pkgList = remoteApi.action.package_list()
+    pkgSearch = remoteApi.action.package_search()
+    assert pkgSearch['count'] == len(pkgList)
+    
