@@ -9,10 +9,15 @@ trying to set up the fixtures so that they:
 - re-create test data
 
 '''
-import pytest
-import os.path
 import json
+import logging
+import os.path
+
 import ckanapi
+import pytest
+
+from .test_config import *
+
 
 @pytest.fixture
 def test_data_dir():
@@ -20,10 +25,12 @@ def test_data_dir():
     yield pkg_json_dir
     
 @pytest.fixture
-def test_pkg_data(test_data_dir):
+def test_pkg_data(test_data_dir, test_package):
+    logging.debug("test_package: %s", test_package)
     jsonFile = os.path.join(test_data_dir, 'pkgData_min.json')
     with open(jsonFile, 'r') as json_file_hand:
         datastore = json.load(json_file_hand)
+        datastore['name'] = test_package
     return datastore
 
 @pytest.fixture

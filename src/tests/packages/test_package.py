@@ -30,6 +30,8 @@ def test_add_package(test_pkg_data, ckan_url, ckan_apitoken):
 
     '''
     pkgName = test_pkg_data['name']
+    logger.debug("pkgName: %s", pkgName)
+    raise
     logger.debug("apitoken: %s", len(ckan_apitoken))
     remoteApi = ckanapi.RemoteCKAN(ckan_url, ckan_apitoken)   
     #pkgShow = remoteApi.action.package_show(id=pkgName)
