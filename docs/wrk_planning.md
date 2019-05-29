@@ -17,6 +17,9 @@ Suggestion for prefix: zzztest_{object_name}
 
 All data used by the tests will be contained in json files in src/test_data
 
+Object names used for testing should all come from fixtures defined in
+`test_config.py`
+
 ## Testing
 
 CKAN is made up of the following objects:
@@ -28,6 +31,9 @@ CKAN is made up of the following objects:
  
  
 ### Org Testing
+
+**CANNOT CREATE ORGS WITHOUT SUPERADMIN AND THEREFOR CANNOT TEST ORG**
+**CREATION UNTIL THAT IS POSSIBLE**
 
 Most objects in CKAN need to belong to an organization.  Only super 
 users can create organizations.  The testing will not run under 

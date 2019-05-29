@@ -11,7 +11,8 @@ import pytest
 
 # Following are test constants
 TEST_PREFIX = 'zzztest'
-TEST_ORGANIZATION = '{0}_testorg'.format(TEST_PREFIX)
+#TEST_ORGANIZATION = '{0}_testorg'.format(TEST_PREFIX)
+TEST_ORGANIZATION = 'databcc'
 TEST_PACKAGE = '{0}_testpkg'.format(TEST_PREFIX)
 
 
@@ -21,6 +22,7 @@ def test_prefix():
 
 @pytest.fixture
 def test_organization():
+    # TODO: Change the org to something that currently exists.
     return TEST_ORGANIZATION
 
 @pytest.fixture
