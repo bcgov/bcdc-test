@@ -7,10 +7,12 @@ Most of this will get replaced when deployed to pipeline as secrets
 could get retrieved from env vars.
 '''
 
-import pytest
-import DBCSecrets.GetSecrets
 import logging
 import os.path
+
+import DBCSecrets.GetSecrets
+import pytest
+
 
 logger = logging.getLogger(__name__)
 
@@ -42,9 +44,9 @@ def ckan_host(secret_file, env):
     creds = DBCSecrets.GetSecrets.CredentialRetriever(secretFileName=secret_file)
     misc_params = creds.getMiscParams()
 
-    hostKey = '{0}_HOST'.format(env)
-    logging.debug("hostKey: %s", hostKey)
-    host = misc_params.getParam(hostKey)
+    host_key = '{0}_HOST'.format(env)
+    logging.debug("host_key: %s", host_key)
+    host = misc_params.getParam(host_key)
     return host
 
 
