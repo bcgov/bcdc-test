@@ -12,21 +12,80 @@ b) create package with org insert the org just created for this package.
 '''
 
 import logging
-import pprint
 
 import ckanapi
-import pytest
 import requests
+import pytest
+from fixtures.load_config import ckan_restdir
 
 logger = logging.getLogger(__name__)
 
 
-def test_add_package(test_pkg_data, ckan_url, ckan_apitoken):
+def test_add_package_success(test_pkg_teardown, ckan_url, ckan_auth_header,
+                             ckan_restdir, test_pkg_data):
+    '''
+    makes simple request to create package and verifies it gets
+    200 status code.
+
+    Using requests to form this call to get status code and for increased level
+    of granularity over
+    '''
+    api_call = '{0}{1}/{2}'.format(ckan_url, ckan_restdir, 'package_create')
+    logger.debug('api_call: %s', api_call)
+
+    resp = requests.post(api_call, headers=ckan_auth_header, json=test_pkg_data)
+    logger.debug("resp: %s", resp.text)
+    assert resp.status_code == 200
+
+
+def test_package_show(remote_api_admin_auth, test_package_name):
+    '''
+    going to verify package data can be retrieved using package_show.
+    '''
+    pkg_show_data = remote_api_admin_auth.action.package_show(id=test_package_name)
+    logger.debug("pkg_show_data: %s", pkg_show_data)
+    assert pkg_show_data['name'] == test_package_name
+
+
+def test_package_update(remote_api_admin_auth, test_pkg_data, ckan_url,
+                        ckan_restdir, ckan_auth_header):
+    '''
+    package update test will use requests
+    '''
+    test_package_name = test_pkg_data['name']
+    pkg_show_data = remote_api_admin_auth.action.package_show(id=test_package_name)
+    logger.debug("pkg_show_data: %s", pkg_show_data)
+    # now modify the package show data and update
+
+    api_call = '{0}{1}/{2}'.format(ckan_url, ckan_restdir, 'package_update')
+    resp = requests.post(api_call, headers=ckan_auth_header, json=test_pkg_data)
+    logger.debug("resp: %s", resp.text)
+    logger.debug("resp.status_code: %s", resp.status_code)
+
+
+def test_add_package_junk(test_pkg_data, ckan_url, ckan_apitoken):
     '''
     - checks to see if the package exists, removes if thats the case
     - adds the package
     - removes the package
-    
+
+
+    5-29-2019:
+        - Thinking should do this using requests possibly as
+          requests will allow finer graned evaluation of results
+          from a api call.
+        CREATE
+               will pass on the work of adding a package to the
+               fixtures.  All we are interested in is that an
+               error was not thrown, and that after creating
+               the package I can successfully retrieve it.
+
+        READ
+               can it be viewed in various methods that return the
+               package data, search, list, show etc.
+
+        DELETE
+               can package be deleted.
     '''
     # ----------------------------------------------------------------
     # SETUP - make sure package doesn't exist
@@ -79,7 +138,7 @@ def test_add_package(test_pkg_data, ckan_url, ckan_apitoken):
         logger.debug("err: %s %s", type(err), err)
     assert pkg_data
     logger.debug("finished adding record")
-    
+
     # CLEANUP
     logger.debug("removing package...")
     remote_api.action.package_delete(id=pkg_name)
@@ -94,7 +153,7 @@ def test_verify_package_count(ckan_url):
     # verify that the pkg_search and package_list report the same
     # total number of packages
     remote_api = ckanapi.RemoteCKAN(ckan_url)
-    pkgList = remote_api.action.package_list()
-    pkgSearch = remote_api.action.package_search()
-    assert pkgSearch['count'] == len(pkgList)
+    pkg_list = remote_api.action.package_list()
+    pkg_search = remote_api.action.package_search()
+    assert pkg_search['count'] == len(pkg_list)
 

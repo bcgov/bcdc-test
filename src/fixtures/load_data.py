@@ -26,13 +26,19 @@ def test_data_dir():
 
 
 @pytest.fixture
-def test_pkg_data(test_data_dir, test_package):
-    logging.debug("test_package: %s", test_package)
+def test_pkg_data(test_data_dir, test_package_name):
+    logging.debug("test_package_name: %s", test_package_name)
     json_file = os.path.join(test_data_dir, 'pkgData_min.json')
     with open(json_file, 'r') as json_file_hand:
         datastore = json.load(json_file_hand)
-        datastore['name'] = test_package
+        datastore['name'] = test_package_name
     return datastore
+
+@pytest.fixture
+def test_pkg_data_updated(test_pkg_data):
+    logging.debug("test_package_name: %s", test_package_name)
+    test_pkg_data['title'] = 'test package update'
+    return test_pkg_data
 
 
 @pytest.fixture

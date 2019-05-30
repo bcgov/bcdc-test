@@ -1,0 +1,23 @@
+'''
+Created on May 29, 2019
+
+@author: KJNETHER
+'''
+import pytest
+import ckanapi
+
+from fixtures.load_config import *
+
+@pytest.fixture
+def remote_api_admin_auth(ckan_url, ckan_apitoken):
+    '''
+    :return: a remote ckan object with admin privs that has been authenticated
+            with an api key
+    :rtype: ckanapi.RemoteCKAN
+    '''
+    rmt_api = ckanapi.RemoteCKAN(ckan_url, ckan_apitoken)
+    yield rmt_api
+    
+@pytest.fixture
+def requests_create_package(ckan_url, ckan_apitoken, ckan_restdir):
+    pass

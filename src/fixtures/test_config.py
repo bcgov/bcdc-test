@@ -26,6 +26,6 @@ def test_organization():
     return TEST_ORGANIZATION
 
 @pytest.fixture
-def test_package():
+def test_package_name():
     return TEST_PACKAGE
 
