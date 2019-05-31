@@ -43,17 +43,18 @@ def test_verify_test_org_exists(ckan_url, ckan_apitoken, test_organization):
         pytest.fail(msg)
     logger.debug("org: %s", org)
 
-
-def test_add_organization(test_org_data, ckan_url, ckan_apitoken):
-    '''
-    Cannot create the create orgs without superuser at the moment so this
-    test will remain commented out until that is resolved.
-    '''
-    remoteApi = ckanapi.RemoteCKAN(ckan_url, ckan_apitoken)
-
-    # orgList = remoteApi.action.organization_list_for_user()
-    # logger.debug("orgList: %s", orgList)
-    # pkg_create = remoteApi.action.organization_create(**test_org_data)
-    # logger.debug("org return data: %s", pkg_create)
-    logger.warning('not running org creation tests')
+# LEAVING COMMENTED OUT FOR NOW UNTIL WE DETERMINE WHETHER THE TESTS WILL BE 
+# RUN AS SUPER ADMIN OR AS ADMIN WITH PRECONFIGURED ORGS
+# def test_add_organization(test_org_data, ckan_url, ckan_apitoken):
+#     '''
+#     Cannot create the create orgs without superuser at the moment so this
+#     test will remain commented out until that is resolved.
+#     '''
+#     remoteApi = ckanapi.RemoteCKAN(ckan_url, ckan_apitoken)
+# 
+#     # orgList = remoteApi.action.organization_list_for_user()
+#     # logger.debug("orgList: %s", orgList)
+#     # pkg_create = remoteApi.action.organization_create(**test_org_data)
+#     # logger.debug("org return data: %s", pkg_create)
+#     logger.warning('not running org creation tests')
 

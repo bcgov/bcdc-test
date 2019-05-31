@@ -48,12 +48,15 @@ def ckan_host(secret_file, env):
     # code below demos how that might work
     #
     # integration with openshift, retrieve these from env vars
-    creds = DBCSecrets.GetSecrets.CredentialRetriever(secretFileName=secret_file)
-    misc_params = creds.getMiscParams()
-
-    host_key = '{0}_HOST'.format(env)
-    logging.debug("host_key: %s", host_key)
-    host = misc_params.getParam(host_key)
+    if 'BCDC_URL' in os.environ:
+        host = None
+    else:
+        creds = DBCSecrets.GetSecrets.CredentialRetriever(secretFileName=secret_file)
+        misc_params = creds.getMiscParams()
+    
+        host_key = '{0}_HOST'.format(env)
+        logging.debug("host_key: %s", host_key)
+        host = misc_params.getParam(host_key)
     return host
 
 
@@ -64,8 +67,10 @@ def ckan_url(ckan_host):
     '''
     # for now hard coding the env to DLV, could be TST, PRD
     # env = 'DLV'
-
-    url = 'https://{0}'.format(ckan_host)
+    if 'BCDC_URL' in os.environ:
+        url = os.environ['BCDC_URL']
+    else:
+        url = 'https://{0}'.format(ckan_host)
     return url
 
 
@@ -74,11 +79,14 @@ def ckan_apitoken(secret_file, env):
     '''
     gets the ckan api for the given env
     '''
-    creds = DBCSecrets.GetSecrets.CredentialRetriever(secretFileName=secret_file)
-    misc_params = creds.getMiscParams()
-    token_key = '{0}_TOKEN'.format(env)
-    logger.debug("token_key: %s", token_key)
-    token = misc_params.getParam(token_key)
+    if 'BCDC_API_KEY' in os.environ:
+        token = os.environ['BCDC_API_KEY']
+    else:
+        creds = DBCSecrets.GetSecrets.CredentialRetriever(secretFileName=secret_file)
+        misc_params = creds.getMiscParams()
+        token_key = '{0}_TOKEN'.format(env)
+        logger.debug("token_key: %s", token_key)
+        token = misc_params.getParam(token_key)
     return token
 
 @pytest.fixture()
@@ -90,12 +98,12 @@ def ckan_auth_header(ckan_apitoken):
                    'content-type': 'application/json;charset=utf-8'}
     return api_headers
 
-@pytest.fixture()
-def ckan_restdir(secret_file, ckan_host):
-    logger.debug("secretfile: %s", secret_file)
-    creds = DBCSecrets.GetSecrets.CredentialRetriever(secretFileName=secret_file)
-    misc_params = creds.getMiscParams()
-    restdir_key = 'REST_DIR'
-    logger.debug("restdir_key: %s", restdir_key)
-    restdir = misc_params.getParam(restdir_key)
-    return restdir
+# @pytest.fixture()
+# def ckan_restdir(secret_file, ckan_host):
+#     logger.debug("secretfile: %s", secret_file)
+#     creds = DBCSecrets.GetSecrets.CredentialRetriever(secretFileName=secret_file)
+#     misc_params = creds.getMiscParams()
+#     restdir_key = 'REST_DIR'
+#     logger.debug("restdir_key: %s", restdir_key)
+#     restdir = misc_params.getParam(restdir_key)
+#     return restdir
