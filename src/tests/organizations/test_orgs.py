@@ -12,6 +12,9 @@ import logging
 import ckanapi
 import pytest
 
+from fixtures.load_config import ckan_url, ckan_apitoken
+from fixtures.test_config import test_organization
+
 logger = logging.getLogger(__name__)
 
 

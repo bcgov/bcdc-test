@@ -5,18 +5,34 @@ Created on May 29, 2019
 
 Code used to verify packages.
 '''
-import pytest
+import logging
+
 import ckanapi
+import pytest
 
 from fixtures.ckan import *
-from fixtures.test_config import *
 from fixtures.load_data import *
+from fixtures.test_config import *
+
+
+logger = logging.getLogger(__name__)
+# pylint: disable=redefined-outer-name
+
 
 def package_delete(remote_api, pkg_name):
+    '''
+    :param remote_api: a ckanapi remote object
+    :param pkg_name: the name of the package that needs to be deleted
+    '''
     remote_api.action.package_delete(id=pkg_name)
+
 
 @pytest.fixture
 def test_package_exists(remote_api_admin_auth, test_package_name):
+    '''
+    :param remote_api_admin_auth: a ckanapi remote object with authenticated
+    :param test_package_name: the name of a package that exists
+    '''
     remote_api = remote_api_admin_auth
     pkg_data = None
     pkg_exists = False
@@ -28,6 +44,7 @@ def test_package_exists(remote_api_admin_auth, test_package_name):
     except ckanapi.errors.NotFound as err:
         logger.debug("err: %s %s", type(err), err)
     return pkg_exists
+
 
 @pytest.fixture
 def test_pkg_teardown(remote_api_admin_auth, test_package_name, test_package_exists):

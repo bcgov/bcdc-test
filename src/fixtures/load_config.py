@@ -15,15 +15,18 @@ import pytest
 
 logger = logging.getLogger(__name__)
 
+# pylint: disable=redefined-outer-name
+
 
 @pytest.fixture()
 def secret_file():
     '''
     :return: full path to the secret file that arms the tests
     '''
-    scrt_file = os.path.join(os.path.dirname(__file__), '..', '..', 'secrets', 'secrets.json')
+    scrt_file = os.path.join(os.path.dirname(__file__), '..', '..', 'secrets',
+                             'secrets.json')
     scrt_file = os.path.realpath(scrt_file)
-    logger.debug
+    logger.debug("secret file path: %s", scrt_file)
     return scrt_file
 
 
@@ -51,9 +54,10 @@ def ckan_host(secret_file, env):
     if 'BCDC_URL' in os.environ:
         host = None
     else:
+        logger.debug("using secrets file: %s", secret_file)
         creds = DBCSecrets.GetSecrets.CredentialRetriever(secretFileName=secret_file)
         misc_params = creds.getMiscParams()
-    
+
         host_key = '{0}_HOST'.format(env)
         logging.debug("host_key: %s", host_key)
         host = misc_params.getParam(host_key)
@@ -89,6 +93,7 @@ def ckan_apitoken(secret_file, env):
         token = misc_params.getParam(token_key)
     return token
 
+
 @pytest.fixture()
 def ckan_auth_header(ckan_apitoken):
     '''
@@ -98,12 +103,3 @@ def ckan_auth_header(ckan_apitoken):
                    'content-type': 'application/json;charset=utf-8'}
     return api_headers
 
-# @pytest.fixture()
-# def ckan_restdir(secret_file, ckan_host):
-#     logger.debug("secretfile: %s", secret_file)
-#     creds = DBCSecrets.GetSecrets.CredentialRetriever(secretFileName=secret_file)
-#     misc_params = creds.getMiscParams()
-#     restdir_key = 'REST_DIR'
-#     logger.debug("restdir_key: %s", restdir_key)
-#     restdir = misc_params.getParam(restdir_key)
-#     return restdir

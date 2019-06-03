@@ -17,7 +17,13 @@ import ckanapi
 import requests
 import pytest  # @UnusedImport
 
-logger = logging.getLogger(__name__)  #pylint: disable=invalid-name
+logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
+
+from fixtures.packages import test_pkg_teardown, ckan_rest_dir
+from fixtures.load_config import ckan_url, ckan_auth_header
+from fixtures.test_config import ckan_rest_dir
+from fixtures.load_data import test_pkg_data
+from fixtures.ckan import remote_api_admin_auth
 
 
 def test_add_package_success(test_pkg_teardown, ckan_url, ckan_auth_header,
@@ -75,7 +81,12 @@ def test_verify_package_count(ckan_url):
     # verify that the pkg_search and package_list report the same
     # total number of packages
     remote_api = ckanapi.RemoteCKAN(ckan_url)
-    pkg_list = remote_api.action.package_list()
+    # TODO: package_list method called with no args implements a page size of 1000.
+    #       just set the page size parameter explicitly below to 10000.  Haven't
+    #       had a chance to test as tst index rebuilding is taking place.  If this
+    #       fix doesn't resolve the problem then will have to set up multiple page
+    #       calls until all the datasets have been counted.
+    pkg_list = remote_api.action.package_list(limit=10000)
     pkg_search = remote_api.action.package_search()
     logger.debug("pkg_search cnt: %s", pkg_search['count'])
     logger.debug("pkglist cnt: %s", len(pkg_list))
@@ -93,6 +104,7 @@ def test_package_delete(ckan_url, ckan_auth_header,
     delete_data = {'id': test_package_name}
 
     resp = requests.post(api_call, headers=ckan_auth_header, json=delete_data)
+    logger.debug('status code: %s', resp.status_code)
     resp_json = resp.json()
     logger.debug("resp: %s", resp.text)
     assert resp.status_code == 200
