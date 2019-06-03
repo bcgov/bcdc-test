@@ -1,7 +1,6 @@
 {  
    "sector":"Natural Resources",
-   "name":"airphoto-centroids-test3",
-   "title":"Airphoto Centroids test3",
+   "title":"Automated Testing Test Package",
    "private":false,
    "license_id":"22",
    "notes":"__A set of points representing the centre points of all individual air photo frames catalogued in the provincial collection, dating back to 1963.__\r\n\r\n",
