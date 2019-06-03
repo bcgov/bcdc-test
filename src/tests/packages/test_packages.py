@@ -14,16 +14,14 @@ b) create package with org insert the org just created for this package.
 import logging
 
 import ckanapi
-import requests
 import pytest  # @UnusedImport
+import requests
+
 
 logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
-from fixtures.packages import test_pkg_teardown, ckan_rest_dir
-from fixtures.load_config import ckan_url, ckan_auth_header
-from fixtures.test_config import ckan_rest_dir
-from fixtures.load_data import test_pkg_data
-from fixtures.ckan import remote_api_admin_auth
+
+# pylint: disable=redefined-outer-name
 
 
 def test_add_package_success(test_pkg_teardown, ckan_url, ckan_auth_header,
@@ -72,7 +70,7 @@ def test_package_update(remote_api_admin_auth, test_pkg_data, ckan_url,
     assert pkg_show_data['title'] == test_pkg_data['title']
 
 
-def test_verify_package_count(ckan_url):
+def test_verify_package_count(ckan_url, ckan_rest_dir, ckan_auth_header):
     '''
     verify the count reported by package_search matches packages
     returned by package_list, als seeing as a package has been
@@ -80,17 +78,33 @@ def test_verify_package_count(ckan_url):
     '''
     # verify that the pkg_search and package_list report the same
     # total number of packages
+
+    # using requests as can't get the limit to work with ckanapi.
+    package_list_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'package_list')
+    params = {'limit': 500, 'offset': 0}
+    package_list_cnt = 0
+    while True:
+        logger.debug("offset: %s", params['offset'])
+        resp = requests.get(package_list_call, headers=ckan_auth_header,
+                            params=params)
+        logger.debug("status: %s", resp.status_code)
+        pkg_list = resp.json()
+        package_list_cnt = package_list_cnt + len(pkg_list['result'])
+        logger.debug("package cnt: %s %s", package_list_cnt,
+                     len(pkg_list['result']))
+        if len(pkg_list['result']) < params['limit']:
+            logger.debug("end of pages, breaking out")
+            break
+        params['offset'] = params['limit'] + params['offset']
+
+    logger.debug("final package cnt from packagelist: %s", package_list_cnt)
+
     remote_api = ckanapi.RemoteCKAN(ckan_url)
-    # TODO: package_list method called with no args implements a page size of 1000.
-    #       just set the page size parameter explicitly below to 10000.  Haven't
-    #       had a chance to test as tst index rebuilding is taking place.  If this
-    #       fix doesn't resolve the problem then will have to set up multiple page
-    #       calls until all the datasets have been counted.
-    pkg_list = remote_api.action.package_list(limit=10000)
     pkg_search = remote_api.action.package_search()
+
     logger.debug("pkg_search cnt: %s", pkg_search['count'])
-    logger.debug("pkglist cnt: %s", len(pkg_list))
-    assert pkg_search['count'] == len(pkg_list)
+    logger.debug("pkglist cnt: %s", package_list_cnt)
+    assert pkg_search['count'] == package_list_cnt
     assert len(pkg_list) >= 1
 
 

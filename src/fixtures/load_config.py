@@ -23,10 +23,13 @@ def secret_file():
     '''
     :return: full path to the secret file that arms the tests
     '''
-    scrt_file = os.path.join(os.path.dirname(__file__), '..', '..', 'secrets',
-                             'secrets.json')
-    scrt_file = os.path.realpath(scrt_file)
-    logger.debug("secret file path: %s", scrt_file)
+    scrt_file = None
+    if 'BCDC_URL' not in os.environ:
+
+        scrt_file = os.path.join(os.path.dirname(__file__), '..', '..', 'secrets',
+                                 'secrets.json')
+        scrt_file = os.path.realpath(scrt_file)
+        logger.debug("secret file path: %s", scrt_file)
     return scrt_file
 
 
@@ -53,6 +56,7 @@ def ckan_host(secret_file, env):
     # integration with openshift, retrieve these from env vars
     if 'BCDC_URL' in os.environ:
         host = None
+        logger.info("Env Var BCDC_URL is set: %s", os.environ['BCDC_URL'])
     else:
         logger.debug("using secrets file: %s", secret_file)
         creds = DBCSecrets.GetSecrets.CredentialRetriever(secretFileName=secret_file)

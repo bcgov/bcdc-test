@@ -12,10 +12,7 @@ import logging
 import ckanapi
 import pytest
 
-from fixtures.load_config import ckan_url, ckan_apitoken
-from fixtures.test_config import test_organization
-
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
 
 def test_verify_read_orgs(ckan_url):
@@ -46,7 +43,7 @@ def test_verify_test_org_exists(ckan_url, ckan_apitoken, test_organization):
         pytest.fail(msg)
     logger.debug("org: %s", org)
 
-# LEAVING COMMENTED OUT FOR NOW UNTIL WE DETERMINE WHETHER THE TESTS WILL BE 
+# LEAVING COMMENTED OUT FOR NOW UNTIL WE DETERMINE WHETHER THE TESTS WILL BE
 # RUN AS SUPER ADMIN OR AS ADMIN WITH PRECONFIGURED ORGS
 # def test_add_organization(test_org_data, ckan_url, ckan_apitoken):
 #     '''
@@ -54,7 +51,7 @@ def test_verify_test_org_exists(ckan_url, ckan_apitoken, test_organization):
 #     test will remain commented out until that is resolved.
 #     '''
 #     remoteApi = ckanapi.RemoteCKAN(ckan_url, ckan_apitoken)
-# 
+#
 #     # orgList = remoteApi.action.organization_list_for_user()
 #     # logger.debug("orgList: %s", orgList)
 #     # pkg_create = remoteApi.action.organization_create(**test_org_data)
