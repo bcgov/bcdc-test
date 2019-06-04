@@ -1,16 +1,17 @@
 {
             "approval_status": "approved",
-            "sector": "Health and Safety",
+            "sector": "Testing and Testing",
             "state": "active",
             "image_display_url": "",
-            "title": "Test Agency",
-            "name": "test-agency9",
+            "title": "Automated Testing",
+            "name": "automated-testing",
             "is_organization": true,
             "extras": [],
            	"image_url": "",
-           	"__type": "organization",
             "type": "organization",
-            "description": "", 
-            "groups": [ ],
-            "packages": [{"name": "test-api-2"}]
+            "description": "",
+            "groups": [
+            	{ 	"capacity": "public",
+              		"name": "databc"
+               }]
 }
