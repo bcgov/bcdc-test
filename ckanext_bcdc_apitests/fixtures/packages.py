@@ -10,9 +10,9 @@ import logging
 import ckanapi
 import pytest
 
-from fixtures.ckan import *
-from fixtures.load_data import *
-from fixtures.test_config import *
+from .ckan import *
+from .load_data import *
+from .test_config import *
 
 
 logger = logging.getLogger(__name__)

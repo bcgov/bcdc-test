@@ -15,7 +15,7 @@ with open('requirements.txt') as f:
 
 setuptools.setup(
     name="ckanext_bcdc_apitests",
-    version="0.0.1",
+    version="0.0.5",
     author="Kevin Netherton",
     author_email="kevin.netherton@gov.bc.ca",
     description="API testing for BC Data Catalog",
@@ -25,6 +25,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     python_requires='>=2.6, !=3.0.*, !=3.1.*, !=3.2.*, <4',
     install_requires=requires,
+    include_package_data=True,
     classifiers=[
         "Development Status :: 4 - Beta",
         "Framework :: Pytest",
