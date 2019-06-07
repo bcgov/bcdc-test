@@ -1,5 +1,3 @@
 ckanapi==4.3
 pytest==4.6.1
 requests==2.22.0
-git+https://github.com/bcgov/dbc-pylib@v3.0.7#egg=DBCSecrets&subdirectory=DBCSecrets
-git+https://github.com/bcgov/dbc-pylib@v3.0.7#egg=PMP&subdirectory=PMP

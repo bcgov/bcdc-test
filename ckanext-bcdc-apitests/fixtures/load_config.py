@@ -9,13 +9,46 @@ could get retrieved from env vars.
 
 import logging
 import os.path
+import pkgutil
 
-import DBCSecrets.GetSecrets
 import pytest
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
+
+# declare the namespace to be used by the import if it is optionally imported
+DBCSecrets = None  # pylint: disable=invalid-name
+
+# using the DBC Secrets module if it exists, otherwise will rely on
+# environment variables
+dbc_secrets_exists = pkgutil.find_loader('DBCSecrets')  # pylint: disable=invalid-name
+logger.debug('dbc_secrets_exists: %s', dbc_secrets_exists)
+if dbc_secrets_exists:
+    # can find the package therefor import it
+    import DBCSecrets.GetSecrets
+    if ('DBCSecrets' in dir()) and 'GetSecrets' in dir(DBCSecrets):
+        logger.debug("Successfully imported DBCSecrets")
 
 # pylint: disable=redefined-outer-name
+
+
+@pytest.fixture()
+def import_dbcsecrets():
+    '''
+    Optional import of DBCSecrets, imports if it can be found
+    '''
+    global DBCSecrets
+
+    # using the DBC Secrets module if it exists, otherwise will rely on
+    # environment variables
+    dbc_secrets_exists = pkgutil.find_loader('DBCSecrets')
+    print 'dbc_secrets_exists:', dbc_secrets_exists
+    if dbc_secrets_exists:
+        # can find the package therefor import it
+        import DBCSecrets.GetSecrets
+        print 'IMPORTED DBCSecrets'
+        if ('DBCSecrets' in dir()) and 'GetSecrets' in dir(DBCSecrets):
+            print 'SUCCESS FOUND DBCSECRETS'
+    yield DBCSecrets
 
 
 @pytest.fixture()
@@ -44,7 +77,7 @@ def env():
 
 
 @pytest.fixture()
-def ckan_host(secret_file, env):
+def ckan_host(secret_file, env, import_dbcsecrets):
     '''
     gets the host for the given env
     '''
@@ -54,10 +87,16 @@ def ckan_host(secret_file, env):
     # code below demos how that might work
     #
     # integration with openshift, retrieve these from env vars
+    logger.debug('DBCSecrets: %s', DBCSecrets)
+    logger.debug('dir: %s', dir())
+    logger.debug('dir(DBCSecrets): %s', dir(DBCSecrets))
+    logger.debug("Module DBCSecrets can be found: %s", (('DBCSecrets' in dir()) and 'GetSecrets' in dir(DBCSecrets)))
+    logger.debug('import_dbcsecrets: %s', import_dbcsecrets)
     if 'BCDC_URL' in os.environ:
         host = None
         logger.info("Env Var BCDC_URL is set: %s", os.environ['BCDC_URL'])
-    else:
+    elif 'GetSecrets' in dir(DBCSecrets):
+        # if the DBCSecrets module was imported
         logger.debug("using secrets file: %s", secret_file)
         creds = DBCSecrets.GetSecrets.CredentialRetriever(secretFileName=secret_file)
         misc_params = creds.getMiscParams()
@@ -65,6 +104,11 @@ def ckan_host(secret_file, env):
         host_key = '{0}_HOST'.format(env)
         logging.debug("host_key: %s", host_key)
         host = misc_params.getParam(host_key)
+    else:
+        msg = 'unable to retrieve secrets either using the environment %s or ' + \
+              'from the secrets file %s'
+        msg = msg.format('BCDC_URL', secret_file)
+        raise SecretsNotFound(msg)
     return host
 
 
@@ -89,12 +133,17 @@ def ckan_apitoken(secret_file, env):
     '''
     if 'BCDC_API_KEY' in os.environ:
         token = os.environ['BCDC_API_KEY']
-    else:
+    elif 'GetSecrets' in dir(DBCSecrets):
         creds = DBCSecrets.GetSecrets.CredentialRetriever(secretFileName=secret_file)
         misc_params = creds.getMiscParams()
         token_key = '{0}_TOKEN'.format(env)
         logger.debug("token_key: %s", token_key)
         token = misc_params.getParam(token_key)
+    else:
+        msg = 'unable to retrieve secrets either using the environment %s or ' + \
+              'from the secrets file %s'
+        msg = msg.format('BCDC_URL', secret_file)
+        raise SecretsNotFound(msg)
     return token
 
 
@@ -107,3 +156,11 @@ def ckan_auth_header(ckan_apitoken):
                    'content-type': 'application/json;charset=utf-8'}
     return api_headers
 
+
+class SecretsNotFound(Exception):
+    """
+    Base class for other exceptions
+    """
+
+    def __init__(self, message):
+        self.message = message

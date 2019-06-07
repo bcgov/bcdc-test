@@ -10,6 +10,7 @@ with open("readme.md", "r") as fh:
     
 with open('requirements.txt') as f:
     requires =f.read().splitlines()
+    print 'requirements:', requires
 
 
 setuptools.setup(
