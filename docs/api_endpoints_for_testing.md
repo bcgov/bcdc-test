@@ -1,15 +1,3 @@
-
-| Tables   |      Are      |  Cool |
-|----------|:-------------:|------:|
-| col 1 is |  left-aligned | $1600 |
-| col 2 is |    centered   |   $12 |
-| col 3 is | right-aligned |    $1 |
-
-| foo | bar |
-| --- | --- |
-| baz | bim |
-
-
 |      NAME      | Description                |     Details                          |  API/UI     |   Category  |
 |--------------- | -------------------        | -------------------------------------|-------------| ----------- |
 | override_api	 | Test override API’s        |	organization_list                    |  API        |     Ext     |
