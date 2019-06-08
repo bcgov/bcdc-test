@@ -6,6 +6,13 @@ Current tests include:
  - verification of preconfigured orgs required for testing
  - CRUD tests for packages.
 
+# Run Tests
+
+```
+pip install ckanext-bcdc-apitests
+pytest --pyargs ckanext_bcdc_apitests --junitxml=<xml report name.xml>
+```
+
 # Packaging
 
 ### Create python package:
