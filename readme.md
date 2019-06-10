@@ -36,6 +36,9 @@ set BCDC_URL = <URL>
 pytest --pyargs ckanext_bcdc_apitests
 ```
 
+to create a JUNIT xml report cann run:
+`pytest --pyargs ckanext_bcdc_apitests --junitxml=<path to junit xml report>`
+
 ### Upload to pypi (prod)
 
 `python -m twine upload --verbose dist/*`
