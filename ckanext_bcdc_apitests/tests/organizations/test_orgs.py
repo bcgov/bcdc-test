@@ -57,4 +57,3 @@ def test_verify_test_org_exists(ckan_url, ckan_apitoken, test_organization):
 #     # pkg_create = remoteApi.action.organization_create(**test_org_data)
 #     # logger.debug("org return data: %s", pkg_create)
 #     logger.warning('not running org creation tests')
-
