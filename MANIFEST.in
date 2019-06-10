@@ -1,0 +1,4 @@
+include README.md
+include ckanext_bcdc_apitests/test_data/pkgData.json
+include ckanext_bcdc_apitests/test_data/pkgData_min.json
+include ckanext_bcdc_apitests/test_data/ownerOrg.json

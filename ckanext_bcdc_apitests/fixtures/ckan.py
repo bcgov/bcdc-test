@@ -6,7 +6,7 @@ Created on May 29, 2019
 import pytest
 import ckanapi
 
-from fixtures.load_config import ckan_url, ckan_apitoken
+from .load_config import ckan_url, ckan_apitoken
 
 # pylint: disable=redefined-outer-name
 

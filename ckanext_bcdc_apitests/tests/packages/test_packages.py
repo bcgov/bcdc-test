@@ -17,9 +17,7 @@ import ckanapi
 import pytest  # @UnusedImport
 import requests
 
-
 logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
-
 
 # pylint: disable=redefined-outer-name
 
