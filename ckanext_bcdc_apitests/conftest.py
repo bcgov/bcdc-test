@@ -3,5 +3,6 @@ Created on May 28, 2019
 
 @author: KJNETHER
 '''
+# this set of fixtures is used by other fixtures and all
+# tests so need to import globally here.
 from ckanext_bcdc_apitests.fixtures.load_config import *
-from ckanext_bcdc_apitests.fixtures.load_data import *

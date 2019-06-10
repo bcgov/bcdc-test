@@ -20,13 +20,6 @@ DBCSecrets = None  # pylint: disable=invalid-name
 
 # using the DBC Secrets module if it exists, otherwise will rely on
 # environment variables
-dbc_secrets_exists = pkgutil.find_loader('DBCSecrets')  # pylint: disable=invalid-name
-logger.debug('dbc_secrets_exists: %s', dbc_secrets_exists)
-if dbc_secrets_exists:
-    # can find the package therefor import it
-    import DBCSecrets.GetSecrets
-    if ('DBCSecrets' in dir()) and 'GetSecrets' in dir(DBCSecrets):
-        logger.debug("Successfully imported DBCSecrets")
 
 # pylint: disable=redefined-outer-name
 
@@ -36,18 +29,18 @@ def import_dbcsecrets():
     '''
     Optional import of DBCSecrets, imports if it can be found
     '''
-    global DBCSecrets
+    global DBCSecrets  # pylint: disable=global-statement
 
     # using the DBC Secrets module if it exists, otherwise will rely on
     # environment variables
     dbc_secrets_exists = pkgutil.find_loader('DBCSecrets')
-    print 'dbc_secrets_exists:', dbc_secrets_exists
+    logger.debug('dbc_secrets_exists: %s', dbc_secrets_exists)
     if dbc_secrets_exists:
         # can find the package therefor import it
-        import DBCSecrets.GetSecrets
-        print 'IMPORTED DBCSecrets'
-        if ('DBCSecrets' in dir()) and 'GetSecrets' in dir(DBCSecrets):
-            print 'SUCCESS FOUND DBCSECRETS'
+        import DBCSecrets.GetSecrets  # pylint: disable=import-error
+        logger.debug('IMPORTED DBCSecrets')
+        if 'GetSecrets' in dir(DBCSecrets):
+            logger.debug('SUCCESS FOUND DBCSECRETS.GetSecrets')
     yield DBCSecrets
 
 
@@ -90,7 +83,9 @@ def ckan_host(secret_file, env, import_dbcsecrets):
     logger.debug('DBCSecrets: %s', DBCSecrets)
     logger.debug('dir: %s', dir())
     logger.debug('dir(DBCSecrets): %s', dir(DBCSecrets))
-    logger.debug("Module DBCSecrets can be found: %s", (('DBCSecrets' in dir()) and 'GetSecrets' in dir(DBCSecrets)))
+    logger.debug("Module DBCSecrets can be found: %s",
+                 (('DBCSecrets' in dir()) and
+                  'GetSecrets' in dir(DBCSecrets)))
     logger.debug('import_dbcsecrets: %s', import_dbcsecrets)
     if 'BCDC_URL' in os.environ:
         host = None
@@ -162,5 +157,5 @@ class SecretsNotFound(Exception):
     Base class for other exceptions
     """
 
-    def __init__(self, message):
+    def __init__(self, message):  # pylint: disable=super-init-not-called
         self.message = message

@@ -10,21 +10,20 @@ import logging
 import ckanapi
 import pytest
 
-from .ckan import *
-from .load_data import *
-from .test_config import *
-
+from .ckan import remote_api_admin_auth
+from .test_config import test_package_name
 
 logger = logging.getLogger(__name__)
 # pylint: disable=redefined-outer-name
 
 
-def package_delete(remote_api, pkg_name):
+# need to be able to call directly... don't need to make this a fixture.
+def package_delete(remote_api, test_package_name):
     '''
     :param remote_api: a ckanapi remote object
     :param pkg_name: the name of the package that needs to be deleted
     '''
-    remote_api.action.package_delete(id=pkg_name)
+    remote_api.action.package_delete(id=test_package_name)
 
 
 @pytest.fixture
@@ -53,4 +52,3 @@ def test_pkg_teardown(remote_api_admin_auth, test_package_name, test_package_exi
     '''
     if test_package_exists:
         package_delete(remote_api_admin_auth, test_package_name)
-
