@@ -27,6 +27,16 @@ def package_delete(remote_api, test_package_name):
 
 
 @pytest.fixture
+def package_create_fixture(remote_api_admin_auth, test_pkg_data):
+    '''
+    
+    '''
+    pkg_return = remote_api_admin_auth.action.package_create(**test_pkg_data)
+    logger.debug("pkg_return: %s", pkg_return)
+    yield pkg_return
+
+
+@pytest.fixture
 def test_package_exists(remote_api_admin_auth, test_package_name):
     '''
     :param remote_api_admin_auth: a ckanapi remote object with authenticated
