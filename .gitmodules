@@ -1,4 +1,0 @@
-[submodule "secrets"]
-	path = secrets
-	url = https://gogs.data.gov.bc.ca/daops/Secrets
-	branch = bcdc_tests_secrets
