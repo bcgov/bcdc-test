@@ -14,20 +14,27 @@ https://github.com/bcgov/dbc-pylib/blob/master/docs/secrets.md
 
 # Installing:
 
-### Activte your virtualenv
+## Activate your virtualenv
 
-<path to ve>/scripts
+#### Windoze
 
-First activate your dev virtualenv, then
+`<path to ve>/Scripts/activate`
 
+#### Everyone else (mak, linux)
+`source <path to ve>/bin/activate`
+
+## Install Secrets Module
+
+`pip install -e "git+https://github.com/bcgov/dbc-pylib@v3.0.7#egg=DBCSecrets&subdirectory=DBCSecrets"`
 *Suspect that on non windows platforms you may not have to include the double*
 *around the git module reference.*
 
-`pip install -e "git+https://github.com/bcgov/dbc-pylib@v3.0.7#egg=DBCSecrets&subdirectory=DBCSecrets"`
+## Configure Secrets
 
 Once installed create a secrets file with the following content in a secrets
 sub directory:
 
+```
 {"pmphost":"",
  "pmprestapidir":"/restapi/json/v1/",
  "pmptoken" : "<don't need now>",
@@ -41,10 +48,24 @@ sub directory:
        "PRD_TOKEN": ""
   }
 }
+```
 
 After this is complete you should be able to proceed with development using the
 secrets file.
 
+# Future Development strategy.
 
+Thinking the secrets file should use the same names as the expected environment
+variables.  Also the tokens should identify the roles that they have... so down 
+the road tests expected env vars would change from:
 
+`BCDC_API_KEY=<api token> `
 
+to 
+
+```
+BCDC_API_KEY_VIEWER=<api token> 
+BCDC_API_KEY_EDITOR=<api token> 
+BCDC_API_KEY_ADMIN=<api token> 
+BCDC_API_KEY_BRUCEALLMIGHTY=<api token>
+```
