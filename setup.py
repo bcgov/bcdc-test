@@ -14,8 +14,8 @@ with open('requirements.txt') as f:
 
 
 setuptools.setup(
-    name="ckanext_bcdc_apitests",
-    version="0.0.5",
+    name="bcdc_apitests",
+    version="0.0.6",
     author="Kevin Netherton",
     author_email="kevin.netherton@gov.bc.ca",
     description="API testing for BC Data Catalog",

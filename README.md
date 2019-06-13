@@ -21,7 +21,7 @@ pytest --pyargs ckanext_bcdc_apitests --junitxml=<xml report name.xml>
 
 ### Upload to pypi (test)
 
-` python -m twine upload --verbose --repository-url https://test.pypi.org/legacy/ dist/*`
+`python -m twine upload --verbose --repository-url https://test.pypi.org/legacy/ dist/*`
 
 ### Test (test) package
 ```

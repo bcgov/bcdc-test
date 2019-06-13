@@ -109,7 +109,7 @@ def test_verify_package_count(ckan_url, ckan_rest_dir, ckan_auth_header):
 def test_package_delete(ckan_url, ckan_auth_header,
                         ckan_rest_dir, test_package_name):
     '''
-    verifies that a package can acutally be deleted
+    verifies that a package can actually be deleted
     '''
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'package_delete')
     logger.debug('api_call: %s', api_call)
@@ -147,3 +147,6 @@ def test_package_create_invalid(test_pkg_teardown, ckan_url, ckan_auth_header,
     resp = requests.post(api_call, headers=ckan_auth_header,
                          json={'id': test_pkg_data_core_only['name']})
     logger.debug('resp: %s', resp.text)
+    
+    
+    

@@ -29,7 +29,7 @@ def package_delete(remote_api, test_package_name):
 @pytest.fixture
 def package_create_fixture(remote_api_admin_auth, test_pkg_data):
     '''
-    
+
     '''
     pkg_return = remote_api_admin_auth.action.package_create(**test_pkg_data)
     logger.debug("pkg_return: %s", pkg_return)
@@ -52,6 +52,10 @@ def test_package_exists(remote_api_admin_auth, test_package_name):
             pkg_exists = True
     except ckanapi.errors.NotFound as err:
         logger.debug("err: %s %s", type(err), err)
+    except ckanapi.errors.CKANAPIError as err:
+        logger.debug("err: %s %s", type(err), err)
+        # assume we have a ghost package so yes say exists
+        pkg_exists = True
     return pkg_exists
 
 

@@ -43,6 +43,29 @@ def test_pkg_data(test_data_dir, test_package_name):
         datastore['name'] = test_package_name
     return datastore
 
+@pytest.fixture
+def test_pkg_data_core_only(test_pkg_data):
+    '''
+    :param test_pkg_data: Valid package data
+    
+    Method will remove all but the core attributes required as described in 
+    the ckan docs.
+    
+    (https://docs.ckan.org/en/2.8/api/#module-ckan.logic.action.create)
+    
+    core attributes: 
+        - name (string)
+        - title (string)
+        - private (bool)
+        - owner_org (configurable as optional, assuming its not)
+    '''
+    logging.debug("test_package_name: %s", test_pkg_data)
+    coreAttribs = ['name', 'title', 'private', 'owner_org']
+    core_atribs_only_pkg = {}
+    for key in test_pkg_data.keys():
+        if key in coreAttribs:
+            core_atribs_only_pkg[key] = test_pkg_data[key]
+    return core_atribs_only_pkg
 
 @pytest.fixture
 def test_pkg_data_updated(test_pkg_data):
