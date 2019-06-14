@@ -2,20 +2,22 @@
 Created on Jun. 6, 2019
 
 @author: KJNETHER
+
+using date as versions to simplify
 '''
 import setuptools
+import datetime
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
-    
-with open('requirements.txt') as f:
-    requires =f.read().splitlines()
-    print 'requirements:', requires
 
+with open('requirements.txt') as f:
+    requires = f.read().splitlines()
+    print 'requirements:', requires
 
 setuptools.setup(
     name="bcdc_apitests",
-    version="0.0.6",
+    version=datetime.datetime.now().strftime('%Y.%m.%d'),
     author="Kevin Netherton",
     author_email="kevin.netherton@gov.bc.ca",
     description="API testing for BC Data Catalog",
