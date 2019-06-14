@@ -1,0 +1,14 @@
+{
+	"package_id": "",
+	"url": "https://docs.ckan.org/en/2.8/_static/ckanlogo.png",
+	"file": "https://docs.ckan.org/en/2.8/_static/ckanlogo.png",
+	"resource_storage_location": "External",
+	"edc_resource_type": "Data",
+	"format": "html",
+	"type": "DATA",
+	"resource_update_cycle": "asNeeded",
+	"resource_storage_access_method": "Direct Access",
+	"name": "test resource",
+	"projection_name": "N-A",
+	"description": "test resource description"
+}
