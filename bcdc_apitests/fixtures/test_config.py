@@ -15,7 +15,7 @@ TEST_PREFIX = 'zzztest'
 # TODO: need to modify to use the testing org that should be set up.
 TEST_ORGANIZATION = 'databc'
 TEST_PACKAGE = '{0}_testpkg'.format(TEST_PREFIX)
-
+TEST_RESOURCE = '{0}_testresource'.format(TEST_PREFIX)
 BCDC_REST_DIR = "/api/3/action"
 
 # pylint: disable=redefined-outer-name
@@ -44,6 +44,12 @@ def test_package_name():
     '''
     return TEST_PACKAGE
 
+@pytest.fixture
+def test_resource_name():
+    '''
+    :return: the name of the package to be used for the testing.
+    '''
+    return TEST_RESOURCE
 
 @pytest.fixture
 def ckan_rest_dir():

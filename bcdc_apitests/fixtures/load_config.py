@@ -25,7 +25,7 @@ DBCSecrets = None  # pylint: disable=invalid-name
 
 
 @pytest.fixture()
-def import_dbcsecrets():
+def import_dbcsecrets():  # @DontTrace
     '''
     Optional import of DBCSecrets, imports if it can be found
     '''
@@ -37,7 +37,7 @@ def import_dbcsecrets():
     logger.debug('dbc_secrets_exists: %s', dbc_secrets_exists)
     if dbc_secrets_exists:
         # can find the package therefor import it
-        import DBCSecrets.GetSecrets  # pylint: disable=import-error
+        import DBCSecrets.GetSecrets  # @UnresolvedImport pylint: disable=import-error
         logger.debug('IMPORTED DBCSecrets')
         if 'GetSecrets' in dir(DBCSecrets):
             logger.debug('SUCCESS FOUND DBCSECRETS.GetSecrets')
