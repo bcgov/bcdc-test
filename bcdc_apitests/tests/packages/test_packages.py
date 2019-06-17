@@ -62,9 +62,9 @@ def test_package_update(remote_api_admin_auth, test_pkg_data, ckan_url,
     :param ckan_auth_header: authorization header to use in request
     '''
     test_package_name = test_pkg_data['name']
-    pkg_show_data = remote_api_admin_auth.action.package_show(id=test_package_name)
-    logger.debug("pkg_show_data: %s", pkg_show_data)
-    # now modify the package show data and update
+    test_pkg_data['title'] = 'zzz changed the title'
+    pkg_show_data_orig = remote_api_admin_auth.action.package_show(id=test_package_name)
+    # logger.debug("pkg_show_data: %s", pkg_show_data)
 
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'package_update')
     resp = requests.post(api_call, headers=ckan_auth_header, json=test_pkg_data)
@@ -74,6 +74,7 @@ def test_package_update(remote_api_admin_auth, test_pkg_data, ckan_url,
     # now double check that the data has been changed
     pkg_show_data = remote_api_admin_auth.action.package_show(id=test_package_name)
     assert pkg_show_data['title'] == test_pkg_data['title']
+    assert pkg_show_data_orig['title'] <> pkg_show_data['title']
 
 
 @pytest.mark.xfail

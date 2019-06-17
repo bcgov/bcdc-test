@@ -71,6 +71,18 @@ def package_create_fixture(remote_api_admin_auth, test_pkg_data):
     logger.debug("pkg_return: %s", pkg_return)
     yield pkg_return
 
+@pytest.fixture
+def package_create_if_not_exists(remote_api_admin_auth, test_package_name, 
+                                 test_package_exists, test_pkg_data):
+    pkg_data = None
+    logger.debug("test_package_exists: %s %s", test_package_exists, type(test_package_exists))
+    if test_package_exists:
+        pkg_data = remote_api_admin_auth.action.package_show(id=test_package_name)
+    else:
+        pkg_data = remote_api_admin_auth.action.package_create(**test_pkg_data)
+        logger.debug("pkg_return: %s", pkg_data)
+    yield pkg_data
+    
 
 @pytest.fixture
 def test_package_exists(remote_api_admin_auth, test_package_name):
