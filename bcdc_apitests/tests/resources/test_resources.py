@@ -81,6 +81,7 @@ def test_resource_update(remote_api_admin_auth,ckan_url,ckan_rest_dir,ckan_auth_
 
         # using search to get the ID of resource.
         res_data = remote_api.action.resource_search(query="name:{0}".format(resource_data['name']))
+        logger.debug("resource_data: %s", res_data)
 
         # update resource data dic with package id
         resource_data['package_id'] = res_data['results'][0]['package_id']
@@ -93,11 +94,11 @@ def test_resource_update(remote_api_admin_auth,ckan_url,ckan_rest_dir,ckan_auth_
         # change some data in resource data dic
         resource_data['description'] = 'test resource description changed'
 
-        #define api
+        # define api
         api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'resource_update')
         logger.debug('api_call: %s', api_call)
 
-        #update resource
+        # update resource
         res_data = requests.post(api_call, headers=ckan_auth_header, json=resource_data)
         logger.debug("resource_update: %s", res_data.text)
 
