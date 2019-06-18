@@ -48,11 +48,11 @@ def test_resource_update(remote_api_admin_auth, test_package_name, resource_data
     # TODO: Doesn't look like this is working anymore, doesn't return any records.
     res_data = remote_api.action.resource_search(query="name:{0}".format(resource_data['name']))
     logger.debug("res_data: %s", res_data)
-    
-    #res_id = res_data['results'][0]['id']
+
+    # res_id = res_data['results'][0]['id']
     # res_id = res_data['id']
 
-    #logger.debug("resource_id: %s", res_id)
+    # logger.debug("resource_id: %s", res_id)
 
     try:
         res_data = remote_api.action.resource_update(**resource_data)
@@ -77,7 +77,7 @@ def test_resource_search(remote_api_admin_auth, resource_data):
         # res_id = res_data['results'][0]['id']
         logger.debug("resource_name: %s", resource_data['name'])
         # TODO: once the search gets fixed uncomment
-        #assert res_data['count'] >= 1
+        # assert res_data['count'] >= 1
     except ckanapi.CKANAPIError as err:
         logger.debug("err: %s %s", type(err), err)
 

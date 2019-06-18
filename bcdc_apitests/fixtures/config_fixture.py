@@ -24,6 +24,7 @@ BCDC_REST_DIR = "/api/3/action"
 
 # pylint: disable=redefined-outer-name
 
+
 @pytest.fixture
 def test_user():
     '''
@@ -56,12 +57,14 @@ def test_package_name():
     '''
     return TEST_PACKAGE
 
+
 @pytest.fixture
 def test_resource_name():
     '''
     :return: the name of the package to be used for the testing.
     '''
     return TEST_RESOURCE
+
 
 @pytest.fixture
 def ckan_rest_dir():
