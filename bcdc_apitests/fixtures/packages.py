@@ -11,7 +11,7 @@ import ckanapi
 import pytest
 
 from .ckan import remote_api_admin_auth
-from .test_config import test_package_name
+from .config_fixture import test_package_name
 
 logger = logging.getLogger(__name__)
 # pylint: disable=redefined-outer-name

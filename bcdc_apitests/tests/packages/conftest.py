@@ -24,4 +24,7 @@ from bcdc_apitests.fixtures.load_data \
         test_pkg_data, \
         test_data_dir, \
         test_pkg_data_core_only
-from bcdc_apitests.fixtures.test_config import ckan_rest_dir
+from bcdc_apitests.fixtures.config_fixture \
+    import \
+        ckan_rest_dir, \
+        test_user

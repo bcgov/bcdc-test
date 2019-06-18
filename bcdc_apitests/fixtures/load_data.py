@@ -17,8 +17,10 @@ import pytest
 
 # pylint: disable=redefined-outer-name
 
-from .test_config import test_package_name
+from .config_fixture import test_package_name
+from .config_fixture import test_user
 
+logger = logging.getLogger(__name__)
 
 @pytest.fixture
 def test_data_dir():
@@ -30,17 +32,19 @@ def test_data_dir():
 
 
 @pytest.fixture
-def test_pkg_data(test_data_dir, test_package_name):
+def test_pkg_data(test_data_dir, test_package_name, test_user):
     '''
     :param test_data_dir: the data directory fixture, provides the directory
                           where data is located
     :param test_package_name: the name of the test package
     '''
-    logging.debug("test_package_name: %s", test_package_name)
+    logger.debug("test_package_name: %s", test_package_name)
+    logger.debug("test user: %s", test_user)
     json_file = os.path.join(test_data_dir, 'pkgData_min.json')
     with open(json_file, 'r') as json_file_hand:
         datastore = json.load(json_file_hand)
         datastore['name'] = test_package_name
+        datastore['title'] = '{0} {1}'.format(datastore['title'], test_user)
     return datastore
 
 
