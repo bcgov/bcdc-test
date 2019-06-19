@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
 # looks like a resource has to be part of a package, ie the package_id needs to
 # be populated.  Call the fixtures
 def test_resource_create(ckan_url, ckan_rest_dir, ckan_auth_header,
-                         resource_data,package_create_if_not_exists):
+                         resource_data,package_create_fixture,package_create_if_not_exists):
     '''
     add new resource
 
@@ -28,6 +28,7 @@ def test_resource_create(ckan_url, ckan_rest_dir, ckan_auth_header,
 
     #return pkg
     pkg = package_create_if_not_exists
+    #pkg = package_create_fixture
     logger.debug("package_create id is: %s", pkg['id'])
 
     try:
