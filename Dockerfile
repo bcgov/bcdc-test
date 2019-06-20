@@ -13,4 +13,4 @@ ADD README.md /apitests/
 
 RUN cd /apitests && pip install -r /apitests/requirements.txt && pip install twine && python setup.py sdist bdist_wheel
 ENV PYTHONPATH='/usr/lib/python2.7:/usr/lib/python2.7/site-packages:/apitests'
-RUN  python -m twine upload dist/* -p ${PYPI_PSWD} -u ${PYPI_USER} --skip-existing
+RUN  python -m twine upload dist/*
