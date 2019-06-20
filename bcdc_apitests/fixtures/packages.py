@@ -78,7 +78,7 @@ def package_exists(remote_api, package_name, pkgtype='ANY'):
     # a particular package type, ie valid / invalid
     if pkg_exists and pkgtype != 'ANY':
         # types don't align so the package of the specified type doesn't exist
-        if pkgtype <> exists_pkg_type:
+        if pkgtype != exists_pkg_type:
             pkg_exists = False
 
     return pkg_exists
