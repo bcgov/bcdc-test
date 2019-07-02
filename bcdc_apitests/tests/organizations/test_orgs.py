@@ -31,15 +31,26 @@ def test_add_organization(test_org_data, ckan_url, ckan_apitoken):
     '''
     remoteApi = ckanapi.RemoteCKAN(ckan_url, ckan_apitoken)
 
-    orgList = remoteApi.action.organization_list_for_user()
-    logger.debug("orgList: %s", orgList)
     pkg_create = remoteApi.action.organization_create(**test_org_data)
     logger.debug("org return data: %s", pkg_create)
+
+def test_org_create_if_not_exists(remote_api_admin_auth, test_organization, org_exists_fixture, test_org_data):
+    '''
+    requires sysadmin to create orgs
+    test for org, if does not exist lets create one
+    '''
+
+    if org_exists_fixture:
+        org_data = remote_api_admin_auth.action.organization_show(id=test_organization)
+    else:
+        org_data = remote_api_admin_auth.action.organization_create(**test_org_data)
+        logger.debug("org_return: %s", org_data)
+
 
 
 def test_verify_test_org_exists(ckan_url, ckan_apitoken, test_organization):
     '''
-    verifies that the test_organization exists
+    verifies that the test_organization exists, if not create
     '''
     org = ''
     remote_api = ckanapi.RemoteCKAN(ckan_url, ckan_apitoken)
@@ -55,16 +66,16 @@ def test_verify_test_org_exists(ckan_url, ckan_apitoken, test_organization):
     logger.debug("org: %s", org)
 
 
+#No need to pruge org at this level
 def test_org_purge(ckan_url, ckan_apitoken, test_organization):
     '''
-    verifies that the test_organization exists
+    purges test org
     '''
     org = ''
     remote_api = ckanapi.RemoteCKAN(ckan_url, ckan_apitoken)
     try:
         org = remote_api.action.organization_purge(id=test_organization)
     except ckanapi.errors.NotFound as err:
-        logger.debug("error: %s", type(err))
         logger.debug("error: %s", type(err))
     logger.debug("purge of org: %s", org)
 

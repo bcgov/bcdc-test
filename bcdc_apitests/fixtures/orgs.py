@@ -31,7 +31,7 @@ def org_purge(remote_api, test_organization):
 def org_exists(remote_api, test_organization):
     org_exists = False
     try:
-        org_data = remote_api.action.package_show(id=test_organization)
+        org_data = remote_api.action.organization_show(id=test_organization)
         logger.debug("org show: %s", org_data)
         if org_data['name'] == test_organization:
             org_exists = True
