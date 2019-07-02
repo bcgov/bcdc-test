@@ -33,10 +33,10 @@ def test_org_create_if_not_exists(remote_api_admin_auth, test_organization, org_
 
     if org_exists_fixture:
         org_data = remote_api_admin_auth.action.organization_show(id=test_organization)
-        logger.debug("org_return: %s", org_data)
+        logger.debug("org_exists: %s", org_data)
     else:
         org_data = remote_api_admin_auth.action.organization_create(**test_org_data)
-        logger.debug("org_return: %s", org_data)
+        logger.debug("create org: %s", org_data)
 
 
 def test_verify_test_org_exists(ckan_url, ckan_apitoken, test_organization):
@@ -57,16 +57,8 @@ def test_verify_test_org_exists(ckan_url, ckan_apitoken, test_organization):
     logger.debug("org: %s", org)
 
 
-#No need to pruge org at this level
-# def test_org_purge(ckan_url, ckan_apitoken, test_organization):
-#     '''
-#     purges test org
-#     '''
-#     org = ''
-#     remote_api = ckanapi.RemoteCKAN(ckan_url, ckan_apitoken)
-#     try:
-#         org = remote_api.action.organization_purge(id=test_organization)
-#     except ckanapi.errors.NotFound as err:
-#         logger.debug("error: %s", type(err))
-#     logger.debug("purge of org: %s", org)
+# #No need to pruge org at this level
+# def test_org_purge(org_teardown_fixture):
+#     org = org_teardown_fixture
+#     logger.debug('post cleanup: %s', org)
 

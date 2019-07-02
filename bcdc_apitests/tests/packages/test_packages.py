@@ -23,6 +23,7 @@ logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
 # pylint: disable=unused-argument
 
 
+#TODO: move testpkg teardown to conftest, currently in test method to help while running as single test
 def test_add_package_success(ckan_url, ckan_auth_header,
                              ckan_rest_dir, test_pkg_data,test_pkg_teardown):
     '''
@@ -204,3 +205,10 @@ def test_package_create_invalid( ckan_url, ckan_auth_header,
 
     logger.debug("resp text: %s", resp_show.text)
     logger.debug("tear down has been called")
+
+
+# post test cleanup removal of pkg if previous test fails. this is to be apart of the pre/post run at module level
+# TODO: move this into a conftest
+def test_post_cleanup(test_pkg_teardown):
+    pkg = test_pkg_teardown
+    logger.debug('post cleanup: %s', pkg)

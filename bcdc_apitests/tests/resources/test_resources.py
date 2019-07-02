@@ -8,6 +8,7 @@ import logging
 import requests
 import ckanapi
 
+
 logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
 
@@ -163,29 +164,8 @@ def test_resource_delete(remote_api_admin_auth, ckan_url, ckan_rest_dir, ckan_au
         logger.debug("err: %s %s", type(err), err)
 
 
-# remove test package
-# TODO: move this into a fixture, thinking could configure a fixture in the conftest
-#       with a module scope that does the package creation and deletion.
-def test_package_delete(ckan_url, ckan_auth_header,
-                        ckan_rest_dir, test_package_name):
-    '''
-    verifies that a package can actually be deleted
-    '''
-    api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'package_delete')
-    logger.debug('api_call: %s', api_call)
-    delete_data = {'id': test_package_name}
-
-
-    resp = requests.post(api_call, headers=ckan_auth_header, json=delete_data)
-    logger.debug('status code: %s', resp.status_code)
-    resp_json = resp.json()
-    logger.debug("resp: %s", resp.text)
-
-
-    #purge
-    api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'dataset_purge')
-    logger.debug('api_call: %s', api_call)
-    delete_data = {'id': test_package_name}
-
-    resp = requests.post(api_call, headers=ckan_auth_header, json=delete_data)
-    logger.debug('PURGE: %s', resp.status_code)
+# post test cleanup removal of pkg if previous test fails. this is to be apart of the pre/post run at module level
+# TODO: move this into a conftest
+def test_post_cleanup(test_pkg_teardown):
+    pkg = test_pkg_teardown
+    logger.debug('post cleanup: %s', pkg)
