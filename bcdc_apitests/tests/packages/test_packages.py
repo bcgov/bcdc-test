@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
 # pylint: disable=unused-argument
 
 
-def test_add_package_success(test_pkg_teardown, ckan_url, ckan_auth_header,
+def test_add_package_success(ckan_url, ckan_auth_header,
                              ckan_rest_dir, test_pkg_data):
     '''
     makes simple request to create package and verifies it gets
@@ -74,7 +74,7 @@ def test_package_update(remote_api_admin_auth, test_pkg_data, ckan_url,
     # now double check that the data has been changed
     pkg_show_data = remote_api_admin_auth.action.package_show(id=test_package_name)
     assert pkg_show_data['title'] == test_pkg_data['title']
-    assert pkg_show_data_orig['title'] <> pkg_show_data['title']
+    assert pkg_show_data_orig['title'] != pkg_show_data['title']
 
 
 @pytest.mark.xfail
@@ -129,10 +129,22 @@ def test_package_delete(ckan_url, ckan_auth_header,
     logger.debug('api_call: %s', api_call)
     delete_data = {'id': test_package_name}
 
+
     resp = requests.post(api_call, headers=ckan_auth_header, json=delete_data)
     logger.debug('status code: %s', resp.status_code)
     resp_json = resp.json()
     logger.debug("resp: %s", resp.text)
+
+
+    #purge
+    api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'dataset_purge')
+    logger.debug('api_call: %s', api_call)
+    delete_data = {'id': test_package_name}
+
+    resp = requests.post(api_call, headers=ckan_auth_header, json=delete_data)
+    logger.debug('PURGE: %s', resp.status_code)
+
+
     assert resp.status_code == 200
     assert resp_json['success']
 
@@ -140,7 +152,7 @@ def test_package_delete(ckan_url, ckan_auth_header,
 # its known that this test will currently fail.  remove this decorator once this
 # issue is patched
 @pytest.mark.xfail
-def test_package_create_invalid(test_pkg_teardown, ckan_url, ckan_auth_header,
+def test_package_create_invalid( ckan_url, ckan_auth_header,
                                 ckan_rest_dir, test_pkg_data_core_only):
     '''
     CKAN Documentation suggests these are the core attributes required for a

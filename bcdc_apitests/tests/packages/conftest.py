@@ -27,4 +27,6 @@ from bcdc_apitests.fixtures.load_data \
 from bcdc_apitests.fixtures.config_fixture \
     import \
         ckan_rest_dir, \
-        test_user
+        test_user, \
+        test_organization
+from bcdc_apitests.fixtures.orgs import *

@@ -28,6 +28,13 @@ def package_delete(remote_api, test_package_name):
     logger.debug("deleting the package: %s", test_package_name)
     remote_api.action.package_delete(id=test_package_name)
 
+def package_purge(remote_api, pkg_name):
+    '''
+    :param remote_api: a ckanapi remote object
+    :param pkg_name: the name of the package that needs to be deleted
+    '''
+    logger.debug("purge the package: %s", pkg_name)
+    remote_api.action.dataset_purge(id=pkg_name)
 
 def delete_pkg(remote_api, pkg_name):
     logger.debug("checking for package: %s", pkg_name)
@@ -35,6 +42,8 @@ def delete_pkg(remote_api, pkg_name):
     if pkg_exists:
         logger.debug("deleting package: %s", pkg_name)
         package_delete(remote_api, pkg_name)
+        logger.debug("purge the package: %s", pkg_name)
+        remote_api.action.dataset_purge(id=pkg_name)
 
 
 def package_exists(remote_api, package_name, pkgtype='ANY'):

@@ -32,7 +32,7 @@ def test_data_dir():
 
 
 @pytest.fixture
-def test_pkg_data(test_data_dir, test_package_name, test_user):
+def test_pkg_data(org_id_fixture,test_data_dir, test_package_name, test_user):
     '''
     :param test_data_dir: the data directory fixture, provides the directory
                           where data is located
@@ -45,6 +45,8 @@ def test_pkg_data(test_data_dir, test_package_name, test_user):
         datastore = json.load(json_file_hand)
         datastore['name'] = test_package_name
         datastore['title'] = '{0} {1}'.format(datastore['title'], test_user)
+        datastore['org'] = org_id_fixture
+        datastore['owner_org'] = org_id_fixture
     return datastore
 
 
