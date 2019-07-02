@@ -5,12 +5,10 @@ Created on May 29, 2019
 
 Code used to verify orgs.
 '''
-import logging
 
+import logging
 import ckanapi
 import pytest
-
-
 
 logger = logging.getLogger(__name__)
 # pylint: disable=redefined-outer-name

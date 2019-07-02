@@ -11,8 +11,6 @@ import ckanapi
 logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
 
-# looks like a resource has to be part of a package, ie the package_id needs to
-# be populated.  Call the fixtures
 def test_resource_create(ckan_url, ckan_rest_dir, ckan_auth_header,
                          resource_data,package_create_if_not_exists):
     '''
@@ -26,9 +24,7 @@ def test_resource_create(ckan_url, ckan_rest_dir, ckan_auth_header,
     :param package_create_if_not_exists: create pkg if it does not exist
     '''
 
-    #return pkg
     pkg = package_create_if_not_exists
-    #pkg = package_create_fixture
     logger.debug("package_create id is: %s", pkg['id'])
 
     try:
@@ -66,7 +62,7 @@ def test_resource_create(ckan_url, ckan_rest_dir, ckan_auth_header,
 
 
 # update resource
-def test_resource_update(remote_api_admin_auth,ckan_url,ckan_rest_dir,ckan_auth_header,resource_data):
+def test_resource_update(remote_api_admin_auth, ckan_url, ckan_rest_dir, ckan_auth_header, resource_data):
     '''
     :param remote_api_admin_auth: ckanapi remote, with auth
     :param resource_data: test resource structure
@@ -131,10 +127,13 @@ def test_resource_search(remote_api_admin_auth, resource_data):
 
 
 # delete resource
-def test_resource_delete(remote_api_admin_auth,ckan_url,ckan_rest_dir,ckan_auth_header, resource_data):
+def test_resource_delete(remote_api_admin_auth, ckan_url, ckan_rest_dir, ckan_auth_header, resource_data):
     '''
     :param remote_api_admin_auth: ckanapi remote, with auth
     :param resource_data: test resource structure
+    :param ckan_url:
+    :param ckan_rest_dir:
+    :param ckan_auth_header:
     '''
     try:
         # define api
@@ -176,9 +175,17 @@ def test_package_delete(ckan_url, ckan_auth_header,
     logger.debug('api_call: %s', api_call)
     delete_data = {'id': test_package_name}
 
+
     resp = requests.post(api_call, headers=ckan_auth_header, json=delete_data)
     logger.debug('status code: %s', resp.status_code)
     resp_json = resp.json()
     logger.debug("resp: %s", resp.text)
-    assert resp.status_code == 200
-    assert resp_json['success']
+
+
+    #purge
+    api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'dataset_purge')
+    logger.debug('api_call: %s', api_call)
+    delete_data = {'id': test_package_name}
+
+    resp = requests.post(api_call, headers=ckan_auth_header, json=delete_data)
+    logger.debug('PURGE: %s', resp.status_code)
