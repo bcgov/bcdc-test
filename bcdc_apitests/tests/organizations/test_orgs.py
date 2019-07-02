@@ -57,7 +57,7 @@ def test_verify_test_org_exists(ckan_url, ckan_apitoken, test_organization):
     logger.debug("org: %s", org)
 
 
-# #No need to pruge org at this level
+# #No need to purge org at this level
 # def test_org_purge(org_teardown_fixture):
 #     org = org_teardown_fixture
 #     logger.debug('post cleanup: %s', org)

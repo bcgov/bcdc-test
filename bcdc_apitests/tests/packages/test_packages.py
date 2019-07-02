@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
 #TODO: move testpkg teardown to conftest, currently in test method to help while running as single test
 def test_add_package_success(ckan_url, ckan_auth_header,
-                             ckan_rest_dir, test_pkg_data,test_pkg_teardown):
+                             ckan_rest_dir, test_pkg_data, test_pkg_teardown):
     '''
     makes simple request to create package and verifies it gets
     200 status code.
