@@ -171,6 +171,5 @@ def test_pkg_teardown(remote_api_admin_auth, test_package_name, test_package_exi
     '''
     delete_pkg(remote_api_admin_auth, test_package_name)
     logger.debug('initial clean up complete')
-    yield
-    delete_pkg(remote_api_admin_auth, test_package_name)
-    logger.debug('tear down cleanup complete')
+
+

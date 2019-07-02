@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
 
 def test_add_package_success(ckan_url, ckan_auth_header,
-                             ckan_rest_dir, test_pkg_data):
+                             ckan_rest_dir, test_pkg_data,test_pkg_teardown):
     '''
     makes simple request to create package and verifies it gets
     200 status code.
@@ -125,10 +125,10 @@ def test_package_delete(ckan_url, ckan_auth_header,
     '''
     verifies that a package can actually be deleted
     '''
+    #delete pkg
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'package_delete')
     logger.debug('api_call: %s', api_call)
     delete_data = {'id': test_package_name}
-
 
     resp = requests.post(api_call, headers=ckan_auth_header, json=delete_data)
     logger.debug('status code: %s', resp.status_code)
@@ -136,7 +136,7 @@ def test_package_delete(ckan_url, ckan_auth_header,
     logger.debug("resp: %s", resp.text)
 
 
-    #purge
+    # purge pkg
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'dataset_purge')
     logger.debug('api_call: %s', api_call)
     delete_data = {'id': test_package_name}
