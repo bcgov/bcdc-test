@@ -8,7 +8,6 @@ Can't test orgs as there is no way to create orgs without superuser
 
 '''
 import logging
-
 import ckanapi
 import pytest
 
@@ -26,9 +25,23 @@ def test_verify_read_orgs(ckan_url):
     assert pkg_list
 
 
+def test_org_create_if_not_exists(remote_api_admin_auth, test_organization, org_exists_fixture, test_org_data):
+    '''
+    requires sysadmin to create orgs
+    test for org, if does not exist lets create one
+    '''
+
+    if org_exists_fixture:
+        org_data = remote_api_admin_auth.action.organization_show(id=test_organization)
+        logger.debug("org_exists: %s", org_data)
+    else:
+        org_data = remote_api_admin_auth.action.organization_create(**test_org_data)
+        logger.debug("create org: %s", org_data)
+
+
 def test_verify_test_org_exists(ckan_url, ckan_apitoken, test_organization):
     '''
-    verifies that the test_organization exists
+    verifies that the test_organization exists, if not create
     '''
     org = ''
     remote_api = ckanapi.RemoteCKAN(ckan_url, ckan_apitoken)
@@ -43,17 +56,9 @@ def test_verify_test_org_exists(ckan_url, ckan_apitoken, test_organization):
         pytest.fail(msg)
     logger.debug("org: %s", org)
 
-# LEAVING COMMENTED OUT FOR NOW UNTIL WE DETERMINE WHETHER THE TESTS WILL BE
-# RUN AS SUPER ADMIN OR AS ADMIN WITH PRECONFIGURED ORGS
-# def test_add_organization(test_org_data, ckan_url, ckan_apitoken):
-#     '''
-#     Cannot create the create orgs without superuser at the moment so this
-#     test will remain commented out until that is resolved.
-#     '''
-#     remoteApi = ckanapi.RemoteCKAN(ckan_url, ckan_apitoken)
-#
-#     # orgList = remoteApi.action.organization_list_for_user()
-#     # logger.debug("orgList: %s", orgList)
-#     # pkg_create = remoteApi.action.organization_create(**test_org_data)
-#     # logger.debug("org return data: %s", pkg_create)
-#     logger.warning('not running org creation tests')
+
+# #No need to purge org at this level
+# def test_org_purge(org_teardown_fixture):
+#     org = org_teardown_fixture
+#     logger.debug('post cleanup: %s', org)
+

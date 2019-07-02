@@ -23,8 +23,9 @@ logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
 # pylint: disable=unused-argument
 
 
-def test_add_package_success(test_pkg_teardown, ckan_url, ckan_auth_header,
-                             ckan_rest_dir, test_pkg_data):
+#TODO: move testpkg teardown to conftest, currently in test method to help while running as single test
+def test_add_package_success(ckan_url, ckan_auth_header,
+                             ckan_rest_dir, test_pkg_data, test_pkg_teardown):
     '''
     makes simple request to create package and verifies it gets
     200 status code.
@@ -74,7 +75,7 @@ def test_package_update(remote_api_admin_auth, test_pkg_data, ckan_url,
     # now double check that the data has been changed
     pkg_show_data = remote_api_admin_auth.action.package_show(id=test_package_name)
     assert pkg_show_data['title'] == test_pkg_data['title']
-    assert pkg_show_data_orig['title'] <> pkg_show_data['title']
+    assert pkg_show_data_orig['title'] != pkg_show_data['title']
 
 
 @pytest.mark.xfail
@@ -125,6 +126,7 @@ def test_package_delete(ckan_url, ckan_auth_header,
     '''
     verifies that a package can actually be deleted
     '''
+    #delete pkg
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'package_delete')
     logger.debug('api_call: %s', api_call)
     delete_data = {'id': test_package_name}
@@ -133,6 +135,17 @@ def test_package_delete(ckan_url, ckan_auth_header,
     logger.debug('status code: %s', resp.status_code)
     resp_json = resp.json()
     logger.debug("resp: %s", resp.text)
+
+
+    # purge pkg
+    api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'dataset_purge')
+    logger.debug('api_call: %s', api_call)
+    delete_data = {'id': test_package_name}
+
+    resp = requests.post(api_call, headers=ckan_auth_header, json=delete_data)
+    logger.debug('PURGE: %s', resp.status_code)
+
+
     assert resp.status_code == 200
     assert resp_json['success']
 
@@ -140,7 +153,7 @@ def test_package_delete(ckan_url, ckan_auth_header,
 # its known that this test will currently fail.  remove this decorator once this
 # issue is patched
 @pytest.mark.xfail
-def test_package_create_invalid(test_pkg_teardown, ckan_url, ckan_auth_header,
+def test_package_create_invalid( ckan_url, ckan_auth_header,
                                 ckan_rest_dir, test_pkg_data_core_only):
     '''
     CKAN Documentation suggests these are the core attributes required for a
@@ -192,3 +205,10 @@ def test_package_create_invalid(test_pkg_teardown, ckan_url, ckan_auth_header,
 
     logger.debug("resp text: %s", resp_show.text)
     logger.debug("tear down has been called")
+
+
+# post test cleanup removal of pkg if previous test fails. this is to be apart of the pre/post run at module level
+# TODO: move this into a conftest
+def test_post_cleanup(test_pkg_teardown):
+    pkg = test_pkg_teardown
+    logger.debug('post cleanup: %s', pkg)

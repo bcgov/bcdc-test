@@ -28,6 +28,13 @@ def package_delete(remote_api, test_package_name):
     logger.debug("deleting the package: %s", test_package_name)
     remote_api.action.package_delete(id=test_package_name)
 
+def package_purge(remote_api, pkg_name):
+    '''
+    :param remote_api: a ckanapi remote object
+    :param pkg_name: the name of the package that needs to be deleted
+    '''
+    logger.debug("purge the package: %s", pkg_name)
+    remote_api.action.dataset_purge(id=pkg_name)
 
 def delete_pkg(remote_api, pkg_name):
     logger.debug("checking for package: %s", pkg_name)
@@ -35,6 +42,8 @@ def delete_pkg(remote_api, pkg_name):
     if pkg_exists:
         logger.debug("deleting package: %s", pkg_name)
         package_delete(remote_api, pkg_name)
+        logger.debug("purge the package: %s", pkg_name)
+        remote_api.action.dataset_purge(id=pkg_name)
 
 
 def package_exists(remote_api, package_name, pkgtype='ANY'):
@@ -105,7 +114,6 @@ def package_create_if_not_exists(remote_api_admin_auth, test_package_name,
     # if a package is found that is invalid it will get deleted and a valid
     # one will be created in its place
     if test_invalid_package_exists:
-        # package_delete(remote_api, test_package_name):
         package_delete(remote_api_admin_auth, test_package_name)
 
     if test_valid_package_exists:
@@ -125,6 +133,22 @@ def test_package_exists(remote_api_admin_auth, test_package_name):
     logger.debug("testing existence of package: %s", test_package_name)
     exists = package_exists(remote_api_admin_auth, test_package_name)
     yield exists
+
+@pytest.fixture
+def package_get_id_fixture(remote_api_admin_auth, test_package_name):
+    '''
+    :param remote_api_admin_auth: a ckanapi remote object with authenticated
+    :param test_package_name: the name of a package that exists
+    '''
+    logger.debug("getting id of package: %s", test_package_name)
+    try:
+        pkg_data = remote_api_admin_auth.action.package_show(id=test_package_name)
+        pkg_id = pkg_data['id']
+        logger.debug("package id is: %s", pkg_id)
+    except ckanapi.errors.CKANAPIError as err:
+        logger.debug("err: %s %s", type(err), err)
+
+    yield pkg_id
 
 
 @pytest.fixture
@@ -162,6 +186,5 @@ def test_pkg_teardown(remote_api_admin_auth, test_package_name, test_package_exi
     '''
     delete_pkg(remote_api_admin_auth, test_package_name)
     logger.debug('initial clean up complete')
-    yield
-    delete_pkg(remote_api_admin_auth, test_package_name)
-    logger.debug('tear down cleanup complete')
+
+
