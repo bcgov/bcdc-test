@@ -15,9 +15,11 @@ node('ETLdev') {
                 checkout([$class: 'GitSCM', branches: [[name: "${env.TAGNAME}"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false]], gitTool: 'Default', submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/bcgov/bcdc-test']]])                
             }
             stage('prep Virtualenv') {
+                sh 'if [ -d "ve_bcdc_test" ]; then rm -Rf ve_bcdc_test; fi'
                 sh 'if [ -d "$VEDIR" ]; then rm -Rf $VEDIR; fi'
                 bat '''
-                    rmdir %VEDIR%
+                    ::rmdir %VEDIR%
+                    
                     mkdir %WORKSPACE%\\data
                     set TMP=%WORKSPACE%\\data
                     set TEMP=%TMP%
