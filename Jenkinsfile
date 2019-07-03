@@ -18,6 +18,7 @@ node('ETLdev') {
                 sh 'if [ -d "$VEDIR" ]; then rm -Rf $VEDIR; fi'
                 bat '''
                     rmdir %VEDIR%
+                    mkdir %WORKSPACE%\\data
                     set TMP=%WORKSPACE%\\data
                     set TEMP=%TMP%
                     
