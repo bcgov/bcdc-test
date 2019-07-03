@@ -3,8 +3,8 @@ node('ETLdev') {
         winPaths=getWindowsPaths64()
         veDir = "ve_bcdc_test"
         withEnv([
-                 "TEMP=$WORKSPACE/tmp",
-                 "TMP=$WORKSPACE/tmp",
+                 "TEMP=${WORKSPACE}/tmp",
+                 "TMP=${WORKSPACE}/tmp",
                  "PATH+EXTRA=${winPaths}",
                  "JOB_NAME=BCDC_tests_build",
                  "VEDIR=${veDir}",
