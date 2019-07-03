@@ -28,6 +28,7 @@ node('ETLdev') {
                     python --version
                     python -m pip install -U --force-reinstall pip || goto :error
                     python -m pip install --upgrade pip || goto :error
+                    python -m pip install --no-cache-dir -r .\\requirements.txt || goto :error
                     python -m pip install --no-cache-dir -r .\\requirements_build.txt || goto :error
                     
                     :error
