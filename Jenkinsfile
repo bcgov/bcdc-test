@@ -1,7 +1,7 @@
 node('ETLdev') {
     try{
         winPaths=getWindowsPaths64()
-        veDir = "ve_bcdc_test"
+        veDir = "ve"
         withEnv([
                  "TEMP=${WORKSPACE}/tmp",
                  "TMP=${WORKSPACE}/tmp",
