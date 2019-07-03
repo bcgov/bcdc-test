@@ -1,0 +1,4 @@
+twine==1.13.0
+distlib==0.2.9
+packaging==19.0
+pylint==2.3.1
