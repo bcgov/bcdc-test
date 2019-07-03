@@ -1,0 +1,425 @@
+{
+    "sector": "Economy",
+    "preview_zoom_level": "7",
+    "maintainer": null,
+    "west_bound_longitude": "-139.5",
+    "iso_topic_string": "boundaries",
+    "view_audience": "Public",
+    "private": false,
+    "maintainer_email": null,
+    "num_tags": 8,
+    "license_url": "https://www2.gov.bc.ca/gov/content?id=A519A56BC2BF44E4A008B33FCF527F61",
+    "license_title": "Open Government Licence - British Columbia",
+    "org": "d9e382c6-4b51-4fa5-ae5f-65dda702ebb2",
+    "east_bound_longitude": "-113.5",
+    "id": "e3c3c580-996a-4668-8bc5-6aa7c7dc4932",
+    "link_to_imap": "http://maps.gov.bc.ca/ess/hm/imap4m/?catalogLayers=5380,5381&scale=8000000.0&center=-13659046.2059,6306007.3657",
+    "north_bound_latitude": "60.0",
+    "metadata_modified": "2019-05-04T17:06:27.612620",
+    "author": "86244194-910f-44f9-845a-d2ab19eaf86f",
+    "author_email": null,
+    "lineage_statement": "Primary data sources for ABMS include Metes and Bounds legal descriptions from the Letters Patent, ICF (Integrated Cadastre Fabric), TRIM (Terrain Resource Information Mapping), and FWA (Freshwater Atlas).  Other sources were used to clarify boundaries (e.g., Tantalis for crown land parcels, legal plans, etc.).",
+    "preview_map_service_url": "https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP/ows?",
+    "preview_latitude": "49.18321997",
+    "object_name": "WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP",
+    "state": "active",
+    "version": null,
+    "details": [
+        {
+            "data_precision": "10",
+            "column_comments": "LGL_ADMIN_AREA_ID is an operationally-generated unique identification number, e.g., 1, 2,3.",
+            "data_type": "NUMBER",
+            "short_name": "AA_ID",
+            "column_name": "LGL_ADMIN_AREA_ID"
+        },
+        {
+            "data_precision": "200",
+            "column_comments": "ADMIN_AREA_NAME is the authoritative, officially approved name given to the Administrative Area, e.g., Regional District of Alberni Clayquot.",
+            "data_type": "VARCHAR2",
+            "short_name": "AA_NAME",
+            "column_name": "ADMIN_AREA_NAME"
+        },
+        {
+            "data_precision": "40",
+            "column_comments": "ADMIN_AREA_ABBREVIATION is a short form or commonly-known acronym for the Administrative Area name, e.g., Tofino (Corporation of the Village of Tofino), RDAC (Regional District of Alberni Clayquot).",
+            "data_type": "VARCHAR2",
+            "short_name": "ABRVN",
+            "column_name": "ADMIN_AREA_ABBREVIATION"
+        },
+        {
+            "data_precision": "20",
+            "column_comments": "ADMIN_AREA_BOUNDARY_TYPE is a high-level grouping of Administrative Areas used to categorise features when reporting, e.g., Census, Legal, Administrative.",
+            "data_type": "VARCHAR2",
+            "short_name": "BDY_TYPE",
+            "column_name": "ADMIN_AREA_BOUNDARY_TYPE"
+        },
+        {
+            "data_precision": "50",
+            "column_comments": "ADMIN_AREA_TYPE is a low-level grouping of Administrative Areas used to categorise features when reporting, e.g., Province, Regional District., Harbour and Port Authority.",
+            "data_type": "VARCHAR2",
+            "short_name": "AA_TYPE",
+            "column_name": "ADMIN_AREA_TYPE"
+        },
+        {
+            "data_precision": "200",
+            "column_comments": "ADMIN_AREA_GROUP_NAME is the name given to the larger administrative area (if there is any) of which this feature is a member, e.g., Regional District of Alberni Clayquot (This would be the ADMIN_AREA_GROUP_NAME of the feature called \"The Corporation of the Village of Tofino\").",
+            "data_type": "VARCHAR2",
+            "short_name": "AA_PARENT",
+            "column_name": "ADMIN_AREA_GROUP_NAME"
+        },
+        {
+            "data_precision": "30",
+            "column_comments": "CHANGE_REQUESTED_ORG is the government acronym of the Ministry or sub-org that last requested the change that resulted in the modification of the record, e.g., GeoBC, MCSCD.",
+            "data_type": "VARCHAR2",
+            "short_name": "CHNG_ORG",
+            "column_name": "CHANGE_REQUESTED_ORG"
+        },
+        {
+            "data_precision": "50",
+            "column_comments": "UPDATE_TYPE is a short description of the latest alteration of the feature's geographic or attribute content, e.g., Inserted (added new), Change in geometry.",
+            "data_type": "VARCHAR2",
+            "short_name": "UPT_TYPE",
+            "column_name": "UPDATE_TYPE"
+        },
+        {
+            "data_precision": "7",
+            "column_comments": "WHEN_UPDATED is the date and time the record was last modified.",
+            "data_type": "DATE",
+            "short_name": "UPT_DATE",
+            "column_name": "WHEN_UPDATED"
+        },
+        {
+            "data_precision": "7",
+            "column_comments": "OIC_NUMBER is a single, most-recent Order-In-Council (OIC) identifier for a particular Administrative Area. The OIC_NUMBER is in the form ###/YY where ### is a number, then a forward slash \"/\" followed by a two-digit Year abbreviation, e.g., 245/13 denotes OIC Number 245 enacted into law in 2013.",
+            "data_type": "VARCHAR2",
+            "short_name": "OIC_NUMBER",
+            "column_name": "OIC_NUMBER"
+        },
+        {
+            "data_precision": "4",
+            "column_comments": "OIC_YEAR is the four-digit year that the Order-In-Council was enacted into law, e.g., 2014",
+            "data_type": "VARCHAR2",
+            "short_name": "OIC_YEAR",
+            "column_name": "OIC_YEAR"
+        },
+        {
+            "data_precision": "120",
+            "column_comments": "AFFECTED_ADMIN_AREA_ABRVN is a semicolon-delimited list of the abbreviations (ADMIN_AREA_ABBREVIATION) of Administrative Area boundaries that are affected by the OIC number in the OIC year, e.g., SQCRD-EA E; SQCRD-EA H. If a record has the value \"SQCRD-EA E; SQCRD-EA H\" for  AFFECTED_ADMIN_AREA_ABRVN, an ADMIN_AREA_ABBREVIATION of Prince Rupert, an OIC (OIC_NUMBER) value of 501/14, an OIC Year (OIC_YEAR) value of 2014, and an Administrative Area Group Name (ADMIN_AREA_GROUP_NAME) of  Skeena-Queen Charlotte Regional District, then the interpretation is that OIC 501 in the year 2014 for Prince Rupert also affects the boundaries of Electoral Areas SQCRD-EA E and SQCRD-EA H in the Skeena-Queen Charlotte Regional District.",
+            "data_type": "VARCHAR2",
+            "short_name": "AFCTD_AREA",
+            "column_name": "AFFECTED_ADMIN_AREA_ABRVN"
+        },
+        {
+            "data_precision": "19",
+            "column_comments": "FEATURE_AREA_SQM is the system calculated area of a two-dimensional polygon in square meters.",
+            "data_type": "NUMBER",
+            "short_name": "AREA_SQM",
+            "column_name": "FEATURE_AREA_SQM"
+        },
+        {
+            "data_precision": "19",
+            "column_comments": "FEATURE_LENGTH_M is the system calculated length or perimeter of a geometry in meters.",
+            "data_type": "NUMBER",
+            "short_name": "LENGTH_M",
+            "column_name": "FEATURE_LENGTH_M"
+        },
+        {
+            "data_precision": "1",
+            "column_comments": "SHAPE is the column used to reference the spatial coordinates defining the feature.",
+            "data_type": "SDO_GEOMETRY",
+            "short_name": "SHAPE",
+            "column_name": "SHAPE"
+        },
+        {
+            "data_precision": "38",
+            "column_comments": "OBJECTID is a column required by spatial layers that interact with ESRI ArcSDE. It is populated with unique values automatically by SDE.",
+            "data_type": "NUMBER",
+            "short_name": "OBEJCTID",
+            "column_name": "OBJECTID"
+        },
+        {
+            "data_precision": "4000",
+            "column_comments": "SE_ANNO_CAD_DATA is a binary column used by spatial tools to store annotation, curve features and CAD data when using the SDO_GEOMETRY storage data type.",
+            "data_type": "BLOB",
+            "short_name": "SE_A_C_FLG",
+            "column_name": "SE_ANNO_CAD_DATA"
+        }
+    ],
+    "relationships_as_object": [],
+    "creator_user_id": "86244194-910f-44f9-845a-d2ab19eaf86f",
+    "type": "Geographic",
+    "resources": [
+        {
+            "cache_last_updated": null,
+            "package_id": "e3c3c580-996a-4668-8bc5-6aa7c7dc4932",
+            "resource_storage_access_method": "Indirect Access",
+            "datastore_active": false,
+            "id": "0bd8e3d1-4d7f-4db8-a8b2-2cd4cd051074",
+            "size": null,
+            "format": "other",
+            "state": "active",
+            "edc_resource_type": "Data",
+            "hash": "",
+            "description": "",
+            "cache_url": null,
+            "projection_name": "EPSG_3005 - NAD83 BC Albers",
+            "tracking_summary": {
+                "total": 0,
+                "recent": 0
+            },
+            "last_modified": null,
+            "url_type": null,
+            "mimetype": null,
+            "resource_storage_location": "BC Geographic Warehouse",
+            "name": "BC Geographic Warehouse Custom Download",
+            "created": "2019-05-04T17:06:19.895558",
+            "url": "https://catalogue.data.gov.bc.ca/api/ofi/other/WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP",
+            "ofi": true,
+            "mimetype_inner": null,
+            "resource_update_cycle": "asNeeded",
+            "position": 0,
+            "revision_id": "d4dc012a-2474-49a7-a694-d52738988d99",
+            "resource_type": null
+        },
+        {
+            "cache_last_updated": null,
+            "data_collection_start_date": "",
+            "package_id": "e3c3c580-996a-4668-8bc5-6aa7c7dc4932",
+            "resource_storage_access_method": "Direct Access",
+            "datastore_active": false,
+            "id": "e33c3ae5-84c0-4ae0-adb0-6459907bf99e",
+            "size": null,
+            "format": "xlsx",
+            "state": "active",
+            "edc_resource_type": "Reports",
+            "hash": "",
+            "description": "Descriptions of Attribute Values",
+            "cache_url": null,
+            "projection_name": "EPSG_3005 - NAD83 BC Albers",
+            "tracking_summary": {
+                "total": 215,
+                "recent": 6
+            },
+            "mimetype_inner": null,
+            "url_type": "upload",
+            "data_collection_end_date": "",
+            "mimetype": null,
+            "resource_storage_location": "EDC Data Store",
+            "name": "Custom Download",
+            "created": "2016-01-27T10:40:20.980896",
+            "url": "https://catalogue.data.gov.bc.ca/dataset/e3c3c580-996a-4668-8bc5-6aa7c7dc4932/resource/e33c3ae5-84c0-4ae0-adb0-6459907bf99e/download/abmsattributecodesanddescriptions.xlsx",
+            "last_modified": null,
+            "supplemental_info": "",
+            "resource_update_cycle": "asNeeded",
+            "position": 1,
+            "revision_id": "d4dc012a-2474-49a7-a694-d52738988d99",
+            "resource_type": null
+        },
+        {
+            "cache_last_updated": null,
+            "package_id": "e3c3c580-996a-4668-8bc5-6aa7c7dc4932",
+            "resource_storage_access_method": "Service",
+            "datastore_active": false,
+            "id": "25c95b07-5882-47ff-970d-36cb243b8355",
+            "size": null,
+            "format": "wms",
+            "state": "active",
+            "edc_resource_type": "Data",
+            "hash": "",
+            "description": "For use in viewers such as ESRI tools use this truncated link: https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP/ows? [Click here for information on how to connect](http://www2.gov.bc.ca/gov/content/governments/about-the-bc-government/databc/geographic-data-and-services/map-services)",
+            "cache_url": null,
+            "projection_name": "EPSG_3005 - NAD83 BC Albers",
+            "tracking_summary": {
+                "total": 121,
+                "recent": 4
+            },
+            "last_modified": null,
+            "url_type": null,
+            "mimetype": null,
+            "resource_storage_location": "BCGW Data Store",
+            "name": "WMS getCapabilities request",
+            "created": "2016-05-16T17:07:21.266691",
+            "url": "https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP/ows?service=WMS&request=GetCapabilities",
+            "mimetype_inner": null,
+            "resource_update_cycle": "asNeeded",
+            "position": 2,
+            "revision_id": "d4dc012a-2474-49a7-a694-d52738988d99",
+            "resource_type": null
+        },
+        {
+            "cache_last_updated": null,
+            "package_id": "e3c3c580-996a-4668-8bc5-6aa7c7dc4932",
+            "resource_storage_access_method": "Service",
+            "datastore_active": false,
+            "id": "1f5027a7-a778-42ad-9b50-52ed5be949ff",
+            "size": 0,
+            "format": "kml",
+            "state": "active",
+            "edc_resource_type": "Data",
+            "hash": "",
+            "description": "For use in viewers such as Google Earth <BR> [Click here for information on how to connect](http://www2.gov.bc.ca/gov/content/data/geographic-data-services/web-based-mapping/map-services)",
+            "cache_url": null,
+            "projection_name": "EPSG_4326 - WGS84 - World Geodetic System 1984",
+            "tracking_summary": {
+                "total": 129,
+                "recent": 6
+            },
+            "last_modified": null,
+            "url_type": null,
+            "mimetype": null,
+            "resource_storage_location": "BCGW Data Store",
+            "name": "KML Network Link",
+            "created": "2017-09-05T16:51:23.176242",
+            "url": "http://openmaps.gov.bc.ca/kml/geo/layers/WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP_loader.kml",
+            "mimetype_inner": null,
+            "resource_update_cycle": "asNeeded",
+            "position": 3,
+            "revision_id": "d4dc012a-2474-49a7-a694-d52738988d99",
+            "resource_type": null
+        }
+    ],
+    "more_info": [
+        {
+            "link": "http://geobc.gov.bc.ca",
+            "delete": "0"
+        }
+    ],
+    "image_display_url": "",
+    "num_resources": 4,
+    "object_short_name": "ABMS_MUNI",
+    "metadata_created": "2016-01-27T18:25:19.653828",
+    "tags": [
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "ABMS",
+            "id": "ca1ec72f-18a0-4673-bf0c-479fa2c9c88b",
+            "name": "ABMS"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "Administrative boundaries",
+            "id": "bf023b67-ad0c-49eb-9646-61ae28fcddff",
+            "name": "Administrative boundaries"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "jurisdicational boundaries",
+            "id": "371759be-eb15-4577-ac5e-95643f61b2ac",
+            "name": "jurisdicational boundaries"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "local government",
+            "id": "25733088-8305-4f68-86d0-4cb35794cab8",
+            "name": "local government"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "metes and bounds",
+            "id": "6ac27e22-c8c4-4840-a4b1-d7215d65d8b8",
+            "name": "metes and bounds"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "municipal boundaries",
+            "id": "96df4640-8c68-4e1b-8870-fac5bd825fb0",
+            "name": "municipal boundaries"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "municipalities",
+            "id": "f8daca29-1e9b-4e77-9753-71738fd1829f",
+            "name": "municipalities"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "municipality",
+            "id": "514e4820-c6d0-42d8-aacc-ab67bf8c8566",
+            "name": "municipality"
+        }
+    ],
+    "retention_expiry_date": "",
+    "spatial": "{\"type\": \"Polygon\", \"coordinates\": [[[-139.5, 48.0], [-139.5, 60.0], [-113.5, 60.0], [-113.5, 48.0], [-139.5, 48.0]]]}",
+    "contacts": [
+        {
+            "name": "Joy Sinnett",
+            "private": "Display",
+            "role": "pointOfContact",
+            "branch": "e51a8106-11c7-4436-a967-7cee18bfb159",
+            "organization": "3275286d-4ec9-422a-817f-ab0e232eddfe",
+            "email": "Joy.Sinnett@gov.bc.ca",
+            "delete": "0"
+        },
+        {
+            "name": "Elizabeth Lane",
+            "private": "Display",
+            "role": "custodian",
+            "branch": "a19fbf8f-2195-4ba6-b034-2ac83c30f497",
+            "organization": "d9e382c6-4b51-4fa5-ae5f-65dda702ebb2",
+            "email": "Elizabeth.Lane@gov.bc.ca",
+            "delete": "0"
+        }
+    ],
+    "resource_status": "completed",
+    "south_bound_latitude": "48.0",
+    "tracking_summary": {
+        "total": 2617,
+        "recent": 51
+    },
+    "record_archive_date": "",
+    "layer_name": "WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP",
+    "groups": [],
+    "license_id": "2",
+    "download_audience": "Public",
+    "preview_image_url": "",
+    "replacement_record": "",
+    "object_table_comments": "ABMS_MUNICIPALITIES_SP contains legally defined municipal administrative boundary areas in the Province of British Columbia. This spatial layer contains multipart features.",
+    "relationships_as_subject": [],
+    "name": "municipalities-legally-defined-administrative-areas-of-bc",
+    "security_class": "LOW-PUBLIC",
+    "dates": [
+        {
+            "date": "2016-03-10",
+            "type": "Published"
+        }
+    ],
+    "organization": {
+        "description": "",
+        "created": "2014-12-10T15:05:21.889689",
+        "title": "Governance and Structure",
+        "full_title": "Ministry of Municipal Affairs and Housing, Governance and Structure",
+        "name": "governance-and-structure",
+        "is_organization": true,
+        "state": "active",
+        "image_url": "",
+        "revision_id": "29b7fd49-a6cb-46ec-858a-d1df946c8680",
+        "type": "organization",
+        "id": "a19fbf8f-2195-4ba6-b034-2ac83c30f497",
+        "approval_status": "approved"
+    },
+    "record_publish_date": "2016-04-18",
+    "isopen": false,
+    "preview_longitude": "-122.70129973",
+    "url": null,
+    "source_data_path": "",
+    "notes": "Legally defined __Municipal__ polygons were drawn from metes and bounds descriptions as written in Letters Patent for Municipalities in the province of British Columbia. In the event of a discrepancy in the data, the metes and bounds description will prevail.\r\n\r\nAlthough the boundaries were drawn based on the legal metes and bounds descriptions, they may differ from how regional districts and their member municipalities and electoral areas currently view and/or manage their boundaries. Where discrepancies are noted, the Ministry of Community Sport and Cultural Development (the custodian) enters into discussion with the local governments whose boundaries are affected. In order to effect a change to the boundary, Cabinet approval is required.  This is done through an Order in Council (OIC). While discrepancies to administrative boundaries are being resolved, boundaries may be adjusted on an ongoing basis until the requested changes are completed.\r\n \r\nThe OIC_YEAR and OIC_NUMBER fields indicate the year that the boundary was passed under OIC and its associated number. The AFFECTED_ADMIN_AREA_ABRVN identifies the administrative areas that are affected by the OIC.\r\n\r\nA polygon dataset that includes all of the administrative areas currently in the __Administrative Boundaries Management System (ABMS)__ is available [here](https://catalogue.data.gov.bc.ca/dataset/legally-defined-administrative-areas-of-bc).\r\n\r\nA complimentary point dataset that defines the administrative areas is also available available [here](https://catalogue.data.gov.bc.ca/dataset/legally-defined-administrative-areas-of-bc-boundary-locations).\r\n\r\nOther individual datasets are available from the following records:\r\n\r\nhttps://catalogue.data.gov.bc.ca/dataset/regional-districts-legally-defined-administrative-areas-of-bc https://catalogue.data.gov.bc.ca/dataset/electoral-areas-legally-defined-administrative-areas-of-bc https://catalogue.data.gov.bc.ca/dataset/province-of-british-columbia-legally-defined-administrative-areas-of-bc https://catalogue.data.gov.bc.ca/dataset/islands-trust-legally-defined-administrative-areas-of-bc https://catalogue.data.gov.bc.ca/dataset/local-trust-areas-legally-defined-administrative-areas-of-bc",
+    "owner_org": "a19fbf8f-2195-4ba6-b034-2ac83c30f497",
+    "edc_state": "PUBLISHED",
+    "record_last_modified": "2019-05-04",
+    "image_url": "",
+    "data_quality": "Digital linework and points used to generate this dataset were reviewed by a professional surveyor.",
+    "metadata_visibility": "Public",
+    "title": "Municipalities - Legally Defined Administrative Areas of BC",
+    "revision_id": "87b23bf7-7081-4f5f-a0d3-ed6cbb89d12b",
+    "record_create_date": "2016-01-27",
+    "sub_org": "a19fbf8f-2195-4ba6-b034-2ac83c30f497",
+    "purpose": "Administrative boundaries are used by agencies at all levels of government for land use planning, treaty negotiations, emergency management and planning, running elections, conducting demographic analysis and municipal planning."
+}

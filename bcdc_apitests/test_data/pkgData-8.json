@@ -1,0 +1,357 @@
+{
+    "sector": "Natural Resources",
+    "preview_zoom_level": "",
+    "maintainer": null,
+    "west_bound_longitude": "-139.5",
+    "iso_topic_string": "biota,planningCadastre",
+    "view_audience": "Government",
+    "private": false,
+    "maintainer_email": null,
+    "num_tags": 9,
+    "license_url": "http://www2.gov.bc.ca/gov/content/home/copyright",
+    "metadata_language": "English",
+    "license_title": "Access Only",
+    "org": "3275286d-4ec9-422a-817f-ab0e232eddfe",
+    "east_bound_longitude": "-113.5",
+    "license_id": "22",
+    "id": "a0d909d7-df03-490d-9d3c-14cea5270ae6",
+    "link_to_imap": "",
+    "north_bound_latitude": "60.0",
+    "metadata_modified": "2019-05-04T16:33:57.082202",
+    "author": "b79f75c3-1dee-4121-9f1a-2c5ac7586d8b",
+    "author_email": null,
+    "preview_map_service_url": "",
+    "preview_latitude": "",
+    "object_name": "WHSE_FOREST_VEGETATION.RESPROJ_RSRCH_INSTLTNS_SVW",
+    "state": "active",
+    "version": null,
+    "details": [
+        {
+            "data_precision": "50",
+            "column_comments": "STUDY SITE is a short name for the research installation.",
+            "data_type": "VARCHAR2",
+            "short_name": "STUDY_SITE",
+            "column_name": "STUDY_SITE"
+        },
+        {
+            "data_precision": "50",
+            "column_comments": "LOCATION NAME of the nearest location (e.g. Walker Creek) to the research installation.",
+            "data_type": "VARCHAR2",
+            "short_name": "LOC_NAME",
+            "column_name": "LOCATION_NAME"
+        },
+        {
+            "data_precision": "10",
+            "column_comments": "RESEARCH INST STATUS CODE identifies the Installation Status as one of ACT (Active), DRM (Dormant), TRM (Terminated) or COM (Complete).",
+            "data_type": "VARCHAR2",
+            "short_name": "IN_STAT_CD",
+            "column_name": "RESEARCH_INST_STATUS_CODE"
+        },
+        {
+            "data_precision": "20",
+            "column_comments": "RESEARCH INST STATUS DESC is a textual description of the Research Installation Status Code.",
+            "data_type": "VARCHAR2",
+            "short_name": "IN_STAT_DS",
+            "column_name": "RESEARCH_INST_STATUS_DESC"
+        },
+        {
+            "data_precision": "10",
+            "column_comments": "ORG UNIT NO is a physical identifier for the storage of organizational unit codes for the Ministry of Forests offices. Values stored here are for the computers use only, and are not to be used by people as \"ministry codes\".",
+            "data_type": "NUMBER",
+            "short_name": "ORG_NO",
+            "column_name": "ORG_UNIT_NO"
+        },
+        {
+            "data_precision": "100",
+            "column_comments": "ORG UNIT NAME or title of a ministry office or section; for example Kamloops Forest Region; Silviculture Branch; Kispiox Forest District P rotection program.",
+            "data_type": "VARCHAR2",
+            "short_name": "ORG_NAME",
+            "column_name": "ORG_UNIT_NAME"
+        },
+        {
+            "data_precision": "40",
+            "column_comments": "PROJECT KEY is a business key used to uniquely identify a project or sub-project which normally beings with EP followed by a number.",
+            "data_type": "VARCHAR2",
+            "short_name": "PROJ_KEY",
+            "column_name": "PROJECT_KEY"
+        },
+        {
+            "data_precision": "255",
+            "column_comments": "PROJECT TITLE used to describe the project.",
+            "data_type": "VARCHAR2",
+            "short_name": "PROJ_TITLE",
+            "column_name": "PROJECT_TITLE"
+        },
+        {
+            "data_precision": "1",
+            "column_comments": "RESOURCE FEATURE IND represents whether the installation been designated as a resource feature.",
+            "data_type": "VARCHAR2",
+            "short_name": "R_FEAT_IND",
+            "column_name": "RESOURCE_FEATURE_IND"
+        },
+        {
+            "data_precision": "51",
+            "column_comments": "CONTACT NAME of the contact.",
+            "data_type": "VARCHAR2",
+            "short_name": "CONT_NAME",
+            "column_name": "CONTACT_NAME"
+        },
+        {
+            "data_precision": "120",
+            "column_comments": "CONTACT EMAIL address of the contact.",
+            "data_type": "VARCHAR2",
+            "short_name": "CONT_EMAIL",
+            "column_name": "CONTACT_EMAIL"
+        },
+        {
+            "data_precision": "10",
+            "column_comments": "CONTACT PHONE NUMBER of the contact formated digits without spaces or country code; for example Vivid's phone number would be persisted as 2503856040.",
+            "data_type": "VARCHAR2",
+            "short_name": "CONT_PHN",
+            "column_name": "CONTACT_PHONE_NUMBER"
+        },
+        {
+            "data_precision": "5",
+            "column_comments": "CONTACT PHONE EXT of the contact formatted as numeric digits without spaces; for example 228.",
+            "data_type": "VARCHAR2",
+            "short_name": "CONT_PHN_E",
+            "column_name": "CONTACT_PHONE_EXT"
+        },
+        {
+            "data_precision": "4",
+            "column_comments": "PRECISION is a length (in metres) to describe the accuracy of the geometry measurement.  Zero is the most precise.",
+            "data_type": "NUMBER",
+            "short_name": "PRECISION",
+            "column_name": "PRECISION"
+        },
+        {
+            "data_precision": "10",
+            "column_comments": "CONFIDENCE is a rating of the accuracy of the geometry.  Current values are 1 - 5.  With one being the least accurate.",
+            "data_type": "VARCHAR2",
+            "short_name": "CONFIDENCE",
+            "column_name": "CONFIDENCE"
+        },
+        {
+            "data_precision": "4",
+            "column_comments": "BUFFER DISTANCE is a distance (in metres) around the geometry of the installation which may be considered reserved.",
+            "data_type": "NUMBER",
+            "short_name": "BUFF_DIST",
+            "column_name": "BUFFER_DISTANCE"
+        },
+        {
+            "data_precision": "19",
+            "data_type": "NUMBER",
+            "column_name": "FEATURE_AREA_SQM"
+        },
+        {
+            "data_precision": "19",
+            "data_type": "NUMBER",
+            "column_name": "FEATURE_LENGTH_M"
+        },
+        {
+            "data_precision": "64",
+            "column_comments": "GEOMETRY is the column used to reference the spatial coordinates defining the feature. ",
+            "data_type": "SDO_GEOMETRY",
+            "short_name": "GEOMETRY",
+            "column_name": "GEOMETRY"
+        },
+        {
+            "data_precision": "38",
+            "column_comments": "OBJECTID is a required attribute of feature classes and object classes in a geodatabase. ",
+            "data_type": "NUMBER",
+            "short_name": "OBJECTID",
+            "column_name": "OBJECTID"
+        },
+        {
+            "data_precision": "4000",
+            "data_type": "BLOB",
+            "column_name": "SE_ANNO_CAD_DATA"
+        }
+    ],
+    "relationships_as_object": [],
+    "image_url": "",
+    "type": "Geographic",
+    "metadata_standard_version": "FDIS, MSRM Profile v2.0",
+    "resources": [
+        {
+            "cache_last_updated": null,
+            "package_id": "a0d909d7-df03-490d-9d3c-14cea5270ae6",
+            "resource_storage_access_method": "Indirect Access",
+            "datastore_active": false,
+            "id": "6c9f1645-0326-48ec-819c-1bf7421e0c99",
+            "size": null,
+            "format": "other",
+            "state": "active",
+            "edc_resource_type": "Data",
+            "hash": "",
+            "description": "",
+            "cache_url": null,
+            "projection_name": "EPSG_3005 - NAD83 BC Albers",
+            "tracking_summary": {
+                "total": 0,
+                "recent": 0
+            },
+            "last_modified": null,
+            "url_type": null,
+            "mimetype": null,
+            "resource_storage_location": "BC Geographic Warehouse",
+            "name": "BC Geographic Warehouse Custom Download",
+            "created": "2019-05-04T16:33:53.288713",
+            "url": "https://catalogue.data.gov.bc.ca/api/ofi/other/WHSE_FOREST_VEGETATION.RESPROJ_RSRCH_INSTLTNS_SVW",
+            "ofi": true,
+            "mimetype_inner": null,
+            "resource_update_cycle": "asNeeded",
+            "position": 0,
+            "revision_id": "f89cb228-7f19-4318-85f9-0e646c0d2215",
+            "resource_type": null
+        }
+    ],
+    "more_info": [
+        {
+            "link": "",
+            "delete": "0"
+        }
+    ],
+    "image_display_url": "",
+    "num_resources": 1,
+    "object_short_name": "RINST_FOR",
+    "metadata_created": "2014-12-11T09:38:22.938036",
+    "metadata_standard_name": "ISO 19115, MSRM Profile v2.0",
+    "retention_expiry_date": "",
+    "spatial": "{\"type\": \"Polygon\", \"coordinates\": [[[-139.5, 48.0], [-139.5, 60.0], [-113.5, 60.0], [-113.5, 48.0], [-139.5, 48.0]]]}",
+    "contacts": [
+        {
+            "name": "Keith Thomas",
+            "private": "Display",
+            "role": "pointOfContact",
+            "branch": "36ee73ba-9a70-419f-8411-6605359d8803",
+            "organization": "3275286d-4ec9-422a-817f-ab0e232eddfe",
+            "email": "Keith.Thomas@gov.bc.ca",
+            "delete": "0"
+        }
+    ],
+    "resource_status": "completed",
+    "south_bound_latitude": "48.0",
+    "tracking_summary": {
+        "total": 413,
+        "recent": 3
+    },
+    "record_archive_date": "",
+    "layer_name": "",
+    "groups": [],
+    "creator_user_id": "d0716cb8-7eb5-4d43-9f57-6022096fd79f",
+    "download_audience": "Named users",
+    "preview_image_url": "",
+    "replacement_record": "",
+    "lineage_statement": "Spatial view built from WHSE_FOREST_VEGETATION.RESPROJ_RSRCH_INSTLTNS_SP",
+    "relationships_as_subject": [],
+    "tags": [
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "EP",
+            "id": "e1191f71-6ce8-4368-8cef-6e2eb96a76af",
+            "name": "EP"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "experimental plot",
+            "id": "c722dd3f-b27c-4dff-8543-24770c20e5a1",
+            "name": "experimental plot"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "forest stewardship plans",
+            "id": "a7678eda-ac54-4745-98d1-7f0ae0a83d8f",
+            "name": "forest stewardship plans"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "installation",
+            "id": "f7191380-d763-4eb2-ba4c-54daf2331482",
+            "name": "installation"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "land statusing",
+            "id": "432855dc-0664-4f12-b639-868c2d048bd0",
+            "name": "land statusing"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "land use plans",
+            "id": "6a3e45b9-47d5-475a-b51b-71b00ccf15b1",
+            "name": "land use plans"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "plot",
+            "id": "33070cf9-cbb1-482a-9572-1d50fa89860c",
+            "name": "plot"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "research installation",
+            "id": "48cfe3c7-76ff-49ec-9b89-b801a60b1fd6",
+            "name": "research installation"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "research plot",
+            "id": "3eeea854-b35b-4570-9e6c-2c41d9bb6b7b",
+            "name": "research plot"
+        }
+    ],
+    "name": "research-installations-industry-view",
+    "metadata_character_set": "utf8",
+    "security_class": "MEDIUM-SENSITIVITY",
+    "dates": [
+        {
+            "date": "2005-09-06",
+            "type": "Published"
+        },
+        {
+            "date": "2014-06-19",
+            "type": "Modified"
+        }
+    ],
+    "organization": {
+        "description": "",
+        "created": "2017-09-13T16:37:29.886976",
+        "title": "Forest Improvement and Research Management",
+        "full_title": "Ministry of Forests, Lands, Natural Resource Operations and Rural Development, Forest Improvement and Research Management",
+        "name": "forest-improvement-and-research-management",
+        "is_organization": true,
+        "state": "active",
+        "image_url": "",
+        "revision_id": "f7fc48d5-f752-4113-88e9-13baad995e25",
+        "type": "organization",
+        "id": "29c1c0d5-1065-4bab-9fd2-d5abfb912cc4",
+        "approval_status": "approved"
+    },
+    "record_publish_date": "2014-12-11",
+    "isopen": false,
+    "preview_longitude": "",
+    "url": null,
+    "source_data_path": "",
+    "notes": "Identifies the physical locations of research installations within the province of British Columbia. Intended for use by Forest Industry Staff.",
+    "owner_org": "29c1c0d5-1065-4bab-9fd2-d5abfb912cc4",
+    "edc_state": "PUBLISHED",
+    "record_last_modified": "2019-05-04",
+    "metastar_uid": "64000",
+    "data_quality": "",
+    "metadata_visibility": "Public",
+    "title": "Research Installations Industry View",
+    "revision_id": "68b51c7d-0cc3-4a71-affe-6b149672193e",
+    "record_create_date": "2014-06-23",
+    "sub_org": "29c1c0d5-1065-4bab-9fd2-d5abfb912cc4",
+    "purpose": "To identify where research installation are physically located within British Columbia to avoid resource conflicts. For use in land use planning, land statusing and Forest Stewardship Plans."
+}

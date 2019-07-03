@@ -1,0 +1,410 @@
+{
+    "sector": "Natural Resources",
+    "preview_zoom_level": "",
+    "maintainer": null,
+    "west_bound_longitude": "-139.5",
+    "iso_topic_string": "environment",
+    "view_audience": "Named users",
+    "private": false,
+    "maintainer_email": null,
+    "num_tags": 5,
+    "license_url": "http://www2.gov.bc.ca/gov/content/home/copyright",
+    "license_title": "Access Only",
+    "org": "bb0dafa6-24d0-44f8-9601-0be908cfc0d3",
+    "east_bound_longitude": "-113.5",
+    "id": "f6cc0b98-2abb-432e-bcf2-b8766c0576fd",
+    "link_to_imap": "http://www.data.gov.bc.ca/dbc/geographic/view_and_analyze/imapbc/index.page",
+    "north_bound_latitude": "60.0",
+    "metadata_modified": "2019-05-03T21:19:57.921125",
+    "author": "85956a00-c0ed-4405-b6e8-19158e8bf7f5",
+    "author_email": null,
+    "preview_map_service_url": "",
+    "preview_latitude": "",
+    "object_name": "WHSE_WILDLIFE_MANAGEMENT.WCP_CRITICAL_HABITAT_SECURE_SP",
+    "state": "active",
+    "version": null,
+    "details": [
+        {
+            "data_precision": "10",
+            "column_comments": "CRITICAL_HABITAT_SECURE_ID is a system generated unique identification number. This is the primary key of this table. e.g., 1",
+            "data_type": "NUMBER",
+            "short_name": "CRTCL_H_ID",
+            "column_name": "CRITICAL_HABITAT_SECURE_ID"
+        },
+        {
+            "data_precision": "10",
+            "column_comments": "COSEWIC_SPECIES_ID is a unique identification number assigned to the species or taxa (including, if applicable, sub species and population) assessed by the Committee on the Status of Endangered Wildlife in Canada (COSEWIC) and currently listed on SARA Schedule 1; e.g., '1086'.",
+            "data_type": "VARCHAR2",
+            "short_name": "COSEWIC_ID",
+            "column_name": "COSEWIC_SPECIES_ID"
+        },
+        {
+            "data_precision": "50",
+            "column_comments": "SCIENTIFIC_NAME is the standard scientific name for the SARA-listed species or taxa, and can include subspecies; e.g., 'Oreoscoptes montanus'.",
+            "data_type": "VARCHAR2",
+            "short_name": "SCNTFC_NM",
+            "column_name": "SCIENTIFIC_NAME"
+        },
+        {
+            "data_precision": "80",
+            "column_comments": "COMMON_NAME_ENGLISH is the English name of the species or taxa listed on SARA Schedule 1; e.g., 'Sage Thrasher'.",
+            "data_type": "VARCHAR2",
+            "short_name": "CNM_ENG",
+            "column_name": "COMMON_NAME_ENGLISH"
+        },
+        {
+            "data_precision": "80",
+            "column_comments": "COMMON_NAME_FRENCH is the French name of the species or taxa listed on SARA Schedule 1; e.g., 'Moqueur des armoises'.",
+            "data_type": "VARCHAR2",
+            "short_name": "CNM_FREN",
+            "column_name": "COMMON_NAME_FRENCH"
+        },
+        {
+            "data_precision": "100",
+            "column_comments": "COSEWIC_POPULATION is the population name of the species or taxa assessed by the Committee on the Status of Endangered Wildlife in Canada (COSEWIC) and currently listed on SARA Schedule 1; e.g., 'Southern Mountain population'.",
+            "data_type": "VARCHAR2",
+            "short_name": "CSWC_POP",
+            "column_name": "COSEWIC_POPULATION"
+        },
+        {
+            "data_precision": "50",
+            "column_comments": "CRITICAL_HABITAT_STATUS is the stage of development of the critical habitat polygon; e.g., 'Final' or 'Candidate'",
+            "data_type": "VARCHAR2",
+            "short_name": "CH_STAT",
+            "column_name": "CRITICAL_HABITAT_STATUS"
+        },
+        {
+            "data_precision": "80",
+            "column_comments": "CRITICAL_HABITAT_REGION is a regional identifier optionally used to group critical habitat polygons; e.g. \"Southeastern BC\".",
+            "data_type": "VARCHAR2",
+            "short_name": "CH_REG",
+            "column_name": "CRITICAL_HABITAT_REGION"
+        },
+        {
+            "data_precision": "150",
+            "column_comments": "CRITICAL_HABITAT_SITE_ID is the alphanumeric code of a critical habitat site as defined in the federal recovery document; e.g., '937_5'.",
+            "data_type": "VARCHAR2",
+            "short_name": "CH_SITE_ID",
+            "column_name": "CRITICAL_HABITAT_SITE_ID"
+        },
+        {
+            "data_precision": "150",
+            "column_comments": "CRITICAL_HABITAT_SITE_NAME is the name of a critical habitat site as defined in the federal recovery document; e.g., 'Kilpoola'.",
+            "data_type": "VARCHAR2",
+            "short_name": "CB_SITE_NM",
+            "column_name": "CRITICAL_HABITAT_SITE_NAME"
+        },
+        {
+            "data_precision": "50",
+            "column_comments": "CRITICAL_HABITAT_DETAIL is the level of detail of critical habitat polygon; e.g., 'Detailed polygon' or 'Grid square'. Grid squares are used when detailed polygons contain sensitive information that cannot be released.",
+            "data_type": "VARCHAR2",
+            "short_name": "CH_DETAIL",
+            "column_name": "CRITICAL_HABITAT_DETAIL"
+        },
+        {
+            "data_precision": "50",
+            "column_comments": "CRITICAL_HABITAT_VARIANT is the sub-type of critical habitat, if applicable; e.g. 'Regeneration'.",
+            "data_type": "VARCHAR2",
+            "short_name": "CH_VARIANT",
+            "column_name": "CRITICAL_HABITAT_VARIANT"
+        },
+        {
+            "data_precision": "50",
+            "column_comments": "CRITICAL_HABITAT_APPROACH is the scale at which the polygons were defined and refers to processes within the Critical Habitat Toolbox policy; e.g., 'Landscape', 'Area' or 'Site'.",
+            "data_type": "VARCHAR2",
+            "short_name": "CH_APPRCH",
+            "column_name": "CRITICAL_HABITAT_APPROACH"
+        },
+        {
+            "data_precision": "80",
+            "column_comments": "CRITICAL_HABITAT_METHOD is a broad description of how the critical habitat was identified and refers to processes within the Critical Habitat Toolbox policy; e.g., 'Critical Function Zone'.",
+            "data_type": "VARCHAR2",
+            "short_name": "CH_METHOD",
+            "column_name": "CRITICAL_HABITAT_METHOD"
+        },
+        {
+            "data_precision": "20",
+            "column_comments": "AREA_HECTARES is the area calculated in hectares at source data which is in Lambert Conic Conformal. E.g., 14430833.7926",
+            "data_type": "NUMBER",
+            "short_name": "HECTARES",
+            "column_name": "AREA_HECTARES"
+        },
+        {
+            "data_precision": "80",
+            "column_comments": "LAND_TENURE is the status of federal crown ownership of the land; e.g., 'Federal' or 'Non-federal'.",
+            "data_type": "VARCHAR2",
+            "short_name": "LAND_TEN",
+            "column_name": "LAND_TENURE"
+        },
+        {
+            "data_precision": "250",
+            "column_comments": "CRITICAL_HABITAT_COMMENTS are notes about the critical habitat or specific polygon; e.g., 'Polygons were identified as part of a multispecies recovery plan'.",
+            "data_type": "VARCHAR2",
+            "short_name": "CH_COMMENT",
+            "column_name": "CRITICAL_HABITAT_COMMENTS"
+        },
+        {
+            "data_precision": "7",
+            "column_comments": "CRITICAL_HABITAT_DATE_EDITED is the date that the polygon was last edited; e.g., '8/21/2014'.",
+            "data_type": "DATE",
+            "short_name": "CH_DT_EDIT",
+            "column_name": "CRITICAL_HABITAT_DATE_EDITED"
+        },
+        {
+            "data_precision": "80",
+            "column_comments": "PROVINCE_TERRITORY is the province or territory in which the critical habitat occurs; e.g., 'British Columbia'.",
+            "data_type": "VARCHAR2",
+            "short_name": "PROV_TERR",
+            "column_name": "PROVINCE_TERRITORY"
+        },
+        {
+            "data_precision": "100",
+            "column_comments": "FEDERAL_DEPARTMENT_NAME is the Federal department or agency that published the recovery strategy or action plan in which the critical habitat is identified, and maintains the data; e.g., 'Canadian Wildlife Service', \u2018Parks Canada Agency\u2019.",
+            "data_type": "VARCHAR2",
+            "short_name": "FED_D_NAME",
+            "column_name": "FEDERAL_DEPARTMENT_NAME"
+        },
+        {
+            "data_precision": "2",
+            "column_comments": "UTM_ZONE is a segment of the Earth's surface 6 degrees of longitude in width. The zones are numbered eastward starting at the meridian 180 degrees from the prime meridian at Greenwich. There are five zones numbered 7 through 11 that cover British Columbia, e.g., Zone 10 with a central meridian at -123 degrees.",
+            "data_type": "NUMBER",
+            "short_name": "UTM_ZONE",
+            "column_name": "UTM_ZONE"
+        },
+        {
+            "data_precision": "9",
+            "column_comments": "UTM EASTING is the distance in meters of the polygon centroid eastward to or from the central meridian of a UTM zone with a false easting of 500000 meters. E.g., 532538",
+            "data_type": "NUMBER",
+            "short_name": "UTM_EAST",
+            "column_name": "UTM_EASTING"
+        },
+        {
+            "data_precision": "7",
+            "column_comments": "UTM NORTHING is the distance in meters of the polygon centroidnorthward from the equator. e.g., 5747966",
+            "data_type": "NUMBER",
+            "short_name": "UTM_NORTH",
+            "column_name": "UTM_NORTHING"
+        },
+        {
+            "data_precision": "8",
+            "column_comments": "LATITUDE is the geographic coordinate, in decimal degrees (dd.dddddd), of the location of the feature as measured from the equator, e.g., 55.323653",
+            "data_type": "NUMBER",
+            "short_name": "LATITUDE",
+            "column_name": "LATITUDE"
+        },
+        {
+            "data_precision": "9",
+            "column_comments": "LONGITUDE is the geographic coordinate, in decimal degrees (ddd.dddddd), of the location of the feature as measured from the prime meridian, e.g., -123.093544",
+            "data_type": "NUMBER",
+            "short_name": "LONGITUDE",
+            "column_name": "LONGITUDE"
+        },
+        {
+            "data_precision": "1",
+            "column_comments": "SHAPE is the column used to reference the spatial coordinates defining the feature.",
+            "data_type": "SDO_GEOMETRY",
+            "short_name": "SHAPE",
+            "column_name": "SHAPE"
+        },
+        {
+            "data_precision": "38",
+            "column_comments": "OBJECTID is a column required by spatial layers that interact with ESRI ArcSDE. It is populated with unique values automatically by SDE.",
+            "data_type": "NUMBER",
+            "short_name": "OBJECTID",
+            "column_name": "OBJECTID"
+        },
+        {
+            "data_precision": "4000",
+            "column_comments": "SE ANNO CAD DATA is a binary column used by spatial tools to store annotation, curve features and CAD data when using the SDO_GEOMETRY storage data type.",
+            "data_type": "BLOB",
+            "short_name": "ANNO_CAD",
+            "column_name": "SE_ANNO_CAD_DATA"
+        },
+        {
+            "data_precision": "19",
+            "data_type": "NUMBER",
+            "short_name": "FEAT_AREA",
+            "column_name": "FEATURE_AREA_SQM"
+        },
+        {
+            "data_precision": "19",
+            "data_type": "NUMBER",
+            "short_name": "FEAT_LEN",
+            "column_name": "FEATURE_LENGTH_M"
+        }
+    ],
+    "relationships_as_object": [],
+    "creator_user_id": "85956a00-c0ed-4405-b6e8-19158e8bf7f5",
+    "type": "Geographic",
+    "resources": [
+        {
+            "cache_last_updated": null,
+            "package_id": "f6cc0b98-2abb-432e-bcf2-b8766c0576fd",
+            "resource_storage_access_method": "Indirect Access",
+            "datastore_active": false,
+            "id": "fcae373d-2140-4145-97ac-06cb6eea8aea",
+            "size": null,
+            "format": "other",
+            "state": "active",
+            "edc_resource_type": "Data",
+            "hash": "",
+            "description": "",
+            "cache_url": null,
+            "projection_name": "EPSG_3005 - NAD83 BC Albers",
+            "tracking_summary": {
+                "total": 0,
+                "recent": 0
+            },
+            "last_modified": null,
+            "url_type": null,
+            "mimetype": null,
+            "resource_storage_location": "BC Geographic Warehouse",
+            "name": "BC Geographic Warehouse Custom Download",
+            "created": "2019-05-03T21:19:52.503364",
+            "url": "https://catalogue.data.gov.bc.ca/api/ofi/other/WHSE_WILDLIFE_MANAGEMENT.WCP_CRITICAL_HABITAT_SECURE_SP",
+            "ofi": true,
+            "mimetype_inner": null,
+            "resource_update_cycle": "asNeeded",
+            "position": 0,
+            "revision_id": "a605a898-8ea1-4d86-89ce-78d02e089610",
+            "resource_type": null
+        }
+    ],
+    "more_info": [
+        {
+            "link": "http://www.sararegistry.gc.ca/default.asp?lang=En&n=24F7211B-1",
+            "delete": "0"
+        }
+    ],
+    "image_display_url": "",
+    "num_resources": 1,
+    "object_short_name": "CRTL_HAB_S",
+    "metadata_created": "2015-06-01T23:07:36.659201",
+    "tags": [
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "Federal",
+            "id": "580c12dd-506f-4269-a176-4746a4e8c5e0",
+            "name": "Federal"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "critical habitat",
+            "id": "4b49f6fb-3a21-4038-989b-b713fcf420b7",
+            "name": "critical habitat"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "endangered",
+            "id": "e7425e8b-2455-46f8-b2a8-c1089261a412",
+            "name": "endangered"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "species at risk",
+            "id": "730c371a-cb24-4146-8611-beeae3bf5f61",
+            "name": "species at risk"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "threatened",
+            "id": "b2130361-28a2-46fb-a253-8414d03bcc7c",
+            "name": "threatened"
+        }
+    ],
+    "retention_expiry_date": "",
+    "spatial": "{\"type\": \"Polygon\", \"coordinates\": [[[-139.5, 48.0], [-139.5, 60.0], [-113.5, 60.0], [-113.5, 48.0], [-139.5, 48.0]]]}",
+    "contacts": [
+        {
+            "name": "Danielle Yu",
+            "private": "Display",
+            "role": "pointOfContact",
+            "branch": "3795a2cb-4550-409c-827c-4c507424b7d2",
+            "organization": "bb0dafa6-24d0-44f8-9601-0be908cfc0d3",
+            "email": "ec.ep.rpy-sar.pyr.ec@canada.ca",
+            "delete": "0"
+        },
+        {
+            "name": "Lucy Reiss",
+            "private": "Display",
+            "role": "businessExpert",
+            "branch": "3795a2cb-4550-409c-827c-4c507424b7d2",
+            "organization": "bb0dafa6-24d0-44f8-9601-0be908cfc0d3",
+            "email": "lucy.reiss@canada.ca",
+            "delete": "0"
+        },
+        {
+            "name": "Katrina Stipec",
+            "private": "Display",
+            "role": "pointOfContact",
+            "branch": "66263ee0-816d-4bb4-858b-41e1b6377e08",
+            "organization": "2a242ed6-e26e-4e45-b046-66bd0d402203",
+            "email": "cdcdata@gov.bc.ca",
+            "delete": "0"
+        }
+    ],
+    "resource_status": "onGoing",
+    "south_bound_latitude": "48.0",
+    "tracking_summary": {
+        "total": 1235,
+        "recent": 11
+    },
+    "record_archive_date": "",
+    "layer_name": "",
+    "groups": [],
+    "license_id": "22",
+    "download_audience": "Named users",
+    "preview_image_url": "",
+    "replacement_record": "",
+    "lineage_statement": "",
+    "relationships_as_subject": [],
+    "name": "critical-habitat-for-federally-listed-species-at-risk-secure-",
+    "security_class": "HIGH-SENSITIVITY",
+    "dates": [
+        {
+            "date": "2015-05-22",
+            "type": "Published"
+        },
+        {
+            "date": "2019-04-12",
+            "type": "Modified",
+            "delete": "0"
+        }
+    ],
+    "organization": {
+        "description": "",
+        "created": "2014-12-10T15:05:16.487238",
+        "title": "Environment Canada",
+        "full_title": "Government of Canada, Environment Canada",
+        "name": "environment-canada",
+        "is_organization": true,
+        "state": "active",
+        "image_url": "",
+        "revision_id": "fefe7a2a-b220-4219-835f-a9e31d82948d",
+        "type": "organization",
+        "id": "3795a2cb-4550-409c-827c-4c507424b7d2",
+        "approval_status": "approved"
+    },
+    "record_publish_date": "2015-08-24",
+    "isopen": false,
+    "preview_longitude": "",
+    "url": null,
+    "source_data_path": "",
+    "notes": "This dataset displays the geographic areas within which critical habitat for species at risk listed on Schedule 1 of the federal Species at Risk Act (SARA) occurs or is being considered in British Columbia. However, not all of the area within these boundaries is necessarily critical habitat. To precisely define what constitutes critical habitat for a particular species it is essential that this geo-spatial information be considered in conjunction with complementary information in a species\u2019 recovery document. Recovery documents are available from the Species at Risk (SAR) Public Registry (http://www.sararegistry.gc.ca). The recovery documents contain important information about the interpretation of the geo-spatial information, especially regarding the biological and environmental features (\u201cbiophysical attributes\u201d) that complete the definition of a species\u2019 critical habitat.\r\n\r\nThis dataset includes \"candidate\" critical habitat clipped to British Columbia, as depicted in draft recovery documents which are available only to specified users. This information is provided for reference and review, and is subject to change before it is posted as final. \r\n\r\nIf such data exist, this dataset will also contain the location of biophysical attributes of \"final\" or \"proposed\" critical habitat at a more detailed scale than is available in the recovery document posted on the Species at Risk Public Registry for species noted in the Province of British Columbia\u2019s List of Species and Ecosystems Susceptible to Persecution or Harm: http://www2.gov.bc.ca/gov/topic.page?id=24C3179F7D764A8F906DB352B98253D2. \r\n\r\nThis file does not include \u201cfinal\u201d critical habitat and \u201cproposed\u201d critical habitat for species that are not considered susceptible to persecution or harm. This dataset is available to the BC government via http://catalogue.data.gov.bc.ca/dataset/critical-habitat-for-federally-listed-species-at-risk-posted-  \r\n\r\nThis file includes data from the Pacific and Yukon regional branch of the Canadian Wildlife Service (Environment and Climate Change Canada) and Parks Canada. It does not include critical habitat identified by other regions within Environment and Climate Change Canada. \r\n\r\nCritical habitat is defined in the federal Species at Risk Act (SARA) as \"the habitat that is necessary for the survival or recovery of a listed wildlife species and that is identified as the species\u2019 critical habitat in the recovery strategy or action plan for the species\". Critical habitat identification alone is not an automatic \u201cprotection\u201d designation. Federal or non-federal laws or bylaws may be in place to provide protection. Note that the Province of B.C. considers recovery planning documents, including the identification of critical habitat by the federal government, as science advice only. \r\n\r\nThis data is shared with the Province of B.C. through the Canada-BC Agreement on Species at Risk. It is not to be distributed beyond the named users. If external parties request the data, refer them to Environment and Climate Change Canada. Note that Environment and Climate Change Canada may not be able to share all data that are requested.\r\n",
+    "owner_org": "3795a2cb-4550-409c-827c-4c507424b7d2",
+    "edc_state": "PUBLISHED",
+    "record_last_modified": "2019-05-03",
+    "image_url": "",
+    "data_quality": "",
+    "metadata_visibility": "Public",
+    "title": "Critical habitat for federally-listed species at risk (secure)",
+    "revision_id": "6ad5c2d0-1a76-45c7-a78c-7d1668b01f4f",
+    "record_create_date": "2015-06-01",
+    "sub_org": "3795a2cb-4550-409c-827c-4c507424b7d2",
+    "purpose": "To facilitate the protection of critical habitat in British Columbia by ensuring that land managers, decision-makers, and those with a \u2018need to know\u2019 the location and description of critical habitat identified under the Species at Risk Act are able to consistently and conveniently access the information, and appropriately manage its use."
+}

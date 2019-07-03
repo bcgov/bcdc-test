@@ -1,0 +1,252 @@
+{
+    "sector": "Natural Resources",
+    "preview_zoom_level": "",
+    "maintainer": null,
+    "west_bound_longitude": "-139.5",
+    "iso_topic_string": "transportation",
+    "view_audience": "Named users",
+    "private": false,
+    "maintainer_email": null,
+    "num_tags": 3,
+    "license_url": "http://www2.gov.bc.ca/gov/content/home/copyright",
+    "license_title": "Access Only",
+    "org": "3275286d-4ec9-422a-817f-ab0e232eddfe",
+    "east_bound_longitude": "-113.5",
+    "id": "7c166ce7-a3ff-40ee-b7e2-98b3059aba37",
+    "link_to_imap": "",
+    "north_bound_latitude": "60.0",
+    "metadata_modified": "2019-05-03T21:20:21.153777",
+    "author": "21256c06-85b5-4026-88c2-9b468d829cad",
+    "author_email": null,
+    "lineage_statement": "",
+    "preview_map_service_url": "",
+    "preview_latitude": "",
+    "object_name": "WHSE_FOREST_TENURE.BCTS_BLOCK_ACCESS_ROADS_SP",
+    "state": "active",
+    "version": null,
+    "details": [
+        {
+            "data_precision": "10",
+            "column_comments": "BLOCK ACCESS ROAD ID is a system generated unique identification number. This is a primary key of this table. e.g., 1",
+            "data_type": "NUMBER",
+            "short_name": "BLCK_CC_ID",
+            "column_name": "BLOCK_ACCESS_ROAD_ID"
+        },
+        {
+            "data_precision": "50",
+            "column_comments": "TIMBER SALE OFFICE CODE is the office name code providing the administrative and management services for the business area and customer in relation to timber sales. e.g. TPL",
+            "data_type": "VARCHAR2",
+            "short_name": "TSO_CODE",
+            "column_name": "TIMBER_SALE_OFFICE_CODE"
+        },
+        {
+            "data_precision": "50",
+            "column_comments": "TIMBER SALE OFFICE NAME is the office name providing the administrative and management services for the business area and customer in relation to timber sales. e.g. Peace-Liard",
+            "data_type": "VARCHAR2",
+            "short_name": "TSO_NAME",
+            "column_name": "TIMBER_SALE_OFFICE_NAME"
+        },
+        {
+            "data_precision": "15",
+            "column_comments": "ROAD SEQUENCE NUMBER is a BCTS system generated unique identifier for a road. This field is used to join spatial data (e.g., FOREST 11.ROAD) with the tabular data (FORESTVIEW.V ROAD and FORESTVIEW.V ROAD STEWARD). e.g. 160169962",
+            "data_type": "NUMBER",
+            "short_name": "RD_SEQ_NUM",
+            "column_name": "ROAD_SEQUENCE_NUMBER"
+        },
+        {
+            "data_precision": "50",
+            "column_comments": "ROAD NAME is the name of road in BCTS system. e.g., Fisher Creek FSR-9465-02",
+            "data_type": "VARCHAR2",
+            "short_name": "ROAD_NM",
+            "column_name": "ROAD_NAME"
+        },
+        {
+            "data_precision": "13",
+            "column_comments": "ROAD LENGTH STEWARD is the calculated length of the road in metre based on the difference between the start and end meters. e.g., 720611",
+            "data_type": "NUMBER",
+            "short_name": "RD_LEN_STW",
+            "column_name": "ROAD_LENGTH_STEWARD"
+        },
+        {
+            "data_precision": "50",
+            "column_comments": "ROAD NAME STEWARD is the name of steward of the road. e.g. BCTS, FLNRO, former BCTS, Local Government, LOTI, Non-Status, Other, Private, TSL Holder",
+            "data_type": "VARCHAR2",
+            "short_name": "RD_NM_STW",
+            "column_name": "ROAD_NAME_STEWARD"
+        },
+        {
+            "data_precision": "19",
+            "column_comments": "FEATURE LENGTH M is the system calculated length or perimeter of a geometry in meters.",
+            "data_type": "NUMBER",
+            "short_name": "FEAT_LEN",
+            "column_name": "FEATURE_LENGTH_M"
+        },
+        {
+            "data_precision": "1",
+            "column_comments": "SHAPE is the column used to reference the spatial coordinates defining the feature.",
+            "data_type": "SDO_GEOMETRY",
+            "short_name": "SHAPE",
+            "column_name": "SHAPE"
+        },
+        {
+            "data_precision": "38",
+            "column_comments": "OBJECTID is a column required by spatial layers that interact with ESRI ArcSDE. It is populated with unique values automatically by SDE.",
+            "data_type": "NUMBER",
+            "short_name": "OBJECTID",
+            "column_name": "OBJECTID"
+        },
+        {
+            "data_precision": "4000",
+            "column_comments": "SE ANNO CAD DATA is a binary column used by spatial tools to store annotation, curve features and CAD data when using the SDO_GEOMETRY storage data type.",
+            "data_type": "BLOB",
+            "short_name": "ANNO_CAD",
+            "column_name": "SE_ANNO_CAD_DATA"
+        }
+    ],
+    "relationships_as_object": [],
+    "creator_user_id": "21256c06-85b5-4026-88c2-9b468d829cad",
+    "type": "Geographic",
+    "resources": [
+        {
+            "cache_last_updated": null,
+            "package_id": "7c166ce7-a3ff-40ee-b7e2-98b3059aba37",
+            "resource_storage_access_method": "Indirect Access",
+            "datastore_active": false,
+            "id": "ae6df39d-36e8-4c1a-89d0-800b5d24f41a",
+            "size": null,
+            "format": "other",
+            "state": "active",
+            "edc_resource_type": "Data",
+            "hash": "",
+            "description": "",
+            "cache_url": null,
+            "projection_name": "EPSG_3005 - NAD83 BC Albers",
+            "tracking_summary": {
+                "total": 0,
+                "recent": 0
+            },
+            "last_modified": null,
+            "url_type": null,
+            "mimetype": null,
+            "resource_storage_location": "BC Geographic Warehouse",
+            "name": "BC Geographic Warehouse Custom Download",
+            "created": "2019-05-03T21:20:16.869389",
+            "url": "https://catalogue.data.gov.bc.ca/api/ofi/other/WHSE_FOREST_TENURE.BCTS_BLOCK_ACCESS_ROADS_SP",
+            "ofi": true,
+            "mimetype_inner": null,
+            "resource_update_cycle": "asNeeded",
+            "position": 0,
+            "revision_id": "501a0c4e-4048-4ee2-a9c0-4b7e7f4e828a",
+            "resource_type": null
+        }
+    ],
+    "more_info": [
+        {
+            "link": "",
+            "delete": "0"
+        }
+    ],
+    "image_display_url": "",
+    "num_resources": 1,
+    "object_short_name": "BCTS_RD",
+    "metadata_created": "2015-11-09T19:39:34.980059",
+    "tags": [
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "BCTS",
+            "id": "dee8ecf6-11a9-4eed-8f00-6bdcde98a321",
+            "name": "BCTS"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "forest data",
+            "id": "05acca6f-f080-49d9-8433-6eb9fd4857ff",
+            "name": "forest data"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "proposed roads",
+            "id": "6cc63768-30d2-4c50-b0d2-d09bb5cad65f",
+            "name": "proposed roads"
+        }
+    ],
+    "retention_expiry_date": "",
+    "spatial": "{\"type\": \"Polygon\", \"coordinates\": [[[-139.5, 48.0], [-139.5, 60.0], [-113.5, 60.0], [-113.5, 48.0], [-139.5, 48.0]]]}",
+    "contacts": [
+        {
+            "name": "Walter Fister",
+            "private": "Display",
+            "role": "businessExpert",
+            "branch": "a2aea22f-afe8-4440-aa77-e40c933ee025",
+            "organization": "3275286d-4ec9-422a-817f-ab0e232eddfe",
+            "email": "Walter.Fister@gov.bc.ca",
+            "delete": "0"
+        },
+        {
+            "name": "Brian Quinn",
+            "private": "Display",
+            "role": "custodian",
+            "branch": "a2aea22f-afe8-4440-aa77-e40c933ee025",
+            "organization": "3275286d-4ec9-422a-817f-ab0e232eddfe",
+            "email": "Brian.Quinn@gov.bc.ca",
+            "delete": "0"
+        }
+    ],
+    "resource_status": "onGoing",
+    "south_bound_latitude": "48.0",
+    "tracking_summary": {
+        "total": 430,
+        "recent": 3
+    },
+    "record_archive_date": "",
+    "layer_name": "",
+    "groups": [],
+    "license_id": "22",
+    "download_audience": "Named users",
+    "preview_image_url": "",
+    "replacement_record": "",
+    "object_table_comments": "This spatial layer represents BC Timber Sales block access roads for the province as defined by the road steward (BCTS). This is a linear feature with measure values.",
+    "relationships_as_subject": [],
+    "name": "bc-timber-sales-block-access-roads",
+    "security_class": "LOW-SENSITIVITY",
+    "dates": [
+        {
+            "date": "2015-11-09",
+            "type": "Created"
+        }
+    ],
+    "organization": {
+        "description": "BC Timber Sales (BCTS) manages about 20 per cent of the province\u2019s allowable annual cut for Crown timber, generating economic prosperity for British Columbians through the safe, sustainable development and auction of Crown timber. BCTS operates in 33 communities and directly supports over 8,000 jobs across B.C.\r\n\r\nData from our operations are used to help determine the market value of the timber harvested from public land and ensures British Columbians receive fair value from their timber resources. \r\n\r\nBCTS also supports government\u2019s commitment to true, lasting reconciliation with First Nations in B.C as we move toward fully adopting and implementing the United Nations Declaration on the Rights of Indigenous Peoples and the Calls to Action of the Truth and Reconciliation Commission.",
+        "created": "2015-09-25T13:48:42.045164",
+        "title": "BC Timber Sales ",
+        "full_title": "Ministry of Forests, Lands, Natural Resource Operations and Rural Development, BC Timber Sales ",
+        "name": "bc-timber-sales",
+        "is_organization": true,
+        "state": "active",
+        "image_url": "2018-09-21-163518.057789BCTS-Corp-Logo-Transparent.png",
+        "revision_id": "3dd431bb-e672-425a-939b-e70c8e9b3783",
+        "type": "organization",
+        "id": "a2aea22f-afe8-4440-aa77-e40c933ee025",
+        "approval_status": "approved"
+    },
+    "record_publish_date": "2015-11-16",
+    "isopen": false,
+    "preview_longitude": "",
+    "url": null,
+    "source_data_path": "",
+    "notes": "This spatial layer represents BC Timber Sales block access roads for the province as defined by the road steward.\t\t\t\t\t\t\t\t\t\r\n",
+    "owner_org": "a2aea22f-afe8-4440-aa77-e40c933ee025",
+    "edc_state": "PUBLISHED",
+    "record_last_modified": "2019-05-03",
+    "image_url": "",
+    "data_quality": "",
+    "metadata_visibility": "Public",
+    "title": "BC Timber Sales Block Access Roads",
+    "revision_id": "933a03e2-6f95-42c4-a64b-e6a8f36ba9bf",
+    "record_create_date": "2015-11-09",
+    "sub_org": "a2aea22f-afe8-4440-aa77-e40c933ee025",
+    "purpose": "To assist with Oil and Gas Commission reviews."
+}

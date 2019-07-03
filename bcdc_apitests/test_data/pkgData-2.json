@@ -1,0 +1,394 @@
+{
+    "sector": "Transportation",
+    "preview_zoom_level": "6",
+    "maintainer": null,
+    "west_bound_longitude": "-139.5",
+    "iso_topic_string": "climatologyMeteorologyAtmosphere",
+    "view_audience": "Public",
+    "private": false,
+    "maintainer_email": null,
+    "num_tags": 12,
+    "license_url": "https://www2.gov.bc.ca/gov/content?id=A519A56BC2BF44E4A008B33FCF527F61",
+    "metadata_language": "English",
+    "license_title": "Open Government Licence - British Columbia",
+    "org": "2febcf4b-d2c8-4bce-b7cd-e06a10a39c08",
+    "east_bound_longitude": "-113.5",
+    "license_id": "2",
+    "id": "17e35288-4b46-42c6-bd98-78d8443aa2a7",
+    "link_to_imap": "http://maps.gov.bc.ca/ess/hm/imap4m/?catalogLayers=531&scale=28000000.0&center=-12941106.0856,6525405.80104",
+    "north_bound_latitude": "60.0",
+    "metadata_modified": "2017-11-03T18:45:02.492410",
+    "author": "d0716cb8-7eb5-4d43-9f57-6022096fd79f",
+    "author_email": null,
+    "preview_map_service_url": "https://openmaps.gov.bc.ca/geo/pub/WHSE_ENVIRONMENTAL_MONITORING.TAWP_WEATHER_FROST_STN_POINT/ows?",
+    "preview_latitude": "50.45474774",
+    "object_name": "WHSE_ENVIRONMENTAL_MONITORING.TAWP_WEATHER_FROST_STN_POINT",
+    "state": "active",
+    "version": null,
+    "details": [
+        {
+            "data_precision": "5",
+            "column_comments": "OBSERVATION LOCATION ID is the Observation Location Unique Identifier (to relate to oracle table SAW_OBSERVATION_LOCATION).",
+            "data_type": "NUMBER",
+            "short_name": "OBS_ID",
+            "column_name": "OBSERVATION_LOCATION_ID"
+        },
+        {
+            "data_precision": "6",
+            "column_comments": "STATION CODE is the Station Number - Business attribute for weather station.",
+            "data_type": "VARCHAR2",
+            "short_name": "CODE",
+            "column_name": "STATION_CODE"
+        },
+        {
+            "data_precision": "30",
+            "column_comments": "STATION NAME is the business name for the station.",
+            "data_type": "VARCHAR2",
+            "short_name": "STN_NAME",
+            "column_name": "STATION_NAME"
+        },
+        {
+            "data_precision": "3",
+            "column_comments": "CONTRACT AREA ID is the  business attribute for Ministry Contract Service Area.",
+            "data_type": "NUMBER",
+            "short_name": "CONT_ID",
+            "column_name": "CONTRACT_AREA_ID"
+        },
+        {
+            "data_precision": "30",
+            "column_comments": "OBSERVATION LOCATION TYPE is the Observation Location Type. Examples are RAWS: Remote Automated Weather Station - primarily used for Avalanche operation, RWS: Road Weather Station - primarily used for winter road maintenance operationsGEOTCH: Frost Probe Station - used for Seasonal Strength Loss Programs at District Offices.TECHWX: Stations where manual data is collected by Ministry Personnel to supplement the RAWS Observations.AVALWX: Stations where manual data is collected and submitted to the Ministry to supplement local knowledge for avalanche forecasting.",
+            "data_type": "VARCHAR2",
+            "short_name": "OBS_TYPE",
+            "column_name": "OBSERVATION_LOCATION_TYPE"
+        },
+        {
+            "data_precision": "18",
+            "column_comments": "LATITUDE is the geographic latitude of a point.",
+            "data_type": "NUMBER",
+            "short_name": "LATITUDE_",
+            "column_name": "LATITUDE"
+        },
+        {
+            "data_precision": "18",
+            "column_comments": "LONGITUDE is the  geographic longitude of a point.",
+            "data_type": "NUMBER",
+            "short_name": "LONGITUDE",
+            "column_name": "LONGITUDE"
+        },
+        {
+            "data_precision": "10",
+            "column_comments": "FEATURE CODE is a standard alphanumeric code to identify the type of feature represented by the spatial data. A feature code is most importantly a means of linking a feature to its name and definition. For example, the code GB15300120 on a digital geographic feature links it to the name \"Lake - Dry\" with the definition \"A lake bed from which all water has drained or evaporated.\" The feature code does NOT mark when it was digitized, what dataset it belongs to, how accurate it is, what it should look like when plotted, or who is responsible for updating it. It only says what it represents in the real world. It also doesn't even matter how the lake is represented. If it is a very small lake, it may be stored as a point feature. If it is large enough to have a shape at the scale of data capture, it may be stored as an outline, or a closed polygon. The same feature code still links it to the same definition. The feature code of this dataset is CF29200000.",
+            "data_type": "VARCHAR2",
+            "short_name": "F_CODE",
+            "column_name": "FEATURE_CODE"
+        },
+        {
+            "data_precision": "1",
+            "column_comments": "GEOMETRY is the column used to reference the spatial coordinates defining the feature. ",
+            "data_type": "SDO_GEOMETRY",
+            "short_name": "GEOMETRY",
+            "column_name": "GEOMETRY"
+        },
+        {
+            "data_precision": "38",
+            "column_comments": "OBJECTID is a required attribute of feature classes and object classes in a geodatabase. ",
+            "data_type": "NUMBER",
+            "short_name": "OBJECTID",
+            "column_name": "OBJECTID"
+        },
+        {
+            "data_precision": "4000",
+            "column_comments": "SE_ANNO_CAD_DATA is a binary column used by spatial tools to store annotation, curve features and CAD data when using the SDO_GEOMETRY storage data type. ",
+            "data_type": "BLOB",
+            "column_name": "SE_ANNO_CAD_DATA"
+        }
+    ],
+    "relationships_as_object": [],
+    "image_url": "",
+    "type": "Geographic",
+    "metadata_standard_version": "FDIS, MSRM Profile v2.0",
+    "resources": [
+        {
+            "cache_last_updated": null,
+            "data_collection_start_date": "2000-12-07",
+            "package_id": "17e35288-4b46-42c6-bd98-78d8443aa2a7",
+            "resource_storage_access_method": "Direct Access",
+            "datastore_active": false,
+            "id": "6455b6b5-264a-4988-8bdf-d0345e005d3b",
+            "size": null,
+            "format": "kmz",
+            "state": "active",
+            "edc_resource_type": "Data",
+            "hash": "",
+            "description": "",
+            "cache_url": null,
+            "projection_name": "EPSG_3005 - NAD83 BC Albers",
+            "tracking_summary": {
+                "total": 107,
+                "recent": 2
+            },
+            "mimetype_inner": null,
+            "url_type": null,
+            "data_collection_end_date": "",
+            "mimetype": null,
+            "resource_storage_location": "External",
+            "name": "Weather Station Locations KMZ",
+            "created": "2014-12-11T01:37:40.949905",
+            "url": "https://prdoas3.pub-apps.th.gov.bc.ca/saw-paws/docs/PAWS.kmz",
+            "last_modified": null,
+            "supplemental_info": "",
+            "resource_update_cycle": "annually",
+            "position": 0,
+            "revision_id": "5ca69fe8-0040-48ef-a987-dec3daae2444",
+            "resource_type": null
+        },
+        {
+            "cache_last_updated": null,
+            "package_id": "17e35288-4b46-42c6-bd98-78d8443aa2a7",
+            "resource_storage_access_method": "Service",
+            "datastore_active": false,
+            "id": "8be053de-677e-411e-9057-fca396c0501b",
+            "size": null,
+            "format": "wms",
+            "state": "active",
+            "edc_resource_type": "Data",
+            "hash": "",
+            "description": "For use in viewers such as ESRI tools use this truncated link: https://openmaps.gov.bc.ca/geo/pub/WHSE_ENVIRONMENTAL_MONITORING.TAWP_WEATHER_FROST_STN_POINT/ows? [Click here for information on how to connect](http://www2.gov.bc.ca/gov/content/governments/about-the-bc-government/databc/geographic-data-and-services/map-services)",
+            "cache_url": null,
+            "projection_name": "EPSG_3005 - NAD83 BC Albers",
+            "tracking_summary": {
+                "total": 21,
+                "recent": 1
+            },
+            "last_modified": null,
+            "url_type": null,
+            "mimetype": null,
+            "resource_storage_location": "BCGW Data Store",
+            "name": "WMS getCapabilities request",
+            "created": "2016-08-22T10:58:08.707415",
+            "url": "https://openmaps.gov.bc.ca/geo/pub/WHSE_ENVIRONMENTAL_MONITORING.TAWP_WEATHER_FROST_STN_POINT/ows?service=WMS&request=GetCapabilities",
+            "mimetype_inner": null,
+            "resource_update_cycle": "annually",
+            "position": 1,
+            "revision_id": "90f4b78b-6521-400c-a1ee-7ddff35b6574",
+            "resource_type": null
+        },
+        {
+            "cache_last_updated": null,
+            "package_id": "17e35288-4b46-42c6-bd98-78d8443aa2a7",
+            "resource_storage_access_method": "Service",
+            "datastore_active": false,
+            "id": "49391509-7bc8-478e-a80f-02084334fc32",
+            "size": 0,
+            "format": "kml",
+            "state": "active",
+            "edc_resource_type": "Data",
+            "hash": "",
+            "description": "For use in viewers such as Google Earth <BR> [Click here for information on how to connect](http://www2.gov.bc.ca/gov/content/data/geographic-data-services/web-based-mapping/map-services)",
+            "cache_url": null,
+            "projection_name": "EPSG_4326 - WGS84 - World Geodetic System 1984",
+            "tracking_summary": {
+                "total": 11,
+                "recent": 1
+            },
+            "last_modified": null,
+            "url_type": null,
+            "mimetype": null,
+            "resource_storage_location": "BCGW Data Store",
+            "name": "KML Network Link",
+            "created": "2017-09-25T23:55:48.762191",
+            "url": "http://openmaps.gov.bc.ca/kml/geo/layers/WHSE_ENVIRONMENTAL_MONITORING.TAWP_WEATHER_FROST_STN_POINT_loader.kml",
+            "mimetype_inner": null,
+            "resource_update_cycle": "annually",
+            "position": 2,
+            "revision_id": "ab870286-dca0-4129-a836-23ef476f4c13",
+            "resource_type": null
+        }
+    ],
+    "more_info": [
+        {
+            "link": "http://www2.gov.bc.ca/gov/content/transportation/funding-programs-and-engagement/programs/weather-network-program",
+            "delete": "0"
+        },
+        {
+            "link": "http://www2.gov.bc.ca/gov/content/transportation/funding-programs-and-engagement/programs/avalanche-safety-program",
+            "delete": "0"
+        }
+    ],
+    "image_display_url": "",
+    "num_resources": 3,
+    "object_short_name": "T_W_F_STN",
+    "metadata_created": "2014-12-11T09:37:40.905612",
+    "metadata_standard_name": "ISO 19115, MSRM Profile v2.0",
+    "retention_expiry_date": "",
+    "spatial": "{\"type\": \"Polygon\", \"coordinates\": [[[-139.5, 48.0], [-139.5, 60.0], [-113.5, 60.0], [-113.5, 48.0], [-139.5, 48.0]]]}",
+    "contacts": [
+        {
+            "name": "Tanya McKinney",
+            "role": "pointOfContact",
+            "branch": "887e5427-b980-48c8-853d-74623333bfff",
+            "organization": "2febcf4b-d2c8-4bce-b7cd-e06a10a39c08",
+            "email": "Tanya.McKinney@gov.bc.ca",
+            "delete": "0"
+        },
+        {
+            "name": "Simon Walker",
+            "private": "Display",
+            "role": "businessExpert",
+            "branch": "887e5427-b980-48c8-853d-74623333bfff",
+            "organization": "2febcf4b-d2c8-4bce-b7cd-e06a10a39c08",
+            "email": "simon.walker@gov.bc.ca",
+            "delete": "0"
+        },
+        {
+            "name": "AWP Systems Support",
+            "private": "Display",
+            "role": "pointOfContact",
+            "branch": "887e5427-b980-48c8-853d-74623333bfff",
+            "organization": "2febcf4b-d2c8-4bce-b7cd-e06a10a39c08",
+            "email": "awpit@gov.bc.ca",
+            "delete": "0"
+        }
+    ],
+    "resource_status": "completed",
+    "south_bound_latitude": "48.0",
+    "tracking_summary": {
+        "total": 745,
+        "recent": 3
+    },
+    "record_archive_date": "",
+    "layer_name": "WHSE_ENVIRONMENTAL_MONITORING.TAWP_WEATHER_FROST_STN_POINT",
+    "groups": [],
+    "creator_user_id": "d0716cb8-7eb5-4d43-9f57-6022096fd79f",
+    "download_audience": "Public",
+    "preview_image_url": "",
+    "replacement_record": "",
+    "lineage_statement": "This data has been developed for regional and district operations",
+    "relationships_as_subject": [],
+    "tags": [
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "BC",
+            "id": "7455488b-313b-43aa-9c89-542c36a9900c",
+            "name": "BC"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "MoT",
+            "id": "3ffd3d89-28d2-4da1-b2c2-c8128ac4eb39",
+            "name": "MoT"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "PAWS",
+            "id": "8d5ccbf3-b75d-41ff-bef7-3aefc3e38de6",
+            "name": "PAWS"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "RAWS",
+            "id": "413206f2-bba8-4aab-9c21-f4ee9611f215",
+            "name": "RAWS"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "RWIS",
+            "id": "e7fc462d-ee15-45d4-a3c3-3d4624cc7eb4",
+            "name": "RWIS"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "TRAN",
+            "id": "038c5a6c-bfc8-4e76-b109-dc3ac29804c2",
+            "name": "TRAN"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "avalanche",
+            "id": "a49d89e8-9f38-48d0-a649-b94df5dd7d96",
+            "name": "avalanche"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "frost probe",
+            "id": "b3f87d5b-9a66-4da1-9a41-cc4dc7c36a29",
+            "name": "frost probe"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "road weather",
+            "id": "0fd7d9da-aeb5-40d6-ac5e-2f5945b7c856",
+            "name": "road weather"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "soil temperatures",
+            "id": "9d0aebb5-ce4b-4a4b-a5ef-e147d4463d8e",
+            "name": "soil temperatures"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "weather",
+            "id": "56ce1852-824b-4816-8fe3-62c6ff8c19ad",
+            "name": "weather"
+        },
+        {
+            "vocabulary_id": null,
+            "state": "active",
+            "display_name": "weather station",
+            "id": "81ff76b4-4277-49cd-9275-b575028747a2",
+            "name": "weather station"
+        }
+    ],
+    "name": "bc-mot-weather-and-frost-probe-station-network",
+    "metadata_character_set": "utf8",
+    "security_class": "LOW-PUBLIC",
+    "dates": [
+        {
+            "date": "2007-08-21",
+            "type": "Published"
+        }
+    ],
+    "organization": {
+        "description": "",
+        "created": "2014-12-10T15:05:37.828323",
+        "title": "Construction and Maintenance",
+        "full_title": "Ministry of Transportation and Infrastructure, Construction and Maintenance",
+        "name": "construction-and-maintenance",
+        "is_organization": true,
+        "state": "active",
+        "image_url": "",
+        "revision_id": "8b01ae84-26b4-48e7-b94a-81f600127342",
+        "type": "organization",
+        "id": "887e5427-b980-48c8-853d-74623333bfff",
+        "approval_status": "approved"
+    },
+    "record_publish_date": "2014-12-11",
+    "isopen": false,
+    "preview_longitude": "-116.2519339",
+    "url": null,
+    "source_data_path": "",
+    "notes": "Locations of active electronic weather and frost probe stations maintained by the Ministry of Transportation to support Avalanche and Winter Road maintenance operations.",
+    "owner_org": "887e5427-b980-48c8-853d-74623333bfff",
+    "edc_state": "PUBLISHED",
+    "record_last_modified": "2017-11-03",
+    "metastar_uid": "37250",
+    "data_quality": "",
+    "metadata_visibility": "Public",
+    "title": "Avalanche and Weather Programs - Weather and Frost Probe Station Network",
+    "revision_id": "600bd7ec-3cf1-44ba-aa55-424653da633c",
+    "record_create_date": "2005-04-11",
+    "sub_org": "887e5427-b980-48c8-853d-74623333bfff",
+    "purpose": "To delineate weather and frost probe station locations as points"
+}
