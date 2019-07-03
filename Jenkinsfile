@@ -59,14 +59,13 @@ node('ETLdev') {
                       echo  "Quality Gate success"
                   } 
             }
-            /*
             stage('Run') {
                 bat '''
                     call %VEDIR%/Scripts/activate.bat || goto :error
                     python setup.py sdist bdist_wheel
                     python -m twine upload dist/*
                 '''
-            }*/ 
+            } 
         }
     } catch (e) {
         currentBuild.result = "FAILED"
