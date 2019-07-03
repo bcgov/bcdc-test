@@ -35,12 +35,11 @@ node('ETLdev') {
                     exit /b %errorlevel%
                 '''
             }
-            /*
             stage ('Code Check'){
                 tool name: 'appqa', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
                 withSonarQubeEnv('CODEQA'){
                   // Run the sonar scanner
-                  bat 'sonar-scanner.bat -Dsonar.sources=src -Dsonar.projectKey=%JOB_NAME% -Dsonar.host.url=%SONARURL% -Dsonar.python.pylint=%PYLINTPATH% -Dsonar.login=%SONARTOKEN% -Dsonar.python.pylint_config=config/pylint.config'
+                  bat 'sonar-scanner.bat -Dsonar.sources=src -Dsonar.projectKey=%JOB_NAME% -Dsonar.host.url=%SONARURL% -Dsonar.python.pylint=%PYLINTPATH% -Dsonar.login=%SONARTOKEN%'
                   // Get the project id
                   pid = projectId()
                   echo "pid:" + pid
@@ -57,14 +56,14 @@ node('ETLdev') {
                       echo  "Quality Gate success"
                   } 
             }
-            */     
+            /*
             stage('Run') {
                 bat '''
                     call %VEDIR%/Scripts/activate.bat || goto :error
                     python setup.py sdist bdist_wheel
                     python -m twine upload dist/*
                 '''
-            }
+            }*/ 
         }
     } catch (e) {
         currentBuild.result = "FAILED"
