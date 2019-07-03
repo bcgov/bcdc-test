@@ -40,7 +40,7 @@ node('ETLdev') {
                 tool name: 'appqa', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
                 withSonarQubeEnv('CODEQA'){
                   // Run the sonar scanner
-                  bat 'sonar-scanner.bat -Dsonar.sources=src -Dsonar.projectKey=%JOB_NAME% -Dsonar.host.url=%SONARURL% -Dsonar.python.pylint=%PYLINTPATH% -Dsonar.login=%SONARTOKEN%'
+                  bat 'sonar-scanner.bat -Dsonar.sources=. -Dsonar.projectKey=%JOB_NAME% -Dsonar.host.url=%SONARURL% -Dsonar.python.pylint=%PYLINTPATH% -Dsonar.login=%SONARTOKEN%'
                   // Get the project id
                   pid = projectId()
                   echo "pid:" + pid
