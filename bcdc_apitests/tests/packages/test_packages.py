@@ -16,6 +16,7 @@ import logging
 import ckanapi
 import pytest  # @UnusedImport
 import requests
+from _pytest.python import Metafunc
 
 logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
@@ -24,8 +25,35 @@ logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
 
 #TODO: move testpkg teardown to conftest, currently in test method to help while running as single test
-def test_add_package_success(ckan_url, ckan_auth_header,
-                             ckan_rest_dir, test_pkg_data, test_pkg_teardown):
+'''
+- have a package_test_data module that will
+  - return the params based on an input of the module name
+  - returns
+
+'''
+
+
+# @pytest.fixture(scope='module', params=[[1, 2], [1, 2]])
+# def get_package_test_data(request, ckan_auth_header, test_pkg_data):
+#     '''
+#     To parameterize the package tests need to get different:
+#       - Authorization header (no header, viewer, editor, admin)
+#       - package data (dataset 1, dataset 2, dataset 3)
+#     '''
+#     logger.debug("func name: %s, %s", __name__)
+#     logger.debug("ckan_auth_header: %s", ckan_auth_header)
+#     logger.debug("test_pkg_data: %s", test_pkg_data)
+#     logger.debug("param: %s", request.param)
+#     
+#     return ckan_auth_header, test_pkg_data, True
+
+
+
+    
+def test_add_package_success(ckan_auth_header, test_pkg_data, expected, test_pkg_teardown, ckan_url, ckan_rest_dir):
+
+#def test_add_package_success(get_package_test_data, ckan_url, ckan_rest_dir):
+
     '''
     makes simple request to create package and verifies it gets
     200 status code.
@@ -33,12 +61,17 @@ def test_add_package_success(ckan_url, ckan_auth_header,
     Using requests to form this call to get status code and for increased level
     of granularity over
     '''
+    #ckan_auth_header = get_package_test_data[0]
+    #test_pkg_data = get_package_test_data[1]
+    #expected = get_package_test_data[2]
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'package_create')
     logger.debug('api_call: %s', api_call)
 
     resp = requests.post(api_call, headers=ckan_auth_header, json=test_pkg_data)
     logger.debug("resp: %s", resp.text)
-    assert resp.status_code == 200
+    logger.info("status code: %s", resp.status_code)
+    #assert resp.status_code == 200
+    assert resp.ok == expected
 
 
 def test_package_show(remote_api_admin_auth, test_package_name):

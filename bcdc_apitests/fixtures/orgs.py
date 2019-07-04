@@ -49,7 +49,7 @@ def org_create_fixture(remote_api_admin_auth, test_org_data):
 @pytest.fixture
 def org_create_if_not_exists_fixture(remote_api_admin_auth, test_organization, org_exists_fixture, test_org_data):
     logger.debug("test_org_exists: %s %s", org_exists_fixture, type(org_exists_fixture))
-
+    logger.debug("test_organization: %s", test_organization)
     if org_exists_fixture:
         org_data = remote_api_admin_auth.action.organization_show(id=test_organization)
     else:

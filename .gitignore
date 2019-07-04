@@ -1,6 +1,7 @@
 *.pyc
 ve/
 build/
+secrets/
 
 
 

@@ -56,7 +56,8 @@ def secret_file():
                                  'secrets.json')
         scrt_file = os.path.realpath(scrt_file)
         logger.debug("secret file path: %s", scrt_file)
-    return scrt_file
+    logger.debug("yielding: %s", scrt_file)
+    yield scrt_file
 
 
 @pytest.fixture()
@@ -66,7 +67,7 @@ def env():
              this value is used by secrets to determine what
              keys to pull from pmp, resources, host names etc
     '''
-    return 'TST'
+    return 'DLV'
 
 
 @pytest.fixture()
@@ -122,19 +123,21 @@ def ckan_url(ckan_host):
 
 
 @pytest.fixture()
-def ckan_apitoken(secret_file, env):
+def ckan_apitoken(secret_file, env, import_dbcsecrets):
     '''
     gets the ckan api for the given env
     '''
     if 'BCDC_API_KEY' in os.environ:
         token = os.environ['BCDC_API_KEY']
     elif 'GetSecrets' in dir(DBCSecrets):
+        logger.debug("GetSecrets module exists, secrets file: %s", secret_file)
         creds = DBCSecrets.GetSecrets.CredentialRetriever(secretFileName=secret_file)
         misc_params = creds.getMiscParams()
         token_key = '{0}_TOKEN'.format(env)
         logger.debug("token_key: %s", token_key)
         token = misc_params.getParam(token_key)
     else:
+        logger.debug("secret file: %s", secret_file)
         msg = 'unable to retrieve secrets either using the environment %s or ' + \
               'from the secrets file %s'
         msg = msg.format('BCDC_URL', secret_file)

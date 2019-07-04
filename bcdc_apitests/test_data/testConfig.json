@@ -1,0 +1,16 @@
+[
+	{
+		"test_module":"packages",
+		"test_function": "test_add_package_success",
+		"test_user": "admin",
+		"test_data": "pkgData_min.json",
+		"test_result": true
+	}, 
+	{
+		"test_module":"packages",
+		"test_function": "test_add_package_success",
+		"test_user": "admin",
+		"test_data": "pkgData.json",
+		"test_result": true
+	}
+]

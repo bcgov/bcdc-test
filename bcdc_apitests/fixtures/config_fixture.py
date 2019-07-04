@@ -9,18 +9,8 @@ putting global configuration parameters into this file
 
 import pytest
 import getpass
+from bcdc_apitests.config.testConfig import *
 
-# getting first three letters of username
-TEST_USER = getpass.getuser()[0:3].lower()
-
-# Following are test constants
-TEST_PREFIX = 'zzztest'
-TEST_ORGANIZATION = '{0}_{1}_testorg'.format(TEST_PREFIX, TEST_USER)
-# TODO: need to modify to use the testing org that should be set up.
-#TEST_ORGANIZATION = 'databc'
-TEST_PACKAGE = '{0}_{1}_testpkg'.format(TEST_PREFIX, TEST_USER)
-TEST_RESOURCE = '{0}_{1}_testresource'.format(TEST_PREFIX, TEST_USER)
-BCDC_REST_DIR = "/api/3/action"
 
 # pylint: disable=redefined-outer-name
 
