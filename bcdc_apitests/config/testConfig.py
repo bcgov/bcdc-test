@@ -18,6 +18,7 @@ TEST_PREFIX = "zzztest"
 # The directory where the various .json files that contain test data
 # are located
 TEST_DATA_DIRECTORY = "test_data"
+TEST_PARAMETERS_FILE = 'testParams.json'
 
 # test org name
 TEST_ORGANIZATION = '{0}_{1}_testorg'.format(TEST_PREFIX, TEST_USER)

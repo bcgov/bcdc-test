@@ -28,7 +28,9 @@ def test_data_dir():
     '''
     :return: the data directory
     '''
-    pkg_json_dir = os.path.join(os.path.dirname(__file__), '..', 'test_data')
+    file_utils = bcdc_apitests.helpers.file_utils.FileUtils
+    #pkg_json_dir = os.path.join(os.path.dirname(__file__), '..', 'test_data')
+    pkg_json_dir = file_utils.get_test_data_dir()
     yield pkg_json_dir
 
 @pytest.fixture
@@ -98,6 +100,7 @@ def test_pkg_data_updated(test_pkg_data):
     '''
     :param test_pkg_data: package data structure that can be used to load a new
                           package
+    :return: a ckan package data structure that can be loaded to ckan for testing
     '''
     logging.debug("test_package_name: %s", test_package_name)
     test_pkg_data['title'] = 'test package update'
@@ -107,6 +110,8 @@ def test_pkg_data_updated(test_pkg_data):
 @pytest.fixture
 def test_org_data(test_data_dir, test_organization):
     '''
+    :param test_data_dir: directory where test data is expected
+    :param test_organization:  The name to be substituted in for the test organization name
     :return:  an organization data structure that can be used for testing
     '''
     json_file = os.path.join(test_data_dir, 'ownerOrg.json')
