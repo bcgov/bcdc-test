@@ -668,44 +668,12 @@
     "retention_expiry_date": "",
     "contacts": [
         {
-            "name": "Barb Robertson",
-            "role": "pointOfContact",
-            "branch": "4f4af652-cbf5-4645-8ca0-fae6a08be44d",
-            "organization": "e33eddfa-6220-40c6-a476-4e4d2a19f4ea",
-            "email": "barb.robertson@gov.bc.ca",
-            "delete": "0"
-        },
-        {
-            "name": "Marissa Burnell-Higgs",
-            "role": "businessExpert",
-            "branch": "4f4af652-cbf5-4645-8ca0-fae6a08be44d",
-            "organization": "e33eddfa-6220-40c6-a476-4e4d2a19f4ea",
-            "email": "marissa.burnell-higgs@gov.bc.ca",
-            "delete": "0"
-        },
-        {
-            "name": "Rick Lambrick",
-            "role": "pointOfContact",
-            "branch": "4f4af652-cbf5-4645-8ca0-fae6a08be44d",
-            "organization": "e33eddfa-6220-40c6-a476-4e4d2a19f4ea",
-            "email": "rick.lambrick@gov.bc.ca",
-            "delete": "0"
-        },
-        {
-            "name": "Raluca Dogaru",
-            "role": "businessExpert",
-            "branch": "4f4af652-cbf5-4645-8ca0-fae6a08be44d",
-            "organization": "e33eddfa-6220-40c6-a476-4e4d2a19f4ea",
-            "email": "raluca.dogaru@gov.bc.ca",
-            "delete": "0"
-        },
-        {
-            "name": "Property Taxation Branch",
+            "name": "Test Contact Name",
             "private": "Display",
             "role": "pointOfContact",
             "branch": "4f4af652-cbf5-4645-8ca0-fae6a08be44d",
             "organization": "e33eddfa-6220-40c6-a476-4e4d2a19f4ea",
-            "email": "PTBData@gov.bc.ca",
+            "email": "do_not_reply@gov.bc.ca",
             "delete": "0"
         }
     ],

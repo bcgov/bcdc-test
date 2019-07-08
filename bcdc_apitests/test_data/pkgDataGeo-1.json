@@ -352,20 +352,12 @@
     "spatial": "{\"type\": \"Polygon\", \"coordinates\": [[[-139.5, 48.0], [-139.5, 60.0], [-113.5, 60.0], [-113.5, 48.0], [-139.5, 48.0]]]}",
     "contacts": [
         {
-            "name": "Joy Sinnett",
+            "name": "Test Contact Name",
             "private": "Display",
             "role": "pointOfContact",
             "branch": "e51a8106-11c7-4436-a967-7cee18bfb159",
             "organization": "3275286d-4ec9-422a-817f-ab0e232eddfe",
-            "email": "Joy.Sinnett@gov.bc.ca",
-            "delete": "0"
-        },
-        {
-            "name": "Destany Crane",
-            "role": "custodian",
-            "branch": "e51a8106-11c7-4436-a967-7cee18bfb159",
-            "organization": "3275286d-4ec9-422a-817f-ab0e232eddfe",
-            "email": "Destany.Crane@gov.bc.ca",
+            "email": "do_not_reply@gov.bc.ca",
             "delete": "0"
         }
     ],
