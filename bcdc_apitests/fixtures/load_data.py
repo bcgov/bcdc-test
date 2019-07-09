@@ -30,6 +30,13 @@ def test_data_dir():
     pkg_json_dir = os.path.join(os.path.dirname(__file__), '..', 'test_data')
     yield pkg_json_dir
 
+@pytest.fixture(scope='session')
+def session_test_data_dir():
+    '''
+    :return: the data directory
+    '''
+    pkg_json_dir = os.path.join(os.path.dirname(__file__), '..', 'test_data')
+    yield pkg_json_dir
 
 @pytest.fixture
 def test_pkg_data(org_id_fixture,test_data_dir, test_package_name, test_user):
@@ -111,4 +118,15 @@ def test_org_data(test_data_dir, test_organization):
     with open(json_file, 'r') as json_file_hand:
         org_data = json.load(json_file_hand)
         org_data['name'] = test_organization
+    return org_data
+
+@pytest.fixture(scope='session')
+def session_test_org_data(session_test_data_dir, test_session_organization):
+    '''
+    :return:  an organization data structure that can be used for testing
+    '''
+    json_file = os.path.join(session_test_data_dir, 'ownerOrg.json')
+    with open(json_file, 'r') as json_file_hand:
+        org_data = json.load(json_file_hand)
+        org_data['name'] = test_session_organization
     return org_data
