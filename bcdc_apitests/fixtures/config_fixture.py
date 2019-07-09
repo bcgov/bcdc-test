@@ -99,3 +99,10 @@ def test_viewer_user():
         unique between testers
     '''
     return TEST_VIEWER_USER
+
+@pytest.fixture(scope="session")
+def test_session_organization():
+    '''
+    :return: the name of the organization that should be owned by tests
+    '''
+    return TEST_ORGANIZATION
