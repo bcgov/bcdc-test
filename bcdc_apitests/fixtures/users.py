@@ -48,3 +48,7 @@ def user_delete(remote_api_admin_auth, user):
     except ckanapi.errors.NotFound as err:
         logger.debug("err: %s %s", type(err), err)
 
+
+def assign_user_role(remote_api_admin_auth, user, org_id, role):
+    resp = remote_api_admin_auth.action.organization_member_create(id=org_id, username=user, role=role)
+    logger.debug("setting test user role: %s", resp)

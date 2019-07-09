@@ -15,6 +15,7 @@ from bcdc_apitests.fixtures.load_config import *
 from bcdc_apitests.fixtures.orgs import *
 from bcdc_apitests.fixtures.users import *
 from bcdc_apitests.fixtures.config_fixture import *
+from bcdc_apitests.fixtures.load_data import *
 
 logger = logging.getLogger(__name__)
 
@@ -22,13 +23,31 @@ logger = logging.getLogger(__name__)
 token = os.environ['BCDC_API_KEY']
 url = os.environ['BCDC_URL']
 
+
 @pytest.fixture(scope="session", autouse=True)
-def session_setup_teardown(test_viewer_user, test_admin_user, test_editor_user, test_session_organization):
+def session_setup_teardown(test_viewer_user, test_admin_user, test_editor_user, test_session_organization,
+                           session_test_org_data, session_test_data_dir):
     logger.debug("------------Session-Setup--------------")
 
-    # Todo: find a way to get this to work at the session level without defining here.
+    # ToDo: find a way to get this to work at the session level without defining here.
     rmt_api = ckanapi.RemoteCKAN(url, token)
+    exist = False
+    # setup Org
+    logger.debug("Setup Org: %s", test_session_organization)
+    try:
+        org_data = rmt_api.action.organization_show(id=test_session_organization)
+        logger.debug("org found and show: %s", org_data)
+        exist = True
+    except ckanapi.errors.NotFound as err:
+        logger.debug("err: %s %s", type(err), err)
+        exist = False
+    # create org if not exist
+    if not exist:
+        org_data = rmt_api.action.organization_create(**session_test_org_data)
 
+    #ToDo: cleanup so org_data will exsist if err.
+    org_id = org_data['id']
+    # setup Users
     users = (test_viewer_user, test_admin_user, test_editor_user)
     logger.debug("Setup Users: %s", users)
 
@@ -51,6 +70,18 @@ def session_setup_teardown(test_viewer_user, test_admin_user, test_editor_user, 
             usr_data = rmt_api.action.user_create(name=user, email='test_do_not_reply@gov.bc.ca',
                                                   password='zzztestpassword')
             logger.debug("creating user: %s", str(usr_data))
+
+        # find role based on test username
+        if 'admin' in user:
+            role = 'admin'
+            assign_user_role(rmt_api, user, org_id, role)
+        elif 'editor' in user:
+            role = 'editor'
+            assign_user_role(rmt_api, user, org_id, role)
+        elif 'viewer' in user:
+            role = ''
+            # no role for Viewer
+
 
     yield
     logger.debug("-----------Session Teardown--------------")
