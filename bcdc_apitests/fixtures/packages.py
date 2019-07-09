@@ -132,7 +132,32 @@ def test_package_exists(remote_api_admin_auth, test_package_name):
     '''
     logger.debug("testing existence of package: %s", test_package_name)
     exists = package_exists(remote_api_admin_auth, test_package_name)
+
     yield exists
+
+@pytest.fixture
+def update_pkg_state(remote_api_admin_auth, test_pkg_data, test_package_state):
+    '''
+    :param test_pkg_data: package data structure that can be used to load a new
+                          package
+    '''
+    logging.debug("edc_state Change :: %s", test_package_name)
+    test_pkg_data['edc_state'] = test_package_state
+    pkg_data = remote_api_admin_auth.action.package_update(**test_pkg_data)
+    logger.debug("pkg_return: %s", pkg_data)
+    return test_pkg_data
+
+@pytest.fixture
+def update_pkg_visibility(remote_api_admin_auth, test_pkg_data, test_package_visibility):
+    '''
+    :param test_pkg_data: package data structure that can be used to load a new
+                          package
+    '''
+    logging.debug("metadata_visibility Change :: %s", test_package_name)
+    test_pkg_data['metadata_visibility'] = test_package_visibility
+    pkg_data = remote_api_admin_auth.action.package_update(**test_pkg_data)
+    logger.debug("pkg_return: %s", pkg_data)
+    return test_pkg_data
 
 @pytest.fixture
 def package_get_id_fixture(remote_api_admin_auth, test_package_name):

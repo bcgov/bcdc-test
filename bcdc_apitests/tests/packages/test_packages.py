@@ -52,6 +52,32 @@ def test_package_show(remote_api_admin_auth, test_package_name):
     assert pkg_show_data['name'] == test_package_name
 
 
+def test_package_state(remote_api_admin_auth, update_pkg_state, test_package_name):
+    '''
+    verify package data can be retrieved using package_show.
+
+    :param param: remote_api_admin_auth
+    '''
+
+    pkg_show_data = remote_api_admin_auth.action.package_show(id=test_package_name)
+    logger.debug("pkg_show_data: %s", pkg_show_data)
+
+    assert pkg_show_data['name'] == test_package_name
+
+
+def test_package_visibility(remote_api_admin_auth, update_pkg_visibility, test_package_name):
+    '''
+    verify package data can be retrieved using package_show.
+
+    :param param: remote_api_admin_auth
+    '''
+
+    pkg_show_data = remote_api_admin_auth.action.package_show(id=test_package_name)
+    logger.debug("pkg_show_data: %s", pkg_show_data)
+
+    assert pkg_show_data['name'] == test_package_name
+
+
 def test_package_update(remote_api_admin_auth, test_pkg_data, ckan_url,
                         ckan_rest_dir, ckan_auth_header):
     '''

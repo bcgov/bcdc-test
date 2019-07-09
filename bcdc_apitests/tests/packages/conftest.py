@@ -7,11 +7,7 @@ fixtures used for package tests
 '''
 # pylint: disable=import-error
 # pylint: disable=unused-import
-from bcdc_apitests.fixtures.packages \
-    import \
-        test_pkg_teardown, \
-        test_package_exists, \
-        test_package_name
+from bcdc_apitests.fixtures.packages import *
 from bcdc_apitests.fixtures.ckan \
     import \
         remote_api_admin_auth

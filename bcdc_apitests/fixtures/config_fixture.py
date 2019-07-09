@@ -12,6 +12,8 @@ import getpass
 
 # getting first three letters of username
 TEST_USER = getpass.getuser()[0:3].lower()
+TEST_STATE = 'draft'
+TEST_VISIBILITY = 'IDIR'
 
 # Following are test constants
 TEST_PREFIX = 'zzztest'
@@ -25,6 +27,9 @@ TEST_ADMIN_USER = '{0}_{1}_admin_user'.format(TEST_PREFIX, TEST_USER)
 TEST_EDITOR_USER = '{0}_{1}_editor_user'.format(TEST_PREFIX, TEST_USER)
 TEST_VIEWER_USER = '{0}_{1}_viewer_user'.format(TEST_PREFIX, TEST_USER)
 
+# TODO: State and Visibility Vars to be updated via config
+TEST_PACKAGE_STATE = TEST_STATE  # draft,published,pending published
+TEST_PACKAGE_VISIBILITY = TEST_VISIBILITY  # PUBLIC, IDIR
 # pylint: disable=redefined-outer-name
 
 
@@ -60,6 +65,19 @@ def test_package_name():
     '''
     return TEST_PACKAGE
 
+@pytest.fixture
+def test_package_state():
+    '''
+    :return: the name of the package to be used for the testing.
+    '''
+    return TEST_PACKAGE_STATE
+
+@pytest.fixture
+def test_package_visibility():
+    '''
+    :return: the name of the package to be used for the testing.
+    '''
+    return TEST_PACKAGE_VISIBILITY
 
 @pytest.fixture
 def test_resource_name():
