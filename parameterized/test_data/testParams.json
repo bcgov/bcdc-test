@@ -1,0 +1,37 @@
+[
+	{
+		"test_module":"parameterized.tests.packages.test_packages",
+		"test_function": "test_add_package",
+		"test_users": ["admin"],
+		"test_data": ["pkgData_min.json", "pkgData.json"],
+		"test_result": true
+	},
+    {
+        "test_module":"parameterized.tests.packages.test_packages",
+        "test_function": "test_add_package",
+        "test_users": ["editor", "viewer"],
+        "test_data": ["pkgData_min.json", "pkgData.json"],
+        "test_result": false
+    },
+    {
+        "test_module":"parameterized.tests.packages.test_packages",
+        "test_function": "test_add_package",
+        "test_users": ["admin"],
+        "test_data": ["pkgData_min.json", "pkgData.json"],
+        "test_result": true
+    },
+	{
+        "test_module":"parameterized.tests.packages.test_packages",
+        "test_function": "test_add_package_success",
+        "test_users": ["admin", "editor", "viewer"],
+        "test_data": ["pkgData_min.json", "pkgData.json"],
+        "test_result": true
+    },
+	{
+		"test_module":"packages",
+		"test_function": "test_view_package",
+		"test_users": ["admin"],
+		"test_data": ["pkgData.json"],
+		"test_result": true
+	}
+]

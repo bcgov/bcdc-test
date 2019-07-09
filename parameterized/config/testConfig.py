@@ -19,7 +19,7 @@ TEST_PREFIX = "zzztest"
 # are located
 TEST_DATA_DIRECTORY = "test_data"
 TEST_PARAMETERS_FILE = 'testParams.json'
-TEST_USER_CONFIG = "userConfig.json"
+TEST_USER_CONFIG = 'userConfig.json'
 
 # test org name
 TEST_ORGANIZATION = '{0}_{1}_testorg'.format(TEST_PREFIX, TEST_USER)

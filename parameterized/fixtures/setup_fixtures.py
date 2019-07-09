@@ -50,9 +50,22 @@ def user_label_fixture(request):
 #      create separate test cases for these.
 
 @pytest.fixture
-def conf_fixture(user_label_fixture, data_fixture):
+def conf_fixture(user_label_fixture, data_fixture, expectation):
     '''
     This is always parameterized and recieves:
        dataset_label / user label 
     '''
     yield user_label_fixture, data_fixture
+    
+@pytest.fixture
+def ckan_auth_header2(ckan_apitoken, user_label_fixture):
+    '''
+    authorization header
+    '''
+    LOGGER.debug("auth header called from setup, user_label_fixture: %s", user_label_fixture)
+    
+    api_headers = {'X-CKAN-API-KEY': ckan_apitoken,
+                   'content-type': 'application/json;charset=utf-8'}
+    return api_headers
+
+
