@@ -21,6 +21,9 @@ TEST_ORGANIZATION = '{0}_{1}_testorg'.format(TEST_PREFIX, TEST_USER)
 TEST_PACKAGE = '{0}_{1}_testpkg'.format(TEST_PREFIX, TEST_USER)
 TEST_RESOURCE = '{0}_{1}_testresource'.format(TEST_PREFIX, TEST_USER)
 BCDC_REST_DIR = "/api/3/action"
+TEST_ADMIN_USER = '{0}_{1}_admin_user'.format(TEST_PREFIX, TEST_USER)
+TEST_EDITOR_USER = '{0}_{1}_editor_user'.format(TEST_PREFIX, TEST_USER)
+TEST_VIEWER_USER = '{0}_{1}_viewer_user'.format(TEST_PREFIX, TEST_USER)
 
 # pylint: disable=redefined-outer-name
 
@@ -72,3 +75,27 @@ def ckan_rest_dir():
     :return: the ckan rest dir.
     '''
     return BCDC_REST_DIR
+
+@pytest.fixture(scope="session")
+def test_admin_user():
+    '''
+    :return: the test user letters to be appended to test objects to keep them
+        unique between testers
+    '''
+    return TEST_ADMIN_USER
+
+@pytest.fixture(scope="session")
+def test_editor_user():
+    '''
+    :return: the test user letters to be appended to test objects to keep them
+        unique between testers
+    '''
+    return TEST_EDITOR_USER
+
+@pytest.fixture(scope="session")
+def test_viewer_user():
+    '''
+    :return: the test user letters to be appended to test objects to keep them
+        unique between testers
+    '''
+    return TEST_VIEWER_USER
