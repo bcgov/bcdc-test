@@ -62,3 +62,34 @@ def ckan_rest_dir():
     :return: the ckan rest dir.
     '''
     return BCDC_REST_DIR
+
+@pytest.fixture(scope="session")
+def test_admin_user():
+    '''
+    :return: the test user letters to be appended to test objects to keep them
+        unique between testers
+    '''
+    return TEST_ADMIN_USER
+
+@pytest.fixture(scope="session")
+def test_editor_user():
+    '''
+    :return: the test user letters to be appended to test objects to keep them
+        unique between testers
+    '''
+    return TEST_EDITOR_USER
+
+@pytest.fixture(scope="session")
+def test_viewer_user():
+    '''
+    :return: the test user letters to be appended to test objects to keep them
+        unique between testers
+    '''
+    return TEST_VIEWER_USER
+
+@pytest.fixture(scope="session")
+def test_session_organization():
+    '''
+    :return: the name of the organization that should be owned by tests
+    '''
+    return TEST_ORGANIZATION
