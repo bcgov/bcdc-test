@@ -15,16 +15,18 @@ logger = logging.getLogger(__name__)
 
 # --------------------- Supporting Functions ----------------------
 
-# need to be able to call directly... don't need to make this a fixture.
+
 def org_delete(remote_api, test_organization):
 
     logger.debug("deleting the org: %s", test_organization)
     remote_api.action.organization_delete(id=test_organization)
 
+
 def org_purge(remote_api, test_organization):
 
     logger.debug("purging the org: %s", test_organization)
     remote_api.action.organization_purge(id=test_organization)
+
 
 def org_exists(remote_api, test_organization):
     org_exists = False
@@ -37,6 +39,25 @@ def org_exists(remote_api, test_organization):
         logger.debug("err: %s %s", type(err), err)
 
     return org_exists
+
+
+def org_create_if_not_exists(remote_api, test_organization, test_org_data):
+
+    exists = org_exists(remote_api, test_organization)
+    if exists:
+        org_data = remote_api.action.organization_show(id=test_organization)
+    else:
+        org_data = remote_api.action.organization_create(**test_org_data)
+        logger.debug("org_return: %s", org_data)
+    return org_data
+
+
+def org_purge_if_exists(remote_api, test_organization):
+
+    exists = org_exists(remote_api, test_organization)
+    if exists:
+        org_purge(remote_api, test_organization)
+
 
 # --------------------- Fixtures ----------------------
 
