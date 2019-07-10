@@ -20,7 +20,6 @@ import inspect
 
 logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
-# THIS IS THE PATTERN, LEAVING FOR A WHILE TILL CODE IS UPDATED
 # def test_add_package_success(conf_fixture, user_label_fixture, data_label_fixture):
 #     #print 'ckan_auth_header', ckan_auth_header
 #     #print 'got here ', ckan_auth_header

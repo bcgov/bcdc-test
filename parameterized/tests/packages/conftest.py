@@ -10,6 +10,10 @@ fixtures used for package tests
 from parameterized.fixtures.packages import *
 from parameterized.fixtures.setup_fixtures import *
 from parameterized.fixtures.load_config import *
+from parameterized.fixtures.load_data import *
+from parameterized.fixtures.orgs import *
+from parameterized.fixtures.config_fixture import *
+from parameterized.fixtures.ckan import *
 
 #from bcdc_apitests.fixtures.load_config import *
 
