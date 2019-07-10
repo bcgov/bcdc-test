@@ -21,9 +21,9 @@ TEST_ORGANIZATION = '{0}_{1}_testorg'.format(TEST_PREFIX, TEST_USER)
 TEST_PACKAGE = '{0}_{1}_testpkg'.format(TEST_PREFIX, TEST_USER)
 TEST_RESOURCE = '{0}_{1}_testresource'.format(TEST_PREFIX, TEST_USER)
 BCDC_REST_DIR = "/api/3/action"
-TEST_ADMIN_USER = '{0}_{1}_admin_user'.format(TEST_PREFIX, TEST_USER)
-TEST_EDITOR_USER = '{0}_{1}_editor_user'.format(TEST_PREFIX, TEST_USER)
-TEST_VIEWER_USER = '{0}_{1}_viewer_user'.format(TEST_PREFIX, TEST_USER)
+TEST_ADMIN_USER = '{0}_admin_user'.format(TEST_PREFIX)
+TEST_EDITOR_USER = '{0}_editor_user'.format(TEST_PREFIX)
+TEST_VIEWER_USER = '{0}_viewer_user'.format(TEST_PREFIX)
 
 # pylint: disable=redefined-outer-name
 
@@ -61,6 +61,14 @@ def test_package_name():
     return TEST_PACKAGE
 
 
+@pytest.fixture(scope="session")
+def session_test_package_name():
+    '''
+    :return: the name of the package to be used for the testing.
+    '''
+    return TEST_PACKAGE
+
+
 @pytest.fixture
 def test_resource_name():
     '''
@@ -76,6 +84,7 @@ def ckan_rest_dir():
     '''
     return BCDC_REST_DIR
 
+
 @pytest.fixture(scope="session")
 def test_admin_user():
     '''
@@ -83,6 +92,7 @@ def test_admin_user():
         unique between testers
     '''
     return TEST_ADMIN_USER
+
 
 @pytest.fixture(scope="session")
 def test_editor_user():
@@ -92,6 +102,7 @@ def test_editor_user():
     '''
     return TEST_EDITOR_USER
 
+
 @pytest.fixture(scope="session")
 def test_viewer_user():
     '''
@@ -99,6 +110,7 @@ def test_viewer_user():
         unique between testers
     '''
     return TEST_VIEWER_USER
+
 
 @pytest.fixture(scope="session")
 def test_session_organization():
