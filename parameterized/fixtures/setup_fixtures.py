@@ -17,7 +17,7 @@ import logging
 LOGGER = logging.getLogger(__name__)
 
 @pytest.fixture
-def data_fixture(request):
+def data_label_fixture(conf_fixture):
     '''
     This fixture will get parameterized by the conftest for the different
     datasets that should be tested.
@@ -27,10 +27,11 @@ def data_fixture(request):
     
     '''
     # TODO: Configure so can be run with a single dataset
-    yield request.param
+    
+    yield conf_fixture.test_data
 
 @pytest.fixture
-def user_label_fixture(request):
+def user_label_fixture(conf_fixture):
     '''
     parameterized fixture that cycles the different user types to 
     be used for the testing, example: viewer, editor, admin
@@ -39,7 +40,7 @@ def user_label_fixture(request):
     they should do.
     '''
     # TODO: configure so can be run with a single user label
-    yield request.param
+    yield conf_fixture.test_users
     
 #TODO: this fixture should be parameterized not user_label_fixture and the 
 #      data_fixture.  The conftest pytest_generate_test will read the test
@@ -50,12 +51,12 @@ def user_label_fixture(request):
 #      create separate test cases for these.
 
 @pytest.fixture
-def conf_fixture(user_label_fixture, data_fixture, expectation):
+def conf_fixture(request):
     '''
-    This is always parameterized and recieves:
-       dataset_label / user label 
+    Gets a TestConfig object that contains the test configuration 
+    information for the module/test combination        
     '''
-    yield user_label_fixture, data_fixture
+    yield request.param
     
 @pytest.fixture
 def ckan_auth_header2(ckan_apitoken, user_label_fixture):

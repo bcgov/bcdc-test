@@ -38,6 +38,9 @@ def pytest_generate_tests(metafunc):
     test_params = tst_config_reader.get_test_params(module=metafunc.module.__name__, 
                                                     function=metafunc.function.__name__)
     
+    data_params = test_params.get_data_labels()
+    user_params = test_params.get_user_labels()
+    
     LOGGER.debug( 'module/function: %s/%s', metafunc.module.__name__, metafunc.function.__name__)
     LOGGER.debug( 'test_params: %s',     test_params)
     LOGGER.debug( 'fixtures required: %s',     metafunc.fixturenames )
@@ -47,20 +50,18 @@ def pytest_generate_tests(metafunc):
                        metafunc.module.__name__,
                        metafunc.function.__name__)
     else:
-        if 'data_fixture' in metafunc.fixturenames:
-            # TODO: consider extending the test_params data model to allow for more descriptive
-            #       test ids to be used.  For now using the name of the json file.
-            LOGGER.debug( 'test_data: %s',  test_params.test_data )
-            metafunc.parametrize("data_fixture",
-                                 test_params.test_data,
-                                 ids=test_params.test_data, 
-                                 indirect=True)
-        if 'user_label_fixture' in metafunc.fixturenames:
-            LOGGER.debug( 'test_users: %s',  test_params.test_users )
-            metafunc.parametrize("user_label_fixture",
-                                 test_params.test_users,
-                                 ids=test_params.test_users,
-                                 indirect=True)
+        if 'conf_fixture' in metafunc.fixturenames:
+            flat_test_params = test_params.get_flattened()
+            test_config_list = flat_test_params.get_test_config_as_list()
+            test_config_ids = flat_test_params.get_test_config_ids()
+            metafunc.parametrize("conf_fixture",
+                test_config_list,
+                ids=test_config_ids,
+                indirect=True)
+
+            
+            
+               
             
         # TODO: Add the test configuration fixture parameterization.
         #       that returns a structure with the expectations

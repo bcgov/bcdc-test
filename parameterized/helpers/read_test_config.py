@@ -52,8 +52,8 @@ class TestConfigReader(object):
         
         :param module: the name of the test module that the tests params are for
         :param function: the name of the function that the test params are for.  
-        :return: a list of TestParameters objects that apply to the module / function
-                 combination.  If no tests are found a blank list is returned
+        :return: a TestConfig object that describes all the tests
+        :rtype: TestConfig
         '''
         test_params = []
         for params in self.config_struct:
@@ -61,16 +61,9 @@ class TestConfigReader(object):
             if param.test_module.lower() == module.lower() and \
                     param.test_function.lower() == function.lower():
                 test_params.append(param)
-                
-        if len(test_params) > 1:
-            msg = "The test configuraation file {0}, has more than one configuration " + \
-                  "for the test: {1} in the module {2}.  Currently setup can only handle one configuration " + \
-                  "per test"
-            msg = msg.format(self.test_config_file, function, module)
-            raise test_configuration_exception(msg)
-        if test_params:
-            test_params = test_params[0]
-        return test_params
+        test_config = TestConfig(test_params)  
+        return test_config
+
     
 class TestConfig(object):
     '''
@@ -80,8 +73,13 @@ class TestConfig(object):
     
     :ivar testParam: a list composed of TestParameters
     '''
+
     def __init__(self, test_params):
         self.test_params = test_params
+        self.logger = logging.getLogger(__name__)
+        self.itercnt = 0
+        self.returnList = None
+        self.idList = None
         
     def add_test_params(self, test_params):
         '''
@@ -97,10 +95,16 @@ class TestConfig(object):
         '''
         data_list = []
         for params in self.test_params:
-            data_list.append(params.test_data)
+            data_list.extend(params.test_data)
             
         # make unique
-        data_list = list(set(data_list))
+        self.logger.debug("data_list: %s", data_list)
+
+        data_set = set(data_list)
+        self.logger.debug("data_set: %s", data_set)
+        data_list = list(data_list)
+        self.logger.debug("unique data_list: %s", data_list)
+        self.itercnt = 0
         return data_list
     
     def get_user_labels(self):
@@ -110,14 +114,91 @@ class TestConfig(object):
         '''
         user_list = []
         for params in self.test_params:
-            user_list.append(params.test_users)
+            user_list.extend(params.test_users)
         
         user_list = list(set(user_list))
         return user_list
     
+    def get_config(self):
+        '''
         
+        '''
     
+    def __str__(self):
+        return str(self.test_params)
     
+    def next(self):
+        '''
+        iteration will iterate over each combination of 
+        users and data for the current module / function
+        '''
+        if self.itercnt >= len(self.test_params):
+            self.itercnt = 0
+            raise StopIteration
+        
+
+        retVal = self.test_params[self.itercnt]
+        self.itercnt += 1 
+        return retVal
+        
+    def __iter__(self):
+        return self
+    
+    def get_flattened(self):
+        '''
+        each test config can have:
+          - multiple data sets
+          - multiple users
+          - a single expected result
+          
+        This method will return a new TestConfig object which has been flattened
+        so that each TestParameter stored by this object will only have a single
+        dataset and a single user.  Flattening will reflect the combinations 
+        of user / test data.
+        '''
+        flatter = TestConfig([])
+        for params in self:
+            for data_label in params.test_data:
+                for user_label in params.test_users:
+                    self.logger.debug("data_label: %s", data_label)
+                    self.logger.debug("user_label: %s", user_label)
+                    struct = params.test_param_struct.copy()
+
+                    struct['test_data'] = [data_label]
+                    struct['test_users'] = [user_label]
+                    self.logger.debug("struct: %s", struct)
+                    
+                    flatParam = TestParameters(struct)
+                    flatter.add_test_params([flatParam])
+        return flatter
+    
+    def get_test_config_as_list(self, regenerate=True):
+        '''
+        Works in combination with get_test_config_ids method.
+        this will return a list of test configurations, while
+        get_test_config_ids will return a list with the test
+        ids.
+        
+        The order for both these lists will align.
+        '''
+        if regenerate:
+            self.returnList = None
+            self.idList = None
+        if self.returnList == None:
+            self.returnList = []
+            self.idList = []
+            for params in self:
+                self.returnList.append(params)
+                id = params.get_as_id()
+                self.idList.append(id)
+        return self.returnList
+        
+    def get_test_config_ids(self, regenerate=False):
+        if self.idList == None:
+            self.idList = []
+            self.get_test_config_as_list(regenerate=True)
+        return self.idList
+        
         
 class TestParameters(object):
     '''
@@ -145,17 +226,21 @@ class TestParameters(object):
             
     def __str__(self):
         return str(self.test_param_struct)
-
             
+    def get_as_id(self):
+        usr = '/'.join(self.test_users)
+        data = '/'.join(self.test_data)
+        
+        retStr = '{0}-{1}-{2}'.format(usr, data, str(self.test_result))
+        return retStr
             
 class test_configuration_exception(Exception):
     '''
     raised when the test configuration file is found to have an incorrect setup
     '''
-    def __init__(self,*args,**kwargs):
-        Exception.__init__(self,*args,**kwargs)
-        
-        
+
+    def __init__(self, *args, **kwargs):
+        Exception.__init__(self, *args, **kwargs)
                 
 # if __name__ == "__main__":
 #     LOGGER = logging.getLogger(__name__)
