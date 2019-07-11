@@ -33,7 +33,9 @@ TEST_RESOURCE = '{0}_{1}_testresource'.format(TEST_PREFIX, TEST_USER)
 # path to the rest api
 BCDC_REST_DIR = "/api/3/action"
 
-BCDC_ROLE_LOOKUP = {}
+# allows multple names to refer to a single role
+BCDC_ROLE_LOOKUP = {'member': ['view', 'viewer', 'looker']}
+
 
 # user configuration, contains all the informaiton necessary to create these
 # new users.
