@@ -33,6 +33,8 @@ TEST_RESOURCE = '{0}_{1}_testresource'.format(TEST_PREFIX, TEST_USER)
 # path to the rest api
 BCDC_REST_DIR = "/api/3/action"
 
+BCDC_ROLE_LOOKUP = {}
+
 # user configuration, contains all the informaiton necessary to create these
 # new users.
 TEST_ADMIN_USER = '{0}_{1}_admin'.format(TEST_PREFIX, TEST_USER)
