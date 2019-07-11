@@ -9,19 +9,21 @@ Code used to boot users.
 import logging
 import ckanapi
 import pytest
-from fixtures.ckan import remote_api_super_admin_auth
+import time
+from bcdc_apitests.fixtures.ckan import remote_api_super_admin_auth
 
 LOGGER = logging.getLogger(__name__)
 
 # --------------------- Supporting Functions ----------------------
 
-# TODO: might be able to set this up in the automatic parameterization, and 
+# TODO: might be able to set this up in the automatic parameterization, and
 #       move to a fixture so that it can be re-used.
-#pylint: disable=unsubscriptable-object
+# pylint: disable=unsubscriptable-object
 
-def get_user_data(remote_api, user):
+
+def get_user_data(remote_api, user, retry=0):
     '''
-    use the super admin to get the user info as other api tokens may not 
+    use the super admin to get the user info as other api tokens may not
     '''
     usr_data = {}
     try:
@@ -29,14 +31,25 @@ def get_user_data(remote_api, user):
         usr_data = remote_api.action.user_show(id=user)
     except ckanapi.errors.NotFound as err:
         LOGGER.debug("err: %s %s", type(err), err)
+    except ckanapi.errors.CKANAPIError:
+        # seems like CKAN randomly fails with 500 every so often if you hit it
+        # too hard.  This is an attempt to overcome that.
+        retry += 1
+        time.sleep(2)
+        if retry == 3:
+            raise
+        get_user_data(remote_api, user, retry)
     return usr_data
 
+
 def check_if_user_exist(remote_api_admin_auth, user):
+    '''
+    '''
     usr_data = {}
     usr_exists = False
     usr_data = get_user_data(remote_api_admin_auth, user)
     LOGGER.debug("usr_data: %s", usr_data)
-    if ('name' in usr_data) and usr_data['name'] == user:  
+    if ('name' in usr_data) and usr_data['name'] == user:
         usr_exists = True
     return usr_exists
 
@@ -52,6 +65,7 @@ def check_if_user_active(remote_api_admin_auth, user):
 def user_delete(remote_api_admin_auth, user):
     try:
         usr_data = remote_api_admin_auth.action.user_delete(id=user)
+        LOGGER.debug("retruned data: %s", usr_data)
         LOGGER.debug("delete user: %s", user)
     except ckanapi.errors.NotFound as err:
         LOGGER.debug("err: %s %s", type(err), err)
@@ -90,17 +104,26 @@ def user_setup_fixture(org_setup_fixture, remote_api_super_admin_auth,
         org_id = org_setup_fixture['id']
         LOGGER.debug('org_id: %s', org_id)
         assign_user_role(remote_api_super_admin_auth, user, org_id, role)
+        LOGGER.debug('user %s setup complete', user)
     yield
     for user in users:
         user_delete(remote_api_super_admin_auth, user)
 
-    
+
 @pytest.fixture()
 def user_data_fixture(remote_api_super_admin_auth, user_label_fixture):
     '''
-    use the super admin to get the user info as other api tokens may not 
+    use the super admin to get the user info as other api tokens may not
     '''
     usr_data = get_user_data(remote_api_super_admin_auth, user_label_fixture)
     return usr_data
 
+
+@pytest.fixture(scope='session')
+def user_data_fixture_session(remote_api_super_admin_auth, user_label_fixture):
+    '''
+    use the super admin to get the user info as other api tokens may not
+    '''
+    usr_data = get_user_data(remote_api_super_admin_auth, user_label_fixture)
+    return usr_data
 

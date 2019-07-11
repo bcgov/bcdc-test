@@ -20,7 +20,7 @@ import pytest
 from .config_fixture import test_package_name
 from .config_fixture import test_user
 
-from helpers.file_utils import FileUtils
+from bcdc_apitests.helpers.file_utils import FileUtils
 LOGGER = logging.getLogger(__name__)
 
 @pytest.fixture(scope='session')
@@ -135,6 +135,7 @@ def session_test_org_data(test_data_dir, test_session_organization):
     :return:  an organization data structure that can be used for testing
     '''
     json_file = os.path.join(test_data_dir, 'ownerOrg.json')
+    LOGGER.debug("json file path: %s", json_file)
     with open(json_file, 'r') as json_file_hand:
         org_data = json.load(json_file_hand)
         org_data['name'] = test_session_organization

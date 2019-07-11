@@ -9,7 +9,7 @@ putting global configuration parameters into this file
 
 import pytest
 import getpass
-from config.testConfig import *
+from bcdc_apitests.config.testConfig import *
 
 
 # pylint: disable=redefined-outer-name

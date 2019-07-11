@@ -24,11 +24,13 @@ class FileUtils(object):
         expected to be located
         :return: test data directory where json test data can be found
         '''
-        curdir = os.path.dirname(__file__)
-        testFile = os.path.realpath(os.path.join(curdir, '..', datadir, tst_params_file))
+        datadir_full_path = self.get_test_data_dir()
+        testFile = os.path.join(datadir_full_path, tst_params_file)
         return testFile
     
     def get_test_data_dir(self):
-        return datadir
+        curdir = os.path.dirname(__file__)
+        datadir_full_path = os.path.realpath(os.path.join(curdir, '..', datadir))
+        return datadir_full_path
     
         

@@ -35,9 +35,9 @@ BCDC_REST_DIR = "/api/3/action"
 
 # user configuration, contains all the informaiton necessary to create these
 # new users.
-TEST_ADMIN_USER = 'admin'
-TEST_EDITOR_USER = 'editor'
-TEST_VIEWER_USER = 'viewer'
+TEST_ADMIN_USER = '{0}_{1}_admin'.format(TEST_PREFIX, TEST_USER)
+TEST_EDITOR_USER = '{0}_{1}_editor'.format(TEST_PREFIX, TEST_USER)
+TEST_VIEWER_USER = '{0}_{1}_viewer'.format(TEST_PREFIX, TEST_USER)
 
 # default test passwords will need to be retrieved as a secret
 USER_CONFIG = {TEST_EDITOR_USER:
@@ -45,7 +45,7 @@ USER_CONFIG = {TEST_EDITOR_USER:
                  'role': 'editor'}, 
                TEST_VIEWER_USER: 
                 {'email': 'test_viewer@gov.bc.ca',
-                 'role': 'viewer'},
+                 'role': 'member'},
                TEST_ADMIN_USER: 
                 {'email': 'test_admin@gov.bc.ca',
                  'role': 'admin'},

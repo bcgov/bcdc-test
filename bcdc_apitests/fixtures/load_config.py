@@ -185,7 +185,7 @@ def ckan_superadmin_auth_header(ckan_superadmin_apitoken):
 
 
 @pytest.fixture(scope="session")
-def ckan_apitoken(user_data_fixture):
+def ckan_apitoken_session(user_data_fixture_session):
     '''
     :param user_label_fixture:  identifies the user that should be
                                 used for this test
@@ -193,13 +193,34 @@ def ckan_apitoken(user_data_fixture):
     # user_label_fixture will be populated with the values in
     # the property test_users from the testParams.json file.
     # they are keywords: admin, editor, viewer
-    apitoken = user_data_fixture['apikey']
+    apitoken = user_data_fixture_session['apikey']
+    # for now to make work just continue to use super admin
+    # api tokens
+    return apitoken
+
+@pytest.fixture()
+def ckan_apitoken(user_data_fixture_session):
+    '''
+    :param user_label_fixture:  identifies the user that should be
+                                used for this test
+    '''
+    # user_label_fixture will be populated with the values in
+    # the property test_users from the testParams.json file.
+    # they are keywords: admin, editor, viewer
+    apitoken = user_data_fixture_session['apikey']
     # for now to make work just continue to use super admin
     # api tokens
     return apitoken
 
 
 @pytest.fixture(scope="session")
+def ckan_auth_header_session(ckan_apitoken):
+    api_headers = {'X-CKAN-API-KEY': ckan_apitoken,
+                   'content-type': 'application/json;charset=utf-8'}
+    return api_headers
+
+
+@pytest.fixture()
 def ckan_auth_header(ckan_apitoken):
     api_headers = {'X-CKAN-API-KEY': ckan_apitoken,
                    'content-type': 'application/json;charset=utf-8'}

@@ -30,7 +30,7 @@ def data_label_fixture(conf_fixture):
     
     yield conf_fixture.test_data
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def user_label_fixture(conf_fixture):
     '''
     parameterized fixture that cycles the different user types to 
@@ -50,7 +50,9 @@ def user_label_fixture(conf_fixture):
 #      datasets they will be described in the config and the conftest will
 #      create separate test cases for these.
 
-@pytest.fixture
+
+
+@pytest.fixture(scope='session')
 def conf_fixture(request):
     '''
     Gets a TestConfig object that contains the test configuration 
