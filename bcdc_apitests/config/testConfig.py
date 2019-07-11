@@ -32,3 +32,22 @@ TEST_RESOURCE = '{0}_{1}_testresource'.format(TEST_PREFIX, TEST_USER)
 
 # path to the rest api
 BCDC_REST_DIR = "/api/3/action"
+
+# user configuration, contains all the informaiton necessary to create these
+# new users.
+TEST_ADMIN_USER = 'admin'
+TEST_EDITOR_USER = 'editor'
+TEST_VIEWER_USER = 'viewer'
+
+# default test passwords will need to be retrieved as a secret
+USER_CONFIG = {TEST_EDITOR_USER:
+                {'email': 'test_editor@gov.bc.ca',
+                 'role': 'editor'}, 
+               TEST_VIEWER_USER: 
+                {'email': 'test_viewer@gov.bc.ca',
+                 'role': 'viewer'},
+               TEST_ADMIN_USER: 
+                {'email': 'test_admin@gov.bc.ca',
+                 'role': 'admin'},
+               }
+

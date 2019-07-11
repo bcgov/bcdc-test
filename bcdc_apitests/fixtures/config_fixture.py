@@ -9,13 +9,13 @@ putting global configuration parameters into this file
 
 import pytest
 import getpass
-from bcdc_apitests.config.testConfig import *
+from config.testConfig import *
 
 
 # pylint: disable=redefined-outer-name
 
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def test_user():
     '''
     :return: the test user letters to be appended to test objects to keep them
@@ -32,7 +32,7 @@ def test_prefix():
     return TEST_PREFIX
 
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def test_organization():
     '''
     :return: the name of the organization that should be owned by tests
@@ -86,6 +86,13 @@ def test_viewer_user():
         unique between testers
     '''
     return TEST_VIEWER_USER
+
+@pytest.fixture(scope="session")
+def test_roles():
+    '''
+    :return: a list of the different user configs
+    '''
+    return USER_CONFIG
 
 @pytest.fixture(scope="session")
 def test_session_organization():

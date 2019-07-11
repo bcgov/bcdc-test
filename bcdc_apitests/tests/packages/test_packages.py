@@ -18,7 +18,7 @@ import pytest  # @UnusedImport
 import requests
 from _pytest.python import Metafunc
 
-logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
+LOGGER = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
 # pylint: disable=redefined-outer-name
 # pylint: disable=unused-argument
@@ -40,17 +40,18 @@ logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
 #       - Authorization header (no header, viewer, editor, admin)
 #       - package data (dataset 1, dataset 2, dataset 3)
 #     '''
-#     logger.debug("func name: %s, %s", __name__)
-#     logger.debug("ckan_auth_header: %s", ckan_auth_header)
-#     logger.debug("test_pkg_data: %s", test_pkg_data)
-#     logger.debug("param: %s", request.param)
+#     LOGGER.debug("func name: %s, %s", __name__)
+#     LOGGER.debug("ckan_auth_header: %s", ckan_auth_header)
+#     LOGGER.debug("test_pkg_data: %s", test_pkg_data)
+#     LOGGER.debug("param: %s", request.param)
 #     
 #     return ckan_auth_header, test_pkg_data, True
 
 
 
     
-def test_add_package_success(ckan_auth_header, test_pkg_data, expected, test_pkg_teardown, ckan_url, ckan_rest_dir):
+def test_add_package_success(conf_fixture, ckan_auth_header, test_pkg_data, 
+                             expected, test_pkg_teardown, ckan_url, ckan_rest_dir):
 
 #def test_add_package_success(get_package_test_data, ckan_url, ckan_rest_dir):
 
@@ -65,11 +66,11 @@ def test_add_package_success(ckan_auth_header, test_pkg_data, expected, test_pkg
     #test_pkg_data = get_package_test_data[1]
     #expected = get_package_test_data[2]
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'package_create')
-    logger.debug('api_call: %s', api_call)
+    LOGGER.debug('api_call: %s', api_call)
 
     resp = requests.post(api_call, headers=ckan_auth_header, json=test_pkg_data)
-    logger.debug("resp: %s", resp.text)
-    logger.info("status code: %s", resp.status_code)
+    LOGGER.debug("resp: %s", resp.text)
+    LOGGER.info("status code: %s", resp.status_code)
     #assert resp.status_code == 200
     assert resp.ok == expected
 
@@ -81,7 +82,7 @@ def test_package_show(remote_api_admin_auth, test_package_name):
     :param param: remote_api_admin_auth
     '''
     pkg_show_data = remote_api_admin_auth.action.package_show(id=test_package_name)
-    logger.debug("pkg_show_data: %s", pkg_show_data)
+    LOGGER.debug("pkg_show_data: %s", pkg_show_data)
     assert pkg_show_data['name'] == test_package_name
 
 
@@ -98,12 +99,12 @@ def test_package_update(remote_api_admin_auth, test_pkg_data, ckan_url,
     test_package_name = test_pkg_data['name']
     test_pkg_data['title'] = 'zzz changed the title'
     pkg_show_data_orig = remote_api_admin_auth.action.package_show(id=test_package_name)
-    # logger.debug("pkg_show_data: %s", pkg_show_data)
+    # LOGGER.debug("pkg_show_data: %s", pkg_show_data)
 
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'package_update')
     resp = requests.post(api_call, headers=ckan_auth_header, json=test_pkg_data)
-    logger.debug("resp: %s", resp.text)
-    logger.debug("resp.status_code: %s", resp.status_code)
+    LOGGER.debug("resp: %s", resp.text)
+    LOGGER.debug("resp.status_code: %s", resp.status_code)
     assert resp.status_code == 200
     # now double check that the data has been changed
     pkg_show_data = remote_api_admin_auth.action.package_show(id=test_package_name)
@@ -130,26 +131,26 @@ def test_verify_package_count(ckan_url, ckan_rest_dir, ckan_auth_header):
     params = {'limit': 500, 'offset': 0}
     package_list_cnt = 0
     while True:
-        logger.debug("offset: %s", params['offset'])
+        LOGGER.debug("offset: %s", params['offset'])
         resp = requests.get(package_list_call, headers=ckan_auth_header,
                             params=params)
-        logger.debug("status: %s", resp.status_code)
+        LOGGER.debug("status: %s", resp.status_code)
         pkg_list = resp.json()
         package_list_cnt = package_list_cnt + len(pkg_list['result'])
-        logger.debug("package cnt: %s %s", package_list_cnt,
+        LOGGER.debug("package cnt: %s %s", package_list_cnt,
                      len(pkg_list['result']))
         if len(pkg_list['result']) < params['limit']:
-            logger.debug("end of pages, breaking out")
+            LOGGER.debug("end of pages, breaking out")
             break
         params['offset'] = params['limit'] + params['offset']
 
-    logger.debug("final package cnt from packagelist: %s", package_list_cnt)
+    LOGGER.debug("final package cnt from packagelist: %s", package_list_cnt)
 
     remote_api = ckanapi.RemoteCKAN(ckan_url)
     pkg_search = remote_api.action.package_search()
 
-    logger.debug("pkg_search cnt: %s", pkg_search['count'])
-    logger.debug("pkglist cnt: %s", package_list_cnt)
+    LOGGER.debug("pkg_search cnt: %s", pkg_search['count'])
+    LOGGER.debug("pkglist cnt: %s", package_list_cnt)
     assert pkg_search['count'] == package_list_cnt
     assert len(pkg_list) >= 1
 
@@ -161,22 +162,22 @@ def test_package_delete(ckan_url, ckan_auth_header,
     '''
     #delete pkg
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'package_delete')
-    logger.debug('api_call: %s', api_call)
+    LOGGER.debug('api_call: %s', api_call)
     delete_data = {'id': test_package_name}
 
     resp = requests.post(api_call, headers=ckan_auth_header, json=delete_data)
-    logger.debug('status code: %s', resp.status_code)
+    LOGGER.debug('status code: %s', resp.status_code)
     resp_json = resp.json()
-    logger.debug("resp: %s", resp.text)
+    LOGGER.debug("resp: %s", resp.text)
 
 
     # purge pkg
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'dataset_purge')
-    logger.debug('api_call: %s', api_call)
+    LOGGER.debug('api_call: %s', api_call)
     delete_data = {'id': test_package_name}
 
     resp = requests.post(api_call, headers=ckan_auth_header, json=delete_data)
-    logger.debug('PURGE: %s', resp.status_code)
+    LOGGER.debug('PURGE: %s', resp.status_code)
 
 
     assert resp.status_code == 200
@@ -212,11 +213,11 @@ def test_package_create_invalid( ckan_url, ckan_auth_header,
     using pytest_check to provide delayed assertion
     '''
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'package_create')
-    logger.debug('api_call: %s', api_call)
+    LOGGER.debug('api_call: %s', api_call)
 
     resp_create = requests.post(api_call, headers=ckan_auth_header,
                                 json=test_pkg_data_core_only)
-    logger.debug("resp: %s", resp_create.text)
+    LOGGER.debug("resp: %s", resp_create.text)
     cant_create_msg = 'Attempt to call %s returned %s'
     cant_create_msg = cant_create_msg.format(api_call,
                                              resp_create.status_code)
@@ -224,10 +225,10 @@ def test_package_create_invalid( ckan_url, ckan_auth_header,
 
     # now make sure the data is viewable
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'package_show')
-    logger.debug('api_call: %s', api_call)
+    LOGGER.debug('api_call: %s', api_call)
     resp_show = requests.post(api_call, headers=ckan_auth_header,
                               json={'id': test_pkg_data_core_only['name']})
-    logger.debug('resp: %s', resp_show.text)
+    LOGGER.debug('resp: %s', resp_show.text)
     non_200_msg = 'package_show on package {0} returned a status_code {1} when ' + \
                   'package_create reported {2}'
 
@@ -236,12 +237,12 @@ def test_package_create_invalid( ckan_url, ckan_auth_header,
                                      non_200_msg)
     assert resp_show.status_code == 200, non_200_msg
 
-    logger.debug("resp text: %s", resp_show.text)
-    logger.debug("tear down has been called")
+    LOGGER.debug("resp text: %s", resp_show.text)
+    LOGGER.debug("tear down has been called")
 
 
 # post test cleanup removal of pkg if previous test fails. this is to be apart of the pre/post run at module level
 # TODO: move this into a conftest
 def test_post_cleanup(test_pkg_teardown):
     pkg = test_pkg_teardown
-    logger.debug('post cleanup: %s', pkg)
+    LOGGER.debug('post cleanup: %s', pkg)

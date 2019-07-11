@@ -19,16 +19,16 @@ import pytest
 
 from .config_fixture import test_package_name
 from .config_fixture import test_user
-import bcdc_apitests.helpers.file_utils
 
-logger = logging.getLogger(__name__)
+from helpers.file_utils import FileUtils
+LOGGER = logging.getLogger(__name__)
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def test_data_dir():
     '''
     :return: the data directory
     '''
-    file_utils = bcdc_apitests.helpers.file_utils.FileUtils
+    file_utils = FileUtils()
     #pkg_json_dir = os.path.join(os.path.dirname(__file__), '..', 'test_data')
     pkg_json_dir = file_utils.get_test_data_dir()
     yield pkg_json_dir
@@ -41,6 +41,7 @@ def test_data_dir():
 def session_test_data_dir():
 @pytest.fixture(scope='session')
     '''
+
 @pytest.fixture
 def test_pkg_data(org_create_if_not_exists_fixture, test_data_dir, test_package_name, test_user):
     #TODO: should get a fixture that creates the org if it doesn't exist
@@ -50,8 +51,8 @@ def test_pkg_data(org_create_if_not_exists_fixture, test_data_dir, test_package_
     :param test_package_name: the name of the test package
     '''
     org_id = org_create_if_not_exists_fixture['id']
-    logger.debug("test_package_name: %s", test_package_name)
-    logger.debug("test user: %s", test_user)
+    LOGGER.debug("test_package_name: %s", test_package_name)
+    LOGGER.debug("test user: %s", test_user)
     json_file = os.path.join(test_data_dir, 'pkgData_min.json')
     with open(json_file, 'r') as json_file_hand:
         datastore = json.load(json_file_hand)
@@ -129,11 +130,11 @@ def test_org_data(test_data_dir, test_organization):
     return org_data
 
 @pytest.fixture(scope='session')
-def session_test_org_data(session_test_data_dir, test_session_organization):
+def session_test_org_data(test_data_dir, test_session_organization):
     '''
     :return:  an organization data structure that can be used for testing
     '''
-    json_file = os.path.join(session_test_data_dir, 'ownerOrg.json')
+    json_file = os.path.join(test_data_dir, 'ownerOrg.json')
     with open(json_file, 'r') as json_file_hand:
         org_data = json.load(json_file_hand)
         org_data['name'] = test_session_organization

@@ -10,10 +10,10 @@ import logging
 import ckanapi
 import pytest
 
-from .ckan import remote_api_admin_auth
+from .ckan import remote_api_super_admin_auth
 from .config_fixture import test_package_name
 
-logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 # pylint: disable=redefined-outer-name
 
 # --------------------- Supporting Functions ----------------------
@@ -25,7 +25,7 @@ def package_delete(remote_api, test_package_name):
     :param remote_api: a ckanapi remote object
     :param pkg_name: the name of the package that needs to be deleted
     '''
-    logger.debug("deleting the package: %s", test_package_name)
+    LOGGER.debug("deleting the package: %s", test_package_name)
     remote_api.action.package_delete(id=test_package_name)
 
 def package_purge(remote_api, pkg_name):
@@ -33,16 +33,16 @@ def package_purge(remote_api, pkg_name):
     :param remote_api: a ckanapi remote object
     :param pkg_name: the name of the package that needs to be deleted
     '''
-    logger.debug("purge the package: %s", pkg_name)
+    LOGGER.debug("purge the package: %s", pkg_name)
     remote_api.action.dataset_purge(id=pkg_name)
 
 def delete_pkg(remote_api, pkg_name):
-    logger.debug("checking for package: %s", pkg_name)
+    LOGGER.debug("checking for package: %s", pkg_name)
     pkg_exists = package_exists(remote_api, pkg_name)
     if pkg_exists:
-        logger.debug("deleting package: %s", pkg_name)
+        LOGGER.debug("deleting package: %s", pkg_name)
         package_delete(remote_api, pkg_name)
-        logger.debug("purge the package: %s", pkg_name)
+        LOGGER.debug("purge the package: %s", pkg_name)
         remote_api.action.dataset_purge(id=pkg_name)
 
 
@@ -71,15 +71,15 @@ def package_exists(remote_api, package_name, pkgtype='ANY'):
     exists_pkg_type = 'VALID'
     try:
         pkg_data = remote_api.action.package_show(id=package_name)
-        logger.debug("package show: %s", pkg_data)
+        LOGGER.debug("package show: %s", pkg_data)
         if pkg_data['name'] == package_name:
             pkg_exists = True
     except ckanapi.errors.NotFound as err:
-        logger.debug("err: %s %s", type(err), err)
+        LOGGER.debug("err: %s %s", type(err), err)
     except ckanapi.errors.CKANAPIError as err:
-        logger.debug("err: %s %s", type(err), err)
+        LOGGER.debug("err: %s %s", type(err), err)
         # assume we have a ghost package so yes say exists
-        logger.debug("error assuming package exists and is invalid: %s", package_name)
+        LOGGER.debug("error assuming package exists and is invalid: %s", package_name)
         pkg_exists = True
         exists_pkg_type = 'INVALID'
 
@@ -95,96 +95,96 @@ def package_exists(remote_api, package_name, pkgtype='ANY'):
 
 # --------------------- Fixtures ----------------------
 @pytest.fixture
-def package_create_fixture(remote_api_admin_auth, test_pkg_data):
+def package_create_fixture(remote_api_super_admin_auth, test_pkg_data):
     '''
-    :param remote_api_admin_auth: a ckanapi remote object with auth
+    :param remote_api_super_admin_auth: a ckanapi remote object with auth
     :param test_pkg_data: json that contains a valid object
     '''
-    pkg_return = remote_api_admin_auth.action.package_create(**test_pkg_data)
-    logger.debug("pkg_return: %s", pkg_return)
+    pkg_return = remote_api_super_admin_auth.action.package_create(**test_pkg_data)
+    LOGGER.debug("pkg_return: %s", pkg_return)
     yield pkg_return
 
 
 @pytest.fixture
-def package_create_if_not_exists(remote_api_admin_auth, test_package_name,
+def package_create_if_not_exists(remote_api_super_admin_auth, test_package_name,
                                  test_valid_package_exists,
                                  test_invalid_package_exists, test_pkg_data):
     pkg_data = None
-    logger.debug("test_package_exists: %s %s", test_package_exists, type(test_package_exists))
+    LOGGER.debug("test_package_exists: %s %s", test_package_exists, type(test_package_exists))
     # if a package is found that is invalid it will get deleted and a valid
     # one will be created in its place
     if test_invalid_package_exists:
-        package_delete(remote_api_admin_auth, test_package_name)
+        package_delete(remote_api_super_admin_auth, test_package_name)
 
     if test_valid_package_exists:
-        pkg_data = remote_api_admin_auth.action.package_show(id=test_package_name)
+        pkg_data = remote_api_super_admin_auth.action.package_show(id=test_package_name)
     else:
-        pkg_data = remote_api_admin_auth.action.package_create(**test_pkg_data)
-        logger.debug("pkg_return: %s", pkg_data)
+        pkg_data = remote_api_super_admin_auth.action.package_create(**test_pkg_data)
+        LOGGER.debug("pkg_return: %s", pkg_data)
     yield pkg_data
 
 
 @pytest.fixture
-def test_package_exists(remote_api_admin_auth, test_package_name):
+def test_package_exists(remote_api_super_admin_auth, test_package_name):
     '''
-    :param remote_api_admin_auth: a ckanapi remote object with authenticated
+    :param remote_api_super_admin_auth: a ckanapi remote object with authenticated
     :param test_package_name: the name of a package that exists
     '''
-    logger.debug("testing existence of package: %s", test_package_name)
-    exists = package_exists(remote_api_admin_auth, test_package_name)
+    LOGGER.debug("testing existence of package: %s", test_package_name)
+    exists = package_exists(remote_api_super_admin_auth, test_package_name)
     yield exists
 
 @pytest.fixture
-def package_get_id_fixture(remote_api_admin_auth, test_package_name):
+def package_get_id_fixture(remote_api_super_admin_auth, test_package_name):
     '''
-    :param remote_api_admin_auth: a ckanapi remote object with authenticated
+    :param remote_api_super_admin_auth: a ckanapi remote object with authenticated
     :param test_package_name: the name of a package that exists
     '''
-    logger.debug("getting id of package: %s", test_package_name)
+    LOGGER.debug("getting id of package: %s", test_package_name)
     try:
-        pkg_data = remote_api_admin_auth.action.package_show(id=test_package_name)
+        pkg_data = remote_api_super_admin_auth.action.package_show(id=test_package_name)
         pkg_id = pkg_data['id']
-        logger.debug("package id is: %s", pkg_id)
+        LOGGER.debug("package id is: %s", pkg_id)
     except ckanapi.errors.CKANAPIError as err:
-        logger.debug("err: %s %s", type(err), err)
+        LOGGER.debug("err: %s %s", type(err), err)
 
     yield pkg_id
 
 
 @pytest.fixture
-def test_invalid_package_exists(remote_api_admin_auth, test_package_name):
+def test_invalid_package_exists(remote_api_super_admin_auth, test_package_name):
     '''
-    :param remote_api_admin_auth: a ckanapi remote object with authenticated
+    :param remote_api_super_admin_auth: a ckanapi remote object with authenticated
     :param test_package_name: the name of a package that exists
 
     returns True if the package exists and is valid.
     '''
-    logger.debug("testing if a valid package exists: %s", test_package_name)
-    exists = package_exists(remote_api_admin_auth, test_package_name, 'INVALID')
+    LOGGER.debug("testing if a valid package exists: %s", test_package_name)
+    exists = package_exists(remote_api_super_admin_auth, test_package_name, 'INVALID')
     yield exists
 
 
 @pytest.fixture
-def test_valid_package_exists(remote_api_admin_auth, test_package_name):
+def test_valid_package_exists(remote_api_super_admin_auth, test_package_name):
     '''
-    :param remote_api_admin_auth: a ckanapi remote object with authenticated
+    :param remote_api_super_admin_auth: a ckanapi remote object with authenticated
     :param test_package_name: the name of a package that exists
 
     returns True if the package exists and is valid.
     '''
-    logger.debug("testing if a valid package exists: %s", test_package_name)
-    exists = package_exists(remote_api_admin_auth, test_package_name, 'VALID')
+    LOGGER.debug("testing if a valid package exists: %s", test_package_name)
+    exists = package_exists(remote_api_super_admin_auth, test_package_name, 'VALID')
     yield exists
 
 
 @pytest.fixture
-def test_pkg_teardown(remote_api_admin_auth, test_package_name, test_package_exists):
+def test_pkg_teardown(remote_api_super_admin_auth, test_package_name, test_package_exists):
     '''
-    :param remote_api_admin_auth: a ckanapi remote object with authenticated
+    :param remote_api_super_admin_auth: a ckanapi remote object with authenticated
     :type param:
     tests to see if the test package exists and removes if it does
     '''
-    delete_pkg(remote_api_admin_auth, test_package_name)
-    logger.debug('initial clean up complete')
+    delete_pkg(remote_api_super_admin_auth, test_package_name)
+    LOGGER.debug('initial clean up complete')
 
 

@@ -12,7 +12,7 @@ import pytest
 import ckanapi
 
 
-logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 # --------------------- Supporting Functions ----------------------
 
@@ -28,11 +28,11 @@ def resource_exists(remote_api, test_resource_name, resource_get_id_fixture):
     res_exists = False
     try:
         res_data = remote_api.action.package_show(id=resource_get_id_fixture)
-        logger.debug("resource show: %s", res_data)
+        LOGGER.debug("resource show: %s", res_data)
         if res_data['name'] == test_resource_name:
             res_exists = True
     except ckanapi.errors.NotFound as err:
-        logger.debug("err: %s %s", type(err), err)
+        LOGGER.debug("err: %s %s", type(err), err)
 
     return res_exists
 
@@ -47,9 +47,9 @@ def resource_get_id_fixture(remote_api_admin_auth, test_resource_name):
     :param test_resource_name: test resource name
     '''
     res_data = remote_api_admin_auth.action.resource_search(query="name:{0}".format(test_resource_name))
-    logger.debug("resource_data: %s", res_data)
+    LOGGER.debug("resource_data: %s", res_data)
     res_id = res_data['results'][0]['id']
-    logger.debug("resource_id: %s", res_id)
+    LOGGER.debug("resource_id: %s", res_id)
 
     yield res_id
 
@@ -60,6 +60,6 @@ def resource_exists_fixture(remote_api_admin_auth, test_resource_name):
     :param remote_api_admin_auth: a ckanapi remote object with authenticated
     :param test_resource_name: the name of a package that exists
     '''
-    logger.debug("testing existence of package: %s", test_resource_name)
+    LOGGER.debug("testing existence of package: %s", test_resource_name)
     exists = resource_exists(remote_api_admin_auth, test_resource_name)
     yield exists
