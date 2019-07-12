@@ -55,10 +55,10 @@ def check_if_user_exist(remote_api_admin_auth, user):
 
 
 def check_if_user_active(remote_api_admin_auth, user):
-    usr_active = False
+    usr_active = True
     usr_data = get_user_data(remote_api_admin_auth, user)
     if usr_data['state'] == "deleted":
-        usr_active = True
+        usr_active = False
     return usr_active
 
 

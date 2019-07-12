@@ -54,6 +54,7 @@ def test_pkg_data(org_create_if_not_exists_fixture, test_data_dir,
         datastore['title'] = '{0} {1}'.format(datastore['title'], test_user)
         datastore['org'] = org_id
         datastore['owner_org'] = org_id
+        datastore['sub_org'] = org_id
     return datastore
 
 
