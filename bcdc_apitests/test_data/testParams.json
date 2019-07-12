@@ -24,7 +24,7 @@
         "test_module":"bcdc_apitests.tests.packages.test_packages",
         "test_function": "test_add_package_success",
         "test_users": ["admin"],
-        "test_data": ["pkgData_min.json", "pkgData.json"],
+        "test_data": ["pkgData_min.json"],
         "test_result": true
     },
     {

@@ -23,28 +23,22 @@ from .config_fixture import test_user
 from bcdc_apitests.helpers.file_utils import FileUtils
 LOGGER = logging.getLogger(__name__)
 
+
 @pytest.fixture(scope='session')
 def test_data_dir():
     '''
     :return: the data directory
     '''
     file_utils = FileUtils()
-    #pkg_json_dir = os.path.join(os.path.dirname(__file__), '..', 'test_data')
+    # pkg_json_dir = os.path.join(os.path.dirname(__file__), '..', 'test_data')
     pkg_json_dir = file_utils.get_test_data_dir()
     yield pkg_json_dir
 
-    '''
-    pkg_json_dir = os.path.join(os.path.dirname(__file__), '..', 'test_data')
-    yield pkg_json_dir
-
-    :return: the data directory
-def session_test_data_dir():
-@pytest.fixture(scope='session')
-    '''
 
 @pytest.fixture
-def test_pkg_data(org_create_if_not_exists_fixture, test_data_dir, test_package_name, test_user):
-    #TODO: should get a fixture that creates the org if it doesn't exist
+def test_pkg_data(org_create_if_not_exists_fixture, test_data_dir,
+                  test_package_name, test_user):
+    # TODO: should get a fixture that creates the org if it doesn't exist
     '''
     :param test_data_dir: the data directory fixture, provides the directory
                           where data is located
@@ -128,6 +122,7 @@ def test_org_data(test_data_dir, test_organization):
         org_data = json.load(json_file_hand)
         org_data['name'] = test_organization
     return org_data
+
 
 @pytest.fixture(scope='session')
 def session_test_org_data(test_data_dir, test_session_organization):

@@ -15,6 +15,7 @@ import logging
 
 import ckanapi
 import pytest  # @UnusedImport
+import time
 import requests
 from _pytest.python import Metafunc
 
@@ -51,8 +52,9 @@ LOGGER = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
     
 def test_add_package_success(conf_fixture, ckan_auth_header, test_pkg_data, 
-                             expected, test_pkg_teardown, ckan_url, ckan_rest_dir):
-
+                             test_pkg_teardown, ckan_url, ckan_rest_dir):
+#package_create_if_not_exists
+#test_pkg_teardown
 #def test_add_package_success(get_package_test_data, ckan_url, ckan_rest_dir):
 
     '''
@@ -62,17 +64,28 @@ def test_add_package_success(conf_fixture, ckan_auth_header, test_pkg_data,
     Using requests to form this call to get status code and for increased level
     of granularity over
     '''
+    #TODO: something is wrong with the configuration for the admin user or the 
+    #      package.  Can create the package as super user but not as admin
+    
+    LOGGER.debug("conf_fixture: expected %s", conf_fixture.test_result)
     #ckan_auth_header = get_package_test_data[0]
     #test_pkg_data = get_package_test_data[1]
     #expected = get_package_test_data[2]
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'package_create')
     LOGGER.debug('api_call: %s', api_call)
-
+    LOGGER.debug('ckan_auth_header: %s', ckan_auth_header)
+    LOGGER.debug('test_pkg_data: %s', test_pkg_data)
     resp = requests.post(api_call, headers=ckan_auth_header, json=test_pkg_data)
+    if resp.status_code == 502:
+        # try again
+        time.sleep(3)
+        LOGGER.debug('api_call: %s', ckan_auth_header)
+        LOGGER.debug('api_call: %s', test_pkg_data)
+        resp = requests.post(api_call, headers=ckan_auth_header, json=test_pkg_data)
     LOGGER.debug("resp: %s", resp.text)
     LOGGER.info("status code: %s", resp.status_code)
-    #assert resp.status_code == 200
-    assert resp.ok == expected
+    
+    assert (resp.status_code == 200) == conf_fixture.test_result
 
 
 def test_package_show(remote_api_admin_auth, test_package_name):

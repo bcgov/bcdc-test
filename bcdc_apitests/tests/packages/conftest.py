@@ -8,6 +8,8 @@ fixtures used for package tests
 # pylint: disable=import-error
 # pylint: disable=unused-import
 
+from bcdc_apitests.fixtures.packages import *
+
 # from bcdc_apitests.fixtures.packages \
 #     import \
 #         test_pkg_teardown, \
