@@ -20,3 +20,13 @@ def remote_api_admin_auth(ckan_url, ckan_apitoken):
     '''
     rmt_api = ckanapi.RemoteCKAN(ckan_url, ckan_apitoken)
     yield rmt_api
+
+@pytest.fixture
+def remote_api_auth(ckan_url, ckan_apitoken):
+    '''
+    :return: a remote ckan object with the api token that corresponds with the 
+             user that was configured by the test parameterization
+    :rtype: ckanapi.RemoteCKAN
+    '''
+    rmt_api = ckanapi.RemoteCKAN(ckan_url, ckan_apitoken)
+    yield rmt_api

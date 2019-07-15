@@ -1,44 +1,67 @@
 [
 	{
-		"test_module":"bcdc_apitests.tests.packages.test_packages",
-		"test_function": "test_add_package",
-		"test_users": ["admin"],
-		"test_data": ["pkgData_min.json", "pkgData.json"],
-		"test_result": true
-	},
-    {
         "test_module":"bcdc_apitests.tests.packages.test_packages",
-        "test_function": "test_add_package",
-        "test_users": ["editor", "viewer"],
-        "test_data": ["pkgData_min.json", "pkgData.json"],
-        "test_result": false
-    },
-    {
-        "test_module":"bcdc_apitests.tests.packages.test_packages",
-        "test_function": "test_add_package",
-        "test_users": ["admin"],
-        "test_data": ["pkgData_min.json", "pkgData.json"],
-        "test_result": true
-    },
-	{
-        "test_module":"bcdc_apitests.tests.packages.test_packages",
-        "test_function": "test_add_package_success",
-        "test_users": ["admin"],
+        "test_function": "test_package_create",
+        "test_users": ["admin", "editor"],
         "test_data": ["pkgData_min.json"],
         "test_result": true
     },
     {
         "test_module":"bcdc_apitests.tests.packages.test_packages",
-        "test_function": "test_add_package_success_disable",
-        "test_users": ["editor", "viewer"],
+        "test_function": "test_package_create",
+        "test_users": ["viewer"],
         "test_data": ["pkgData_min.json", "pkgData.json"],
         "test_result": false
     },
 	{
-		"test_module":"packages",
-		"test_function": "test_view_package",
-		"test_users": ["admin"],
+		"test_module":"bcdc_apitests.tests.packages.test_packages",
+		"test_function": "test_package_show",
+		"test_users": ["admin", "editor", "viewer"],
 		"test_data": ["pkgData.json"],
 		"test_result": true
-	}
+	},
+	{
+        "test_module":"bcdc_apitests.tests.packages.test_packages",
+        "test_function": "test_package_update",
+        "test_users": ["admin", "editor"],
+        "test_data": ["pkgData.json"],
+        "test_result": true
+    }, 
+	   {
+        "test_module":"bcdc_apitests.tests.packages.test_packages",
+        "test_function": "test_package_update",
+        "test_users": ["viewer"],
+        "test_data": ["pkgData.json"],
+        "test_result": false
+    },
+    {
+        "test_module":"bcdc_apitests.tests.packages.test_packages",
+        "test_function": "test_package_list_vs_package_show",
+        "test_users": ["admin", "editor", "viewer"],
+        "test_data": ["pkgData.json"],
+        "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.packages.test_packages",
+        "test_function": "test_package_delete",
+        "test_users": ["admin", "editor"],
+        "test_data": ["pkgData.json"],
+        "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.packages.test_packages",
+        "test_function": "test_package_delete",
+        "test_users": ["viewer"],
+        "test_data": ["pkgData.json"],
+        "test_result": false
+    },
+    {
+        "test_module":"bcdc_apitests.tests.packages.test_packages",
+        "test_function": "test_create_package_coredataonly",
+        "test_users": ["admin", "editor"],
+        "test_data": ["pkgData.json"],
+        "test_result": true, 
+        "comment": "only configure this test for admin/editor as only they can create data.  This test determines if it is possible to create a package with only the fields identified in the ckan docs.  Expected result should be false."
+    }
+	
 ]

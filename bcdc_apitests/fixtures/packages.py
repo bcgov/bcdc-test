@@ -45,19 +45,6 @@ def delete_pkg(remote_api, pkg_name):
         LOGGER.debug("purge the package: %s", pkg_name)
         remote_api.action.dataset_purge(id=pkg_name)
 
-def package_purge_if_exists(remote_api, package_name):
-    pkg_exists = False
-    try:
-        pkg_data = remote_api.action.package_show(id=package_name)
-        logger.debug("package show: %s", pkg_data)
-        if pkg_data['name'] == package_name:
-            pkg_exists = True
-    except ckanapi.errors.NotFound as err:
-        logger.debug("err: %s %s", type(err), err)
-    if pkg_exists:
-        package_purge(remote_api, package_name)
-
-
 def package_exists(remote_api, package_name, pkgtype='ANY'):
     '''
     :param remote_api: ckanapi, remote api object that is to be used to determine
@@ -106,6 +93,7 @@ def package_exists(remote_api, package_name, pkgtype='ANY'):
 
 
 # --------------------- Fixtures ----------------------
+
 @pytest.fixture
 def package_create_fixture(remote_api_super_admin_auth, test_pkg_data):
     '''
@@ -133,8 +121,18 @@ def package_create_if_not_exists(remote_api_super_admin_auth, test_package_name,
     else:
         pkg_data = remote_api_super_admin_auth.action.package_create(**test_pkg_data)
         LOGGER.debug("pkg_return: %s", pkg_data)
-    yield pkg_data
 
+    yield pkg_data
+    
+@pytest.fixture
+def package_delete_if_exists(remote_api_super_admin_auth, test_package_name,
+                             test_package_exists):
+    '''
+    if the package exists nuke it, differs from test_pkg_teardown that will 
+    remove the package at teardown stage
+    '''
+    if test_package_exists:
+        package_delete(remote_api_super_admin_auth, test_package_name)
 
 @pytest.fixture
 def test_package_exists(remote_api_super_admin_auth, test_package_name):
@@ -196,6 +194,7 @@ def test_pkg_teardown(remote_api_super_admin_auth, test_package_name, test_packa
     :type param:
     tests to see if the test package exists and removes if it does
     '''
+    yield
     delete_pkg(remote_api_super_admin_auth, test_package_name)
     LOGGER.debug('initial clean up complete')
 

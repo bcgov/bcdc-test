@@ -70,19 +70,7 @@ def user_delete(remote_api_admin_auth, user):
     except ckanapi.errors.NotFound as err:
         LOGGER.debug("err: %s %s", type(err), err)
 
-
 def assign_user_role(remote_api_admin_auth, user, org_id, role):
-def get_user_apikey(remote_api_admin_auth,user):
-    # func must run as sysadmin to return apikey of user
-    usr_apiKey = ()
-        logger.debug("setting test user role: %s", usr_data)
-        usr_data = remote_api_admin_auth.action.user_show(id=user)
-    try:
-        usr_apiKey = usr_data['apikey']
-    except ckanapi.errors.NotFound as err:
-    return usr_apiKey
-        logger.debug("err: %s %s", type(err), err)
-
     
     resp = remote_api_admin_auth.action.organization_member_create(
         id=org_id, username=user, role=role)

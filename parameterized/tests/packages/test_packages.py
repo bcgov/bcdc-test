@@ -20,7 +20,7 @@ import inspect
 
 logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
-# def test_add_package_success(conf_fixture, user_label_fixture, data_label_fixture):
+# def test_package_create(conf_fixture, user_label_fixture, data_label_fixture):
 #     #print 'ckan_auth_header', ckan_auth_header
 #     #print 'got here ', ckan_auth_header
 #     # need to figure out how to retrieve expected results.
@@ -35,7 +35,7 @@ logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
 #     print 'expectations', conf_fixture.test_result
 
 
-def test_add_package_success(conf_fixture, ckan_auth_header, test_pkg_data, expected, 
+def test_package_create(conf_fixture, ckan_auth_header, test_pkg_data, expected, 
                              test_pkg_teardown, ckan_url, ckan_rest_dir):
     '''
     makes simple request to create package and verifies it gets
