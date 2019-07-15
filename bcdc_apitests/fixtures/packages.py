@@ -28,6 +28,7 @@ def package_delete(remote_api, test_package_name):
     LOGGER.debug("deleting the package: %s", test_package_name)
     remote_api.action.package_delete(id=test_package_name)
 
+
 def package_purge(remote_api, pkg_name):
     '''
     :param remote_api: a ckanapi remote object
@@ -36,7 +37,13 @@ def package_purge(remote_api, pkg_name):
     LOGGER.debug("purge the package: %s", pkg_name)
     remote_api.action.dataset_purge(id=pkg_name)
 
+
 def delete_pkg(remote_api, pkg_name):
+    '''
+    :param remote_api: a ckan remote api object
+    :param pkg_name:  the package name that is to be deleted if it
+                      exists.
+    '''
     LOGGER.debug("checking for package: %s", pkg_name)
     pkg_exists = package_exists(remote_api, pkg_name)
     if pkg_exists:
@@ -44,6 +51,7 @@ def delete_pkg(remote_api, pkg_name):
         package_delete(remote_api, pkg_name)
         LOGGER.debug("purge the package: %s", pkg_name)
         remote_api.action.dataset_purge(id=pkg_name)
+
 
 def package_exists(remote_api, package_name, pkgtype='ANY'):
     '''
@@ -91,8 +99,8 @@ def package_exists(remote_api, package_name, pkgtype='ANY'):
 
     return pkg_exists
 
-
 # --------------------- Fixtures ----------------------
+
 
 @pytest.fixture
 def package_create_fixture(remote_api_super_admin_auth, test_pkg_data):
@@ -106,33 +114,50 @@ def package_create_fixture(remote_api_super_admin_auth, test_pkg_data):
 
 
 @pytest.fixture
-def package_create_if_not_exists(remote_api_super_admin_auth, test_package_name,
+def package_create_if_not_exists(remote_api_super_admin_auth,
                                  test_valid_package_exists,
                                  test_invalid_package_exists, test_pkg_data):
+    '''
+    :param remote_api_super_admin_auth: ckanapi remote object with super admin
+        credentials
+    :param test_package_name: the name of the object that should be created
+    :param test_valid_package_exists: results of whether the package exists and
+        is a valid package
+    :param test_valid_package_exists: Does the package exists and is valid, (not
+        a ghost package)
+    :param test_pkg_data: the data to use when creating the package
+    '''
     pkg_data = None
-    LOGGER.debug("test_package_exists: %s %s", test_package_exists, type(test_package_exists))
+    test_package_name = test_pkg_data['name']
+    LOGGER.debug("test_package_exists (%s): %s %s", test_package_name,
+                 test_package_exists, type(test_package_exists))
+
     # if a package is found that is invalid it will get deleted and a valid
     # one will be created in its place
     if test_invalid_package_exists:
         package_delete(remote_api_super_admin_auth, test_package_name)
 
     if test_valid_package_exists:
-        pkg_data = remote_api_super_admin_auth.action.package_show(id=test_package_name)
+        pkg_data = remote_api_super_admin_auth.action.package_show(
+            id=test_package_name)
     else:
-        pkg_data = remote_api_super_admin_auth.action.package_create(**test_pkg_data)
+        pkg_data = remote_api_super_admin_auth.action.package_create(
+            **test_pkg_data)
         LOGGER.debug("pkg_return: %s", pkg_data)
 
     yield pkg_data
-    
+
+
 @pytest.fixture
 def package_delete_if_exists(remote_api_super_admin_auth, test_package_name,
                              test_package_exists):
     '''
-    if the package exists nuke it, differs from test_pkg_teardown that will 
+    if the package exists nuke it, differs from test_pkg_teardown that will
     remove the package at teardown stage
     '''
     if test_package_exists:
         package_delete(remote_api_super_admin_auth, test_package_name)
+
 
 @pytest.fixture
 def test_package_exists(remote_api_super_admin_auth, test_package_name):
@@ -143,6 +168,7 @@ def test_package_exists(remote_api_super_admin_auth, test_package_name):
     LOGGER.debug("testing existence of package: %s", test_package_name)
     exists = package_exists(remote_api_super_admin_auth, test_package_name)
     yield exists
+
 
 @pytest.fixture
 def package_get_id_fixture(remote_api_super_admin_auth, test_package_name):
@@ -188,7 +214,7 @@ def test_valid_package_exists(remote_api_super_admin_auth, test_package_name):
 
 
 @pytest.fixture
-def test_pkg_teardown(remote_api_super_admin_auth, test_package_name, test_package_exists):
+def test_pkg_teardown(remote_api_super_admin_auth, test_package_name):
     '''
     :param remote_api_super_admin_auth: a ckanapi remote object with authenticated
     :type param:
@@ -197,5 +223,3 @@ def test_pkg_teardown(remote_api_super_admin_auth, test_package_name, test_packa
     yield
     delete_pkg(remote_api_super_admin_auth, test_package_name)
     LOGGER.debug('initial clean up complete')
-
-

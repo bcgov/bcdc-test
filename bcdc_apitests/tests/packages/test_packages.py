@@ -12,20 +12,17 @@ b) create package with org insert the org just created for this package.
 '''
 
 import logging
+import time
 
 import ckanapi
 import pytest  # @UnusedImport
-import time
 import requests
-from _pytest.python import Metafunc
+
 
 LOGGER = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
 # pylint: disable=redefined-outer-name
 # pylint: disable=unused-argument
-
-# TODO: move testpkg teardown to conftest, currently in test method to help
-#       while running as single test
 
 
 def test_package_create(conf_fixture, ckan_auth_header, test_pkg_data,
@@ -189,7 +186,7 @@ def test_package_delete(conf_fixture, ckan_url, ckan_auth_header,
 @pytest.mark.xfail
 def test_create_package_coredataonly(conf_fixture, ckan_url, ckan_auth_header,
                                      ckan_rest_dir, test_pkg_data_core_only,
-                                     package_delete_if_exists, test_pkg_teardown):
+                                     package_delete_if_exists):
     '''
     CKAN Documentation suggests these are the core attributes required for a
     package:
