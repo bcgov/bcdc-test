@@ -72,6 +72,17 @@ def user_delete(remote_api_admin_auth, user):
 
 
 def assign_user_role(remote_api_admin_auth, user, org_id, role):
+def get_user_apikey(remote_api_admin_auth,user):
+    # func must run as sysadmin to return apikey of user
+    usr_apiKey = ()
+        logger.debug("setting test user role: %s", usr_data)
+        usr_data = remote_api_admin_auth.action.user_show(id=user)
+    try:
+        usr_apiKey = usr_data['apikey']
+    except ckanapi.errors.NotFound as err:
+    return usr_apiKey
+        logger.debug("err: %s %s", type(err), err)
+
     
     resp = remote_api_admin_auth.action.organization_member_create(
         id=org_id, username=user, role=role)
@@ -142,10 +153,11 @@ def user_data_fixture_session(remote_api_super_admin_auth, user_label_fixture):
             msg = msg.format(user_label_fixture)
             raise TooManyUsersException(msg)
         user_label_fixture = user_label_fixture[0]
-    
     usr_data = get_user_data(remote_api_super_admin_auth, user_label_fixture)
     return usr_data
 
 class TooManyUsersException(Exception):
     pass
 
+
+    

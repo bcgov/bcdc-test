@@ -45,6 +45,18 @@ def delete_pkg(remote_api, pkg_name):
         LOGGER.debug("purge the package: %s", pkg_name)
         remote_api.action.dataset_purge(id=pkg_name)
 
+def package_purge_if_exists(remote_api, package_name):
+    pkg_exists = False
+    try:
+        pkg_data = remote_api.action.package_show(id=package_name)
+        logger.debug("package show: %s", pkg_data)
+        if pkg_data['name'] == package_name:
+            pkg_exists = True
+    except ckanapi.errors.NotFound as err:
+        logger.debug("err: %s %s", type(err), err)
+    if pkg_exists:
+        package_purge(remote_api, package_name)
+
 
 def package_exists(remote_api, package_name, pkgtype='ANY'):
     '''

@@ -48,6 +48,14 @@ def test_package_name():
     return TEST_PACKAGE
 
 
+@pytest.fixture(scope="session")
+def session_test_package_name():
+    '''
+    :return: the name of the package to be used for the testing.
+    '''
+    return TEST_PACKAGE
+
+
 @pytest.fixture
 def test_resource_name():
     '''
@@ -63,6 +71,7 @@ def ckan_rest_dir():
     '''
     return BCDC_REST_DIR
 
+
 @pytest.fixture(scope="session")
 def test_admin_user():
     '''
@@ -70,6 +79,7 @@ def test_admin_user():
         unique between testers
     '''
     return TEST_ADMIN_USER
+
 
 @pytest.fixture(scope="session")
 def test_editor_user():
@@ -79,6 +89,7 @@ def test_editor_user():
     '''
     return TEST_EDITOR_USER
 
+
 @pytest.fixture(scope="session")
 def test_viewer_user():
     '''
@@ -86,6 +97,7 @@ def test_viewer_user():
         unique between testers
     '''
     return TEST_VIEWER_USER
+
 
 @pytest.fixture(scope="session")
 def test_roles():
