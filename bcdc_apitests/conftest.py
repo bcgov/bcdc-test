@@ -17,7 +17,7 @@ from bcdc_apitests.fixtures.load_data import *
 from bcdc_apitests.fixtures.orgs import *
 from bcdc_apitests.fixtures.users import *
 from bcdc_apitests.fixtures.ckan import *
-from bcdc_apitests.fixtures.setup_fixtures import * 
+from bcdc_apitests.fixtures.setup_fixtures import *
 import helpers.read_test_config
 
 LOGGER = logging.getLogger(__name__)
@@ -68,6 +68,7 @@ def pytest_generate_tests(metafunc):
                                  ids=test_config_ids,
                                  indirect=True)
     LOGGER.info("completed test parameterization")
+
 
 # Move this logic into component fixtures that get imported here instead
 # of defined here, moved org logic to
