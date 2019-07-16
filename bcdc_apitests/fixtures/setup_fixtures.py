@@ -29,6 +29,8 @@ def data_label_fixture(conf_fixture):
     the decided how the data needs to be configured.
 
     '''
+    # should test to make sure there is only one dataset.
+    # assume tests have been flattened if this fixture is called.
     yield conf_fixture.test_data
 
 

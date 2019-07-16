@@ -37,7 +37,7 @@ def test_data_dir():
 
 @pytest.fixture
 def test_pkg_data(org_create_if_not_exists_fixture, test_data_dir,
-                  test_package_name, test_user):
+                  test_package_name, test_user, data_label_fixture):
     '''
     :param test_data_dir: the data directory fixture, provides the directory
                           where data is located
@@ -46,7 +46,7 @@ def test_pkg_data(org_create_if_not_exists_fixture, test_data_dir,
     org_id = org_create_if_not_exists_fixture['id']
     LOGGER.debug("test_package_name: %s", test_package_name)
     LOGGER.debug("test user: %s", test_user)
-    json_file = os.path.join(test_data_dir, 'pkgData_min.json')
+    json_file = os.path.join(test_data_dir, data_label_fixture[0])
     with open(json_file, 'r') as json_file_hand:
         datastore = json.load(json_file_hand)
         datastore['name'] = test_package_name
@@ -65,7 +65,7 @@ def resource_data(test_data_dir, test_resource_name):
     :param test_resource_name: the name of the resource that should
         be used for this test
     '''
-    logging.debug("test_package_name: %s", test_package_name)
+    logging.debug("test_resource_name: %s", test_resource_name)
     json_file = os.path.join(test_data_dir, 'resource.json')
     with open(json_file, 'r') as json_file_hand:
         datastore = json.load(json_file_hand)

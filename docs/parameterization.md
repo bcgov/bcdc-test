@@ -133,4 +133,15 @@ load_config.ckan_auth_header
 
 ```
 
+#### load_data.test_pkg_data
+
+Some tests need access to parameterized source data.  This fixture provides 
+access to test configuration property `test_data`.
+
+```
+load_data.test_pkg_data
+    <-- setup_fixtures.data_label_fixture
+        <-- setup_fixtures.conf_fixture
+```
+
 
