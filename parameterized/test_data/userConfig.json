@@ -1,9 +1,0 @@
-{
-    "admin": {
-        "__comment__": "the key for this struct is the label, using this struct in case we need to add more parameters later"
-    },
-    "viewer": {
-    },
-    "editor": {
-    }
-}
