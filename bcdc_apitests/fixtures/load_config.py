@@ -161,14 +161,14 @@ def temp_user_password(import_dbcsecrets, secret_file):
         misc_params = creds.getMiscParams()
         passwordkey = 'BCDC_TMP_USER_PASSWORD'
         LOGGER.debug("token_key: %s", '*' * len(passwordkey))
-        token = misc_params.getParam(passwordkey)
+        password = misc_params.getParam(passwordkey)
     else:
         LOGGER.debug("secret file: %s", secret_file)
         msg = 'unable to retrieve the secret for the temp user password in ' + \
               'either the environment %s or  the secrets file %s'
         msg = msg.format('BCDC_TMP_USER_PASSWORD', secret_file)
         raise SecretsNotFound(msg)
-    return token
+    return password
 
 
 @pytest.fixture(scope="session")

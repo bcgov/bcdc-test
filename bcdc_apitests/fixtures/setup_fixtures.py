@@ -29,8 +29,6 @@ def data_label_fixture(conf_fixture):
     the decided how the data needs to be configured.
 
     '''
-    # TODO: Configure so can be run with a single dataset
-
     yield conf_fixture.test_data
 
 
