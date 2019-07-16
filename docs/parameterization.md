@@ -54,7 +54,7 @@ records.
 * **test_module**   : the name of the module where the test will be found
 * **test_function** : the name of the test function to be parameterized
 * **test_users**    : a list of test users to be used in this test
-* **test_data**     : a list of the datasets to be used this test. These files are expected to be located in the test_data folder.
+* **test_data**     : a list of the datasets/packages to be used this test. These files are expected to be located in the test_data folder.
 * **test_result**   : the expected outcome for the all combinations of users and data.
 
 ## Fixtures Impacted by Parameterization
