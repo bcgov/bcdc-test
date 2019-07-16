@@ -19,33 +19,31 @@ import pytest
 
 from .config_fixture import test_package_name
 from .config_fixture import test_user
+import bcdc_apitests.helpers.file_utils
 
-from bcdc_apitests.helpers.file_utils import FileUtils
-LOGGER = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
-
-@pytest.fixture(scope='session')
+@pytest.fixture
 def test_data_dir():
     '''
     :return: the data directory
     '''
-    file_utils = FileUtils()
-    # pkg_json_dir = os.path.join(os.path.dirname(__file__), '..', 'test_data')
+    file_utils = bcdc_apitests.helpers.file_utils.FileUtils
+    #pkg_json_dir = os.path.join(os.path.dirname(__file__), '..', 'test_data')
     pkg_json_dir = file_utils.get_test_data_dir()
     yield pkg_json_dir
 
-
 @pytest.fixture
-def test_pkg_data(org_create_if_not_exists_fixture, test_data_dir,
-                  test_package_name, test_user):
+def test_pkg_data(org_create_if_not_exists_fixture, test_data_dir, test_package_name, test_user):
+    #TODO: should get a fixture that creates the org if it doesn't exist
     '''
     :param test_data_dir: the data directory fixture, provides the directory
                           where data is located
     :param test_package_name: the name of the test package
     '''
     org_id = org_create_if_not_exists_fixture['id']
-    LOGGER.debug("test_package_name: %s", test_package_name)
-    LOGGER.debug("test user: %s", test_user)
+    logger.debug("test_package_name: %s", test_package_name)
+    logger.debug("test user: %s", test_user)
     json_file = os.path.join(test_data_dir, 'pkgData_min.json')
     with open(json_file, 'r') as json_file_hand:
         datastore = json.load(json_file_hand)
@@ -53,7 +51,6 @@ def test_pkg_data(org_create_if_not_exists_fixture, test_data_dir,
         datastore['title'] = '{0} {1}'.format(datastore['title'], test_user)
         datastore['org'] = org_id
         datastore['owner_org'] = org_id
-        datastore['sub_org'] = org_id
     return datastore
 
 
@@ -121,17 +118,4 @@ def test_org_data(test_data_dir, test_organization):
     with open(json_file, 'r') as json_file_hand:
         org_data = json.load(json_file_hand)
         org_data['name'] = test_organization
-    return org_data
-
-
-@pytest.fixture(scope='session')
-def session_test_org_data(test_data_dir, test_session_organization):
-    '''
-    :return:  an organization data structure that can be used for testing
-    '''
-    json_file = os.path.join(test_data_dir, 'ownerOrg.json')
-    LOGGER.debug("json file path: %s", json_file)
-    with open(json_file, 'r') as json_file_hand:
-        org_data = json.load(json_file_hand)
-        org_data['name'] = test_session_organization
     return org_data

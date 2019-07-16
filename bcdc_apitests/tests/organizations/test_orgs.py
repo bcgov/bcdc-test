@@ -11,7 +11,7 @@ import logging
 import ckanapi
 import pytest
 
-logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
+LOGGER = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
 
 def test_verify_read_orgs(ckan_url):
@@ -21,7 +21,7 @@ def test_verify_read_orgs(ckan_url):
     '''
     remote_api = ckanapi.RemoteCKAN(ckan_url)
     pkg_list = remote_api.action.organization_list()
-    logger.debug("orglist cnt: %s", len(pkg_list))
+    LOGGER.debug("orglist cnt: %s", len(pkg_list))
     assert pkg_list
 
 
@@ -33,10 +33,10 @@ def test_org_create_if_not_exists(remote_api_admin_auth, test_organization, org_
 
     if org_exists_fixture:
         org_data = remote_api_admin_auth.action.organization_show(id=test_organization)
-        logger.debug("org_exists: %s", org_data)
+        LOGGER.debug("org_exists: %s", org_data)
     else:
         org_data = remote_api_admin_auth.action.organization_create(**test_org_data)
-        logger.debug("create org: %s", org_data)
+        LOGGER.debug("create org: %s", org_data)
 
 
 def test_verify_test_org_exists(ckan_url, ckan_apitoken, test_organization):
@@ -50,15 +50,15 @@ def test_verify_test_org_exists(ckan_url, ckan_apitoken, test_organization):
     except ckanapi.errors.NotFound as err:
         msg = 'The test organization {0} that is required for most tests does ' + \
               'not exist'
-        logger.debug("error: %s", type(err))
+        LOGGER.debug("error: %s", type(err))
         msg = msg.format(test_organization)
-        logger.error(msg)
+        LOGGER.error(msg)
         pytest.fail(msg)
-    logger.debug("org: %s", org)
+    LOGGER.debug("org: %s", org)
 
 
 #No need to purge org at this level
 # def test_org_purge(org_teardown_fixture):
 #     org = org_teardown_fixture
-#     logger.debug('post cleanup: %s', org)
+#     LOGGER.debug('post cleanup: %s', org)
 
