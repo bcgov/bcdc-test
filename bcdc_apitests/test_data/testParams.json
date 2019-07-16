@@ -15,7 +15,7 @@
     },
 	{
 		"test_module":"bcdc_apitests.tests.packages.test_packages",
-		"test_function": "test_package_show",
+		"test_function": "test_package_show2",
 		"test_users": ["admin", "editor", "viewer"],
 		"test_data": ["pkgData.json"],
 		"test_result": true

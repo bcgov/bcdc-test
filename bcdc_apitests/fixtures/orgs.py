@@ -50,7 +50,7 @@ def org_create_if_not_exists(remote_api, test_organization, test_org_data):
         org_data = remote_api.action.organization_show(id=test_organization)
     else:
         org_data = remote_api.action.organization_create(**test_org_data)
-        logger.debug("org_return: %s", org_data)
+        LOGGER.debug("org_return: %s", org_data)
     return org_data
 
 

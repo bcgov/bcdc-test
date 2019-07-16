@@ -40,7 +40,7 @@ def test_organization():
     return TEST_ORGANIZATION
 
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def test_package_name():
     '''
     :return: the name of the package to be used for the testing.

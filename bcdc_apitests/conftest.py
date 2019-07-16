@@ -48,6 +48,8 @@ def pytest_generate_tests(metafunc):
     test_params = tst_config_reader.get_test_params(module=metafunc.module.__name__,
                                                     function=metafunc.function.__name__)
 
+    # TODO: need to print test_params to make sure they are correct
+
     LOGGER.debug('module/function: %s/%s', metafunc.module.__name__, metafunc.function.__name__)
     LOGGER.debug('test_params: %s', test_params)
     LOGGER.debug('fixtures required: %s', metafunc.fixturenames)
@@ -71,4 +73,8 @@ def pytest_generate_tests(metafunc):
 # of defined here, moved org logic to
 # orgs.org_setup_fixture - in theory there is no need to invoke as the
 # fixture was tagged autouse.
+@pytest.fixture(scope="session", autouse=True)
+def session_setup_teardown_mod(user_setup_fixture):
+    LOGGER.debug("called the session start up")
+    pass
 

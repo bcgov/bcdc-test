@@ -199,7 +199,7 @@ def ckan_apitoken_session(user_data_fixture_session):
     return apitoken
 
 @pytest.fixture()
-def ckan_apitoken(user_data_fixture_session):
+def ckan_apitoken(user_data_fixture):
     '''
     :param user_label_fixture:  identifies the user that should be
                                 used for this test
@@ -207,7 +207,7 @@ def ckan_apitoken(user_data_fixture_session):
     # user_label_fixture will be populated with the values in
     # the property test_users from the testParams.json file.
     # they are keywords: admin, editor, viewer
-    apitoken = user_data_fixture_session['apikey']
+    apitoken = user_data_fixture['apikey']
     # for now to make work just continue to use super admin
     # api tokens
     return apitoken

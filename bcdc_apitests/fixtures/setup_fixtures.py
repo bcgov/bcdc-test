@@ -34,7 +34,7 @@ def data_label_fixture(conf_fixture):
     yield conf_fixture.test_data
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture
 def user_label_fixture(conf_fixture):
     '''
     parameterized fixture that cycles the different user types to
@@ -67,7 +67,7 @@ def user_label_fixture(conf_fixture):
             msg = 'The test configuration references the user: {0} which is ' + \
                   'an invalid value. reference is for the module {1} and ' + \
                   'function: {2}.  Some valid values include: {3}'
-            msg = msg.format(conf_test_role, conf_fixture.test_module, 
+            msg = msg.format(conf_test_role, conf_fixture.test_module,
                              conf_fixture.test_function, valid_roles)
             raise UserRoleConfigurationException(msg)
     LOGGER.debug("user_names: %s", user_names)
@@ -82,7 +82,7 @@ def user_label_fixture(conf_fixture):
 #      create separate test cases for these.
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture
 def conf_fixture(request):
     '''
     Gets a TestConfig object that contains the test configuration
@@ -90,9 +90,8 @@ def conf_fixture(request):
     '''
     LOGGER.debug("param for the fixture config: %s", request.param)
     yield request.param
-    
+
+
 class UserRoleConfigurationException(Exception):
     pass
-    
-
 

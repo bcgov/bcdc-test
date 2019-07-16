@@ -29,6 +29,7 @@ def get_user_data(remote_api, user, retry=0):
     try:
         LOGGER.debug("looking for the user: %s", user)
         usr_data = remote_api.action.user_show(id=user)
+        LOGGER.debug("usr_data: %s", usr_data)
     except ckanapi.errors.NotFound as err:
         LOGGER.debug("err: %s %s", type(err), err)
     except ckanapi.errors.CKANAPIError:
@@ -70,8 +71,9 @@ def user_delete(remote_api_admin_auth, user):
     except ckanapi.errors.NotFound as err:
         LOGGER.debug("err: %s %s", type(err), err)
 
+
 def assign_user_role(remote_api_admin_auth, user, org_id, role):
-    
+
     resp = remote_api_admin_auth.action.organization_member_create(
         id=org_id, username=user, role=role)
     LOGGER.debug("setting test user role: %s", resp)
@@ -80,10 +82,10 @@ def assign_user_role(remote_api_admin_auth, user, org_id, role):
 @pytest.fixture(scope="session")
 def user_setup_fixture(org_setup_fixture, remote_api_super_admin_auth,
                        test_roles, temp_user_password):
-    
-    # TODO: This is currently set up to create all the possible user types, 
-    #       could set up as a function scope that creates and configures 
-    #       users as required.  Caches results so that it doesn't have 
+
+    # TODO: This is currently set up to create all the possible user types,
+    #       could set up as a function scope that creates and configures
+    #       users as required.  Caches results so that it doesn't have
     #       to re-create.
     users = test_roles.keys()
     for user in users:
@@ -111,7 +113,7 @@ def user_setup_fixture(org_setup_fixture, remote_api_super_admin_auth,
         assign_user_role(remote_api_super_admin_auth, user, org_id, role)
         LOGGER.debug('user %s setup complete', user)
     yield
-    #TODO: commenting out for now
+    # TODO: commenting out for now
 #     for user in users:
 #         user_delete(remote_api_super_admin_auth, user)
 
@@ -122,7 +124,7 @@ def user_data_fixture(remote_api_super_admin_auth, user_label_fixture):
     use the super admin to get the user info as other api tokens may not
     '''
     LOGGER.debug("user_label_fixture: %s", user_label_fixture)
-    usr_data = get_user_data(remote_api_super_admin_auth, user_label_fixture)
+    usr_data = get_user_data(remote_api_super_admin_auth, user_label_fixture[0])
     return usr_data
 
 
@@ -144,8 +146,7 @@ def user_data_fixture_session(remote_api_super_admin_auth, user_label_fixture):
     usr_data = get_user_data(remote_api_super_admin_auth, user_label_fixture)
     return usr_data
 
+
 class TooManyUsersException(Exception):
     pass
 
-
-    

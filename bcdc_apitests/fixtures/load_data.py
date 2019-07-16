@@ -38,7 +38,6 @@ def test_data_dir():
 @pytest.fixture
 def test_pkg_data(org_create_if_not_exists_fixture, test_data_dir,
                   test_package_name, test_user):
-    # TODO: should get a fixture that creates the org if it doesn't exist
     '''
     :param test_data_dir: the data directory fixture, provides the directory
                           where data is located

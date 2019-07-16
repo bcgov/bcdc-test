@@ -135,9 +135,11 @@ def package_create_if_not_exists(remote_api_super_admin_auth,
     # if a package is found that is invalid it will get deleted and a valid
     # one will be created in its place
     if test_invalid_package_exists:
+        LOGGER.debug("invalid package exists, deleting")
         package_delete(remote_api_super_admin_auth, test_package_name)
 
     if test_valid_package_exists:
+        LOGGER.debug("creating package")
         pkg_data = remote_api_super_admin_auth.action.package_show(
             id=test_package_name)
     else:
@@ -223,3 +225,18 @@ def test_pkg_teardown(remote_api_super_admin_auth, test_package_name):
     yield
     delete_pkg(remote_api_super_admin_auth, test_package_name)
     LOGGER.debug('initial clean up complete')
+
+
+@pytest.fixture(scope="module")
+def module_package_cleaner(remote_api_super_admin_auth, test_package_name):
+    '''
+    Run in the conftest, cleans up an test packages before and after the package
+    tests are run.
+    '''
+    if package_exists(remote_api_super_admin_auth, test_package_name):
+        delete_pkg(remote_api_super_admin_auth, test_package_name)
+    yield
+    if package_exists(remote_api_super_admin_auth, test_package_name):
+        delete_pkg(remote_api_super_admin_auth, test_package_name)
+
+    

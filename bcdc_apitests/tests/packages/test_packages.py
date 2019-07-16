@@ -17,7 +17,7 @@ import time
 import ckanapi
 import pytest  # @UnusedImport
 import requests
-
+import inspect
 
 LOGGER = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
@@ -36,6 +36,13 @@ def test_package_create(conf_fixture, ckan_auth_header, test_pkg_data,
     Using requests to form this call to get status code and for increased level
     of granularity over
     '''
+    funcName = inspect.stack()[0][3]
+    LOGGER.debug("funcName %s, %s", funcName, conf_fixture.test_function)
+    if funcName <> conf_fixture.test_function:
+        raise ValueError("incorrect conf_fixtures was sent")
+
+
+
 
     LOGGER.debug("conf_fixture: expected %s", conf_fixture.test_result)
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'package_create')
@@ -54,18 +61,27 @@ def test_package_create(conf_fixture, ckan_auth_header, test_pkg_data,
     assert (resp.status_code == 200) == conf_fixture.test_result
 
 
-def test_package_show(conf_fixture, remote_api_auth, test_package_name,
+def test_package_show2(conf_fixture, remote_api_auth, test_package_name,
                       package_create_if_not_exists):
     '''
     verify package data can be retrieved using package_show.
 
     :param param: remote_api_admin_auth
     '''
+    # TODO: this test is getting the wrong fixture!!!
+    funcName = inspect.stack()[0][3]
+    LOGGER.debug("funcName %s, %s", funcName, conf_fixture.test_function)
+    if funcName <> conf_fixture.test_function:
+        raise ValueError("incorrect conf_fixtures was sent")
+    
     LOGGER.debug("conf_fixture: expected %s", conf_fixture.test_result)
-
+    LOGGER.debug("conf_fixture:  %s", conf_fixture)
     # should this be a requests call instead of ckanapi?
     pkg_show_data = remote_api_auth.action.package_show(id=test_package_name)
     LOGGER.debug("pkg_show_data: %s", pkg_show_data)
+    LOGGER.debug("package name: %s", pkg_show_data['name'])
+    LOGGER.debug("expected name: %s", test_package_name)
+    LOGGER.debug("expected outcome: %s", conf_fixture.test_result)
     assert (pkg_show_data['name'] == test_package_name) == conf_fixture.test_result
 
 
@@ -88,6 +104,14 @@ def test_package_update(conf_fixture, remote_api_auth, test_pkg_data, ckan_url,
                         exist when its running.  Creates it if it does not
                         already exist
     '''
+    funcName = inspect.stack()[0][3]
+    LOGGER.debug("funcName %s, %s", funcName, conf_fixture.test_function)
+    if funcName <> conf_fixture.test_function:
+        raise ValueError("incorrect conf_fixtures was sent")
+    
+    
+    
+    
     test_package_name = test_pkg_data['name']
     original_title = test_pkg_data['title']
     test_pkg_data['title'] = 'zzz changed the title'
@@ -127,6 +151,15 @@ def test_package_list_vs_package_show(conf_fixture, ckan_url, ckan_rest_dir,
     :param ckan_rest_dir: directory path to rest calls
     :param ckan_auth_header: header struct with auth token
     '''
+    funcName = inspect.stack()[0][3]
+    LOGGER.debug("funcName %s, %s", funcName, conf_fixture.test_function)
+    if funcName <> conf_fixture.test_function:
+        raise ValueError("incorrect conf_fixtures was sent")
+
+    
+    
+    
+    
 
     # using requests as can't get the limit to work with ckanapi.
     package_list_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'package_list')
@@ -166,6 +199,14 @@ def test_package_delete(conf_fixture, ckan_url, ckan_auth_header,
      - removed the purge calls because purge is completed by superadmin
        no by the test user.
     '''
+    funcName = inspect.stack()[0][3]
+    LOGGER.debug("funcName %s, %s", funcName, conf_fixture.test_function)
+    if funcName <> conf_fixture.test_function:
+        raise ValueError("incorrect conf_fixtures was sent")
+    
+    
+    
+    
     # delete pkg
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'package_delete')
     LOGGER.debug('api_call: %s', api_call)
@@ -210,6 +251,13 @@ def test_create_package_coredataonly(conf_fixture, ckan_url, ckan_auth_header,
 
     using pytest_check to provide delayed assertion
     '''
+    
+    funcName = inspect.stack()[0][3]
+    LOGGER.debug("funcName %s, %s", funcName, conf_fixture.test_function)
+    if funcName <> conf_fixture.test_function:
+        raise ValueError("incorrect conf_fixtures was sent")
+    
+    
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'package_create')
     LOGGER.debug('api_call: %s', api_call)
 
