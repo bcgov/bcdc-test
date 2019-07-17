@@ -9,31 +9,13 @@ putting global configuration parameters into this file
 
 import pytest
 import getpass
+from bcdc_apitests.config.testConfig import *
 
-# getting first three letters of username
-TEST_USER = getpass.getuser()[0:3].lower()
-TEST_STATE = 'draft'
-TEST_VISIBILITY = 'IDIR'
 
-# Following are test constants
-TEST_PREFIX = 'zzztest'
-TEST_ORGANIZATION = '{0}_{1}_testorg'.format(TEST_PREFIX, TEST_USER)
-# TODO: need to modify to use the testing org that should be set up.
-#TEST_ORGANIZATION = 'databc'
-TEST_PACKAGE = '{0}_{1}_testpkg'.format(TEST_PREFIX, TEST_USER)
-TEST_RESOURCE = '{0}_{1}_testresource'.format(TEST_PREFIX, TEST_USER)
-BCDC_REST_DIR = "/api/3/action"
-TEST_ADMIN_USER = '{0}_admin_user'.format(TEST_PREFIX)
-TEST_EDITOR_USER = '{0}_editor_user'.format(TEST_PREFIX)
-TEST_VIEWER_USER = '{0}_viewer_user'.format(TEST_PREFIX)
-
-# TODO: State and Visibility Vars to be updated via config
-TEST_PACKAGE_STATE = TEST_STATE  # draft,published,pending published
-TEST_PACKAGE_VISIBILITY = TEST_VISIBILITY  # PUBLIC, IDIR
 # pylint: disable=redefined-outer-name
 
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def test_user():
     '''
     :return: the test user letters to be appended to test objects to keep them
@@ -50,7 +32,7 @@ def test_prefix():
     return TEST_PREFIX
 
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def test_organization():
     '''
     :return: the name of the organization that should be owned by tests
@@ -58,7 +40,7 @@ def test_organization():
     return TEST_ORGANIZATION
 
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def test_package_name():
     '''
     :return: the name of the package to be used for the testing.
@@ -129,6 +111,13 @@ def test_viewer_user():
     '''
     return TEST_VIEWER_USER
 
+
+@pytest.fixture(scope="session")
+def test_roles():
+    '''
+    :return: a list of the different user configs
+    '''
+    return USER_CONFIG
 
 @pytest.fixture(scope="session")
 def test_session_organization():
