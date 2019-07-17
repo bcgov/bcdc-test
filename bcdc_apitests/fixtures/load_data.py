@@ -54,6 +54,11 @@ def test_pkg_data(org_create_if_not_exists_fixture, test_data_dir,
         datastore['org'] = org_id
         datastore['owner_org'] = org_id
         datastore['sub_org'] = org_id
+        
+        # for now removing any group references as we do not have setup code for 
+        # that 
+        if 'groups' in datastore:
+            del datastore['groups']
     return datastore
 
 

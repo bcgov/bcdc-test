@@ -120,6 +120,7 @@ def test_package_update(conf_fixture, remote_api_auth, test_pkg_data, ckan_url,
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'package_update')
     resp = requests.post(api_call, headers=ckan_auth_header, json=test_pkg_data)
     LOGGER.debug("resp.status_code: %s", resp.status_code)
+    LOGGER.debug("resp.status_code: %s", resp.text)
     assert (resp.status_code == 200) == conf_fixture.test_result
     # now double check that the data has been changed
     pkg_show_data = remote_api_auth.action.package_show(id=test_package_name)

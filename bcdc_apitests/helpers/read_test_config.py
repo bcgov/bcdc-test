@@ -213,10 +213,8 @@ class TestParameters(object):
     '''
 
     def __init__(self, test_param_struct):
-        self.logger = logging.getLogger(__name__)
         self.test_param_struct = test_param_struct
         for property in self.test_param_struct:
-            self.logger.debug("property/value: %s/%s", property, self.test_param_struct[property])
             setattr(self, property, self.test_param_struct[property])
 
     def __str__(self):
