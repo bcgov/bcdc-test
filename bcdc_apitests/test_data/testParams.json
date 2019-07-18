@@ -63,13 +63,53 @@
         "test_result": true, 
         "comment": "only configure this test for admin/editor as only they can create data.  This test determines if it is possible to create a package with only the fields identified in the ckan docs.  Expected result should be false."
     }, 
-    
     {
         "test_module":"bcdc_apitests.tests.resources.test_resources",
         "test_function": "test_resource_create",
         "test_users": ["admin", "editor"],
         "test_data": ["pkgData.json"],
+        "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.resources.test_resources",
+        "test_function": "test_resource_create",
+        "test_users": ["viewer"],
+        "test_data": ["pkgData.json"],
+        "test_result": false
+    },
+    {
+        "test_module":"bcdc_apitests.tests.resources.test_resources",
+        "test_function": "test_resource_update",
+        "test_users": ["admin", "editor"],
+        "test_data": ["pkgData.json"],
+        "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.resources.test_resources",
+        "test_function": "test_resource_update",
+        "test_users": ["viewer"],
+        "test_data": ["pkgData.json"],
+        "test_result": false
+    }, 
+    {
+        "test_module":"bcdc_apitests.tests.resources.test_resources",
+        "test_function": "test_resource_search",
+        "test_users": ["admin", "editor", "viewer"],
+        "test_data": ["pkgData.json"],
+        "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.resources.test_resources",
+        "test_function": "test_resource_delete",
+        "test_users": ["admin", "editor"],
+        "test_data": ["pkgData.json"],
+        "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.resources.test_resources",
+        "test_function": "test_resource_delete",
+        "test_users": ["viewer"],
+        "test_data": ["pkgData.json"],
         "test_result": false
     }
-	
 ]

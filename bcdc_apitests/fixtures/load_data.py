@@ -54,28 +54,31 @@ def test_pkg_data(org_create_if_not_exists_fixture, test_data_dir,
         datastore['org'] = org_id
         datastore['owner_org'] = org_id
         datastore['sub_org'] = org_id
-        
-        # for now removing any group references as we do not have setup code for 
-        # that 
+
+        # for now removing any group references. Should do group testing later
+        # created a ticket to keep track of that issue DDM-738.
         if 'groups' in datastore:
             del datastore['groups']
     return datastore
 
 
 @pytest.fixture
-def resource_data(test_data_dir, test_resource_name):
+def resource_data(package_create_if_not_exists, test_data_dir,
+                  test_resource_name):
     '''
     :param test_data_dir: The directory where the data files are
         expected to be
     :param test_resource_name: the name of the resource that should
         be used for this test
     '''
+
     logging.debug("test_resource_name: %s", test_resource_name)
     json_file = os.path.join(test_data_dir, 'resource.json')
     with open(json_file, 'r') as json_file_hand:
-        datastore = json.load(json_file_hand)
-        datastore['name'] = test_resource_name
-    return datastore
+        resource = json.load(json_file_hand)
+        resource['name'] = test_resource_name
+        resource['package_id'] = package_create_if_not_exists['id']
+    return resource
 
 
 @pytest.fixture

@@ -8,11 +8,12 @@ Created on Jul. 3, 2019
 
 '''
 
-import pytest
-import os.path
 import json
-import bcdc_apitests.helpers.file_utils
 import logging
+
+import pytest
+
+import bcdc_apitests.helpers.file_utils
 
 
 class TestConfigReader(object):
@@ -30,8 +31,8 @@ class TestConfigReader(object):
         self.logger = logging.getLogger(__name__)
         self.test_config_file = config_file
         if not self.test_config_file:
-            fu = bcdc_apitests.helpers.file_utils.FileUtils()
-            self.test_config_file = fu.get_test_parameter_file_name()
+            file_util = bcdc_apitests.helpers.file_utils.FileUtils()
+            self.test_config_file = file_util.get_test_parameter_file_name()
         self.config_struct = self.get_test_config()
 
     def get_test_config(self):
@@ -79,8 +80,8 @@ class TestConfig(object):
         self.test_params = test_params
         self.logger = logging.getLogger(__name__)
         self.itercnt = 0
-        self.returnList = None
-        self.idList = None
+        self.return_list = None
+        self.id_list = None
 
     def add_test_params(self, test_params):
         '''
@@ -125,16 +126,16 @@ class TestConfig(object):
 
     def next(self):
         '''
-        iteration will iterate over each combination of
-        users and data for the current module / function
+        iteration will iterate over each combination of users and data for the
+        current module / function
         '''
         if self.itercnt >= len(self.test_params):
             self.itercnt = 0
             raise StopIteration
 
-        retVal = self.test_params[self.itercnt]
+        ret_val = self.test_params[self.itercnt]
         self.itercnt += 1
-        return retVal
+        return ret_val
 
     def __iter__(self):
         return self
@@ -163,94 +164,88 @@ class TestConfig(object):
                     struct['test_users'] = [user_label]
                     self.logger.debug("struct: %s", struct)
 
-                    flatParam = TestParameters(struct)
-                    flatter.add_test_params([flatParam])
+                    flat_param = TestParameters(struct)
+                    flatter.add_test_params([flat_param])
         return flatter
 
     def get_test_config_as_list(self, regenerate=True):
         '''
-        Works in combination with get_test_config_ids method.
-        this will return a list of test configurations, while
-        get_test_config_ids will return a list with the test
-        ids.
+        Works in combination with get_test_config_ids method. this will return a
+        list of test configurations, while get_test_config_ids will return a
+        list with the test ids.
 
         The order for both these lists will align.
         '''
         if regenerate:
-            self.returnList = None
-            self.idList = None
-        if self.returnList == None:
-            self.returnList = []
-            self.idList = []
+            self.return_list = None
+            self.id_list = None
+        if self.return_list is None:
+            self.return_list = []
+            self.id_list = []
             for params in self:
-                self.returnList.append(params)
-                id = params.get_as_id()
-                self.idList.append(id)
-        return self.returnList
+                self.return_list.append(params)
+                test_id = params.get_as_id()
+                self.id_list.append(test_id)
+        return self.return_list
 
     def get_test_config_ids(self, regenerate=False):
-        if self.idList == None:
-            self.idList = []
+        '''
+        Generates if it doesn't already exist a list of ids for the test
+        parameterizations described in this object.
+        :param regenerate: if you want to force regeneration of the id list and
+                           the test list make this parameter true
+        '''
+        if regenerate:
+            self.id_list = None
+        if self.id_list is None:
+            self.id_list = []
             self.get_test_config_as_list(regenerate=True)
-        return self.idList
+        return self.id_list
 
 
 class TestParameters(object):
     '''
-    converts a single test paramaterization into an object, allowing for retrieval of
-    dictionary keys as properties.
+    converts a single test paramaterization into an object, allowing for
+    retrieval of dictionary keys as properties.
 
-    :ivar test_module: the name of the module that the test is located in.  Doesn't
-                       require the fully resolved package.module name but rather just the
-                       module name.
-    :ivar test_function: the name of the function/test in the module that this test config
-                      should be applied to.
-    :ivar test_user: the user label that the test applied to.  Individual user labels are
-                     fetched from the test_data.userConfig.json file.
-    :ivar test_data: the data label ( a key word that refers to a test data set configuration)
-                     that should be used for this test configuration.
-    :ivar test_result: Given all of the above, what is the expected result for the test.
+    :ivar test_module: the name of the module that the test is located in.
+                       Doesn't require the fully resolved package.module name
+                       but rather just the module name.
+    :ivar test_function: the name of the function/test in the module that this
+                      test config should be applied to.
+    :ivar test_user: the user label that the test applied to.  Individual user
+                     labels are fetched from the test_data.userConfig.json file.
+    :ivar test_data: the data label ( a key word that refers to a test data set
+                     configuration) that should be used for this test
+                     configuration.
+    :ivar test_result: Given all of the above, what is the expected result for
+                     the test.
     '''
 
     def __init__(self, test_param_struct):
         self.test_param_struct = test_param_struct
-        for property in self.test_param_struct:
-            setattr(self, property, self.test_param_struct[property])
+        for propertee in self.test_param_struct:
+            setattr(self, propertee, self.test_param_struct[propertee])
 
     def __str__(self):
         return str(self.test_param_struct)
 
     def get_as_id(self):
+        '''
+        :returns: the autogenerated id for this test parameterization
+        '''
         # pylint: disable=no-member
         usr = '/'.join(self.test_users)
         data = '/'.join(self.test_data)
 
-        retStr = '{0}-{1}-{2}'.format(usr, data, str(self.test_result))
-        return retStr
+        ret_str = '{0}-{1}-{2}'.format(usr, data, str(self.test_result))
+        return ret_str
 
 
-class test_configuration_exception(Exception):
+class TestConfigurationException(Exception):
     '''
     raised when the test configuration file is found to have an incorrect setup
     '''
 
     def __init__(self, *args, **kwargs):
         Exception.__init__(self, *args, **kwargs)
-
-# if __name__ == "__main__":
-#     LOGGER = logging.getLogger(__name__)
-#     LOGGER.setLevel(logging.DEBUG)
-#     hndlr = logging.StreamHandler()
-#     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(lineno)d - %(message)s')
-#     hndlr.setFormatter(formatter)
-#     LOGGER.addHandler(hndlr)
-#     LOGGER.debug("test")
-#
-#
-#
-#     test_config = TestConfigReader()
-#     testObj = test_config.get_test_config()
-#     params = test_config.get_test_params('packages', 'test_add_package_success')
-#
-#     print params
-
