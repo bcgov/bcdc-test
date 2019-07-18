@@ -136,7 +136,7 @@ def user_data_fixture_session(remote_api_super_admin_auth, user_label_fixture):
     LOGGER.debug("user_label_fixture: %s / %s", user_label_fixture,
                  type(user_label_fixture))
     if isinstance(user_label_fixture, list):
-        if len(user_label_fixture) <> 1:
+        if len(user_label_fixture) != 1:
             msg = 'Received more than one user in the user_label_fixture.  ' + \
                   'fixture is only configured to deal with 1 user at a time.' + \
                   'user labels: %s'

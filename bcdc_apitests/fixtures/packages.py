@@ -184,7 +184,7 @@ def update_pkg_state(remote_api_super_admin_auth, test_pkg_data, test_package_st
     return test_pkg_data
 
 @pytest.fixture
-def update_pkg_visibility(remote_api_admin_auth, test_pkg_data, test_package_visibility):
+def update_pkg_visibility(remote_api_super_admin_auth, test_pkg_data, test_package_visibility):
     '''
     :param test_pkg_data: package data structure that can be used to load a new
                           package

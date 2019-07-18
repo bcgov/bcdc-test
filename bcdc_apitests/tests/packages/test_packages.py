@@ -40,7 +40,7 @@ def test_package_create(conf_fixture, ckan_auth_header, test_pkg_data,
     # parameters
     func_name = inspect.stack()[0][3]
     LOGGER.debug("func_name %s, %s", func_name, conf_fixture.test_function)
-    if func_name <> conf_fixture.test_function:
+    if func_name != conf_fixture.test_function:
         raise ValueError("incorrect conf_fixtures was sent")
 
     LOGGER.debug("conf_fixture: expected %s", conf_fixture.test_result)
@@ -71,7 +71,7 @@ def test_package_show(conf_fixture, remote_api_auth, test_package_name,
     # parameters
     func_name = inspect.stack()[0][3]
     LOGGER.debug("func_name %s, %s", func_name, conf_fixture.test_function)
-    if func_name <> conf_fixture.test_function:
+    if func_name != conf_fixture.test_function:
         raise ValueError("incorrect conf_fixtures was sent")
 
     LOGGER.debug("conf_fixture: expected %s", conf_fixture.test_result)
@@ -134,7 +134,7 @@ def test_package_update(conf_fixture, remote_api_auth, test_pkg_data, ckan_url,
     # parameters
     func_name = inspect.stack()[0][3]
     LOGGER.debug("func_name %s, %s", func_name, conf_fixture.test_function)
-    if func_name <> conf_fixture.test_function:
+    if func_name != conf_fixture.test_function:
         raise ValueError("incorrect conf_fixtures was sent")
 
     test_package_name = test_pkg_data['name']
@@ -182,7 +182,7 @@ def test_package_list_vs_package_show(conf_fixture,  # pylint: disable=invalid-n
     # parameters
     func_name = inspect.stack()[0][3]
     LOGGER.debug("func_name %s, %s", func_name, conf_fixture.test_function)
-    if func_name <> conf_fixture.test_function:
+    if func_name != conf_fixture.test_function:
         raise ValueError("incorrect conf_fixtures was sent")
 
     # using requests as can't get the limit to work with ckanapi.
@@ -227,7 +227,7 @@ def test_package_delete(conf_fixture, ckan_url,  # pylint: disable=invalid-name
     # parameters
     func_name = inspect.stack()[0][3]
     LOGGER.debug("func_name %s, %s", func_name, conf_fixture.test_function)
-    if func_name <> conf_fixture.test_function:
+    if func_name != conf_fixture.test_function:
         raise ValueError("incorrect conf_fixtures was sent")
 
     # delete pkg
@@ -279,7 +279,7 @@ def test_create_package_coredataonly(conf_fixture, ckan_url,  # pylint: disable=
     # parameters
     func_name = inspect.stack()[0][3]
     LOGGER.debug("func_name %s, %s", func_name, conf_fixture.test_function)
-    if func_name <> conf_fixture.test_function:
+    if func_name != conf_fixture.test_function:
         raise ValueError("incorrect conf_fixtures was sent")
 
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'package_create')
@@ -292,7 +292,7 @@ def test_create_package_coredataonly(conf_fixture, ckan_url,  # pylint: disable=
     cant_create_msg = cant_create_msg.format(api_call,
                                              resp_create.status_code)
     # core data only create is successful.
-    assert (resp_create.status_code <> 200) == conf_fixture.test_result, \
+    assert (resp_create.status_code != 200) == conf_fixture.test_result, \
         cant_create_msg
 
     # now make sure the data is viewable

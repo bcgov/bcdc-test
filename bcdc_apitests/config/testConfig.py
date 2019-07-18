@@ -55,3 +55,9 @@ USER_CONFIG = {TEST_EDITOR_USER:
                  'role': 'admin'},
                }
 
+# package state and visibility
+TEST_STATE = 'draft' # draft,published,pending published
+TEST_VISIBILITY = 'IDIR'  # PUBLIC, IDIR
+
+TEST_PACKAGE_STATE = TEST_STATE
+TEST_PACKAGE_VISIBILITY = TEST_VISIBILITY

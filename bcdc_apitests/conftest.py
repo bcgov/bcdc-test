@@ -18,7 +18,7 @@ from bcdc_apitests.fixtures.orgs import *
 from bcdc_apitests.fixtures.users import *
 from bcdc_apitests.fixtures.ckan import *
 from bcdc_apitests.fixtures.setup_fixtures import *
-import helpers.read_test_config
+import bcdc_apitests.helpers.read_test_config as helper
 
 LOGGER = logging.getLogger(__name__)
 
@@ -44,7 +44,7 @@ def pytest_generate_tests(metafunc):
 
     https://docs.pytest.org/en/latest/example/parametrize.html#indirect-parametrization-with-multiple-fixtures
     '''
-    tst_config_reader = helpers.read_test_config.TestConfigReader()
+    tst_config_reader = helper.TestConfigReader()
     test_params = tst_config_reader.get_test_params(module=metafunc.module.__name__,
                                                     function=metafunc.function.__name__)
 
