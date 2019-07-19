@@ -173,21 +173,29 @@ def test_package_exists(remote_api_super_admin_auth, test_package_name):
 
 
 @pytest.fixture
-def package_get_id_fixture(remote_api_super_admin_auth, test_package_name):
+def get_test_package(remote_api_super_admin_auth, test_package_name):
     '''
     :param remote_api_super_admin_auth: a ckanapi remote object with authenticated
     :param test_package_name: the name of a package that exists
     '''
-    LOGGER.debug("getting id of package: %s", test_package_name)
+    pkg_data = None
+    LOGGER.debug("getting package: %s", test_package_name)
     try:
         pkg_data = remote_api_super_admin_auth.action.package_show(id=test_package_name)
-        pkg_id = pkg_data['id']
-        LOGGER.debug("package id is: %s", pkg_id)
     except ckanapi.errors.CKANAPIError as err:
         LOGGER.debug("err: %s %s", type(err), err)
+    return pkg_data
 
+@pytest.fixture
+def package_get_id_fixture(get_test_package):
+    '''
+    :param remote_api_super_admin_auth: a ckanapi remote object with authenticated
+    :param test_package_name: the name of a package that exists
+    '''
+    pkg_id = None
+    if 'id' in get_test_package:
+        pkg_id = get_test_package['id']
     yield pkg_id
-
 
 @pytest.fixture
 def test_invalid_package_exists(remote_api_super_admin_auth, test_package_name):
