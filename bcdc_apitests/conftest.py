@@ -70,12 +70,17 @@ def pytest_generate_tests(metafunc):
     LOGGER.info("completed test parameterization")
 
 
-# Move this logic into component fixtures that get imported here instead
-# of defined here, moved org logic to
-# orgs.org_setup_fixture - in theory there is no need to invoke as the
-# fixture was tagged autouse.
 @pytest.fixture(scope="session", autouse=True)
 def session_setup_teardown_mod(user_setup_fixture):
+    '''
+    user_setup_fixture - creates the test users, this fixture has a dependency
+    to orgs, which will create the test org.  
+    
+    The session fixtures that create the users and the orgs also have teardown 
+    code to remove them when the tests are complete
+    
+    This fixture only ensures that these fixtures get triggered.    
+    '''
     LOGGER.debug("called the session start up")
     pass
 

@@ -57,6 +57,8 @@ def resource_teardown(remote_api, pkg_name):
     '''
     
     '''
+    
+    resource_delete_if_exists
     pkg_data = remote_api.action.package_show(id=pkg_name)
     for rsrc in pkg_name['resources']:
         LOGGER.debug("deleting resource: %s", rsrc['name'])

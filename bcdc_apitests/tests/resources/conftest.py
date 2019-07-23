@@ -9,7 +9,8 @@ from bcdc_apitests.fixtures.packages \
         package_create_if_not_exists, \
         test_valid_package_exists, \
         test_invalid_package_exists, \
-        package_get_id_fixture
+        package_get_id_fixture, \
+        package_delete
 # from bcdc_apitests.fixtures.packages import *
 # from bcdc_apitests.fixtures.ckan import *
 # from bcdc_apitests.fixtures.load_config import *
@@ -26,8 +27,6 @@ from bcdc_apitests.fixtures.resources \
         get_resource_fixture
         
         
-# post test cleanup removal of pkg if previous test fails. this is to be apart of the pre/post run at module level
-# TODO: move this into a conftest
 @pytest.fixture(scope='module')
 def test_post_cleanup(remote_api_super_admin_auth, test_package_name):
     '''
@@ -35,5 +34,11 @@ def test_post_cleanup(remote_api_super_admin_auth, test_package_name):
     then delete the package.
     
     '''
+    # do cleanup at start and end of run
     resource_teardown(remote_api_super_admin_auth, test_package_name)
+    yield
+    resource_teardown(remote_api_super_admin_auth, test_package_name)
+    # delete the package at the end
+    package_delete(remote_api_super_admin_auth, test_package_name)
+
 

@@ -105,7 +105,7 @@ def test_resource_update(conf_fixture, ckan_url, ckan_rest_dir,
         assert (resp.status_code == 200 and resp_data['success']) == conf_fixture.test_result
         pckg = resp_data['result']
         LOGGER.debug('package has resources: %s'  'resources' in pckg)
-        
+
         LOGGER.debug('package : %s', pckg)
         # make sure the package has at least one resource
         LOGGER.debug('resources is true: %s', (pckg['resources']))
@@ -128,13 +128,14 @@ def test_resource_update(conf_fixture, ckan_url, ckan_rest_dir,
 
 
 # search resource
-def test_resource_search(conf_fixture, remote_api_auth, test_resource_name):
+def test_resource_search(conf_fixture, remote_api_auth, test_resource_name,
+                         resource_get_id_fixture):
     '''
     :param remote_api_admin_auth: ckanapi remote, with auth
     :param test_resource_name: test resource name
+    :param resource_get_id_fixture: This will ensure that the resource and all
+        dependent objects are in existence prior to running this test.
     '''
-    # TODO: add a fixture that makes sure the resource has been created in case
-    #      the tests above have failed to create one.
     # define remote api
     remote_api = remote_api_auth
 
@@ -142,10 +143,19 @@ def test_resource_search(conf_fixture, remote_api_auth, test_resource_name):
     res_data = remote_api.action.resource_search(query="name:{0}".format(
         test_resource_name))
     LOGGER.debug("resource search results: %s", res_data)
+    # assert the show turned up the same resource as was created
+    LOGGER.debug("id expected: %s", resource_get_id_fixture)
 
     assert (res_data['count'] >= 1) == conf_fixture.test_result
 
-    # TODO: do a package_show to verify that the data exists.
+    # getting all the different resource ids associated with the resource
+    # search
+    ids = []
+    for res in res_data['results']:
+        ids.append(res['id'])
+    # verify that the expected resource id is included in the returned values
+    # from the search
+    assert (resource_get_id_fixture in ids) == conf_fixture.test_result
 
 
 # delete resource
@@ -172,16 +182,14 @@ def test_resource_delete(conf_fixture, remote_api_auth, ckan_url,
     if resp.status_code == 200:
         # check is resource exist
         # define api
-
         api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'resource_show')
         LOGGER.debug('api_call: %s', api_call)
 
-        # show resource
+        # show resource, to later verify that the id cannot be found
         res_data = requests.get(api_call, headers=ckan_auth_header,
                                 params={'id': resource_get_id_fixture})
         LOGGER.debug("resource_show: %s", res_data.text)
 
         resp_json = res_data.json()
         assert (not resp_json['success']) == conf_fixture.test_result
-
 

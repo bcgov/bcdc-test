@@ -144,6 +144,12 @@ def org_setup_fixture(remote_api_super_admin_auth, test_session_organization,
     at start of tests will test to see if the required test org
     exists.  if it does not it gets created.  At conclusion of testing
     will clean it up with a delete.
+    
+    :param remote_api_super_admin_auth: remote ckanapi object with auth header
+    :param test_session_organization: the name of the org to be used for the 
+        test
+    :param org_exists_fixture: does the org used for testing exist
+    :param session_test_org_data: data to use when creating the org
     '''
     LOGGER.debug("Setup Org: %s", test_session_organization)
     org_data = None

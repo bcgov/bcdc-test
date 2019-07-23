@@ -7,11 +7,16 @@ Code used to boot users.
 '''
 
 import logging
+import time
+
 import ckanapi
 import pytest
-import time
-from bcdc_apitests.fixtures.ckan import remote_api_super_admin_auth
 
+from bcdc_apitests.fixtures.ckan import remote_api_super_admin_auth
+from bcdc_apitests.fixtures.config_fixture import test_roles
+
+# adding imports here to allow ide code navigation even though they are already
+# declared in the conftest.py
 LOGGER = logging.getLogger(__name__)
 
 # --------------------- Supporting Functions ----------------------
@@ -82,11 +87,11 @@ def assign_user_role(remote_api_admin_auth, user, org_id, role):
 @pytest.fixture(scope="session")
 def user_setup_fixture(org_setup_fixture, remote_api_super_admin_auth,
                        test_roles, temp_user_password):
+    '''
+    Used in session setup and tear down.  Creates the 3 test users that are
+    used by tests, then calls org setup that will create the test org.
+    '''
 
-    # TODO: This is currently set up to create all the possible user types,
-    #       could set up as a function scope that creates and configures
-    #       users as required.  Caches results so that it doesn't have
-    #       to re-create.
     users = test_roles.keys()
     for user in users:
         email = test_roles[user]['email']
@@ -148,5 +153,8 @@ def user_data_fixture_session(remote_api_super_admin_auth, user_label_fixture):
 
 
 class TooManyUsersException(Exception):
+    '''
+    raised when multiple users are returned, when expecting a single user 
+    '''
     pass
 

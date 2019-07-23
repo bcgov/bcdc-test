@@ -111,5 +111,21 @@
         "test_users": ["viewer"],
         "test_data": ["pkgData.json"],
         "test_result": false
+    }, 
+    {
+        "test_module":"bcdc_apitests.tests.organizations.test_orgs",
+        "test_function": "test_organization_show",
+        "test_users": ["viewer", "editor", "admin"],
+        "test_data": ["pkgData.json"],
+        "comment": "test_data isn't really used here, however all the different user types should be able to view the data",        
+        "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.organizations.test_orgs",
+        "test_function": "test_organization_list",
+        "test_users": ["viewer", "editor", "admin"],
+        "test_data": ["pkgData.json"],
+        "comment": "test_data isn't really used here, however all the different user types should be able to view the data",        
+        "test_result": true
     }
 ]
