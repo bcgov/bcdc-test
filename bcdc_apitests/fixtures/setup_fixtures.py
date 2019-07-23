@@ -11,10 +11,13 @@ These fixtures are parameterized in the conftest.
 The setup for them is described in the test_config
 
 '''
-import pytest
 import logging
+
+import pytest
+
 from bcdc_apitests.config.testConfig import BCDC_ROLE_LOOKUP
 from bcdc_apitests.config.testConfig import USER_CONFIG
+
 
 LOGGER = logging.getLogger(__name__)
 
@@ -51,14 +54,14 @@ def user_label_fixture(conf_fixture):
         # replace the role with the role in the lookup BCDC_ROLE_LOOKUP
         for role_name in conf_fixture.test_users:
             # now get the authoritative role name
-            for auth_role_name in BCDC_ROLE_LOOKUP.keys():
+            for auth_role_name in BCDC_ROLE_LOOKUP:
                 if conf_test_role in BCDC_ROLE_LOOKUP[auth_role_name]:
                     conf_test_role = auth_role_name
 
         # now get the role from the USER_CONFIG
         user_lookup_found = False
         valid_roles = []
-        for user in USER_CONFIG.keys():
+        for user in USER_CONFIG:
             valid_roles.append(USER_CONFIG[user]['role'])
             if conf_test_role == USER_CONFIG[user]['role']:
                 user_names.append(user)

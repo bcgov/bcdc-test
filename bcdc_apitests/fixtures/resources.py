@@ -9,9 +9,11 @@ fixtures used to set up and tear down resource tests
 import logging
 import pytest
 import ckanapi
-from bcdc_apitests.fixtures.ckan import remote_api_super_admin_auth
+# from bcdc_apitests.fixtures.ckan import remote_api_super_admin_auth
 
 LOGGER = logging.getLogger(__name__)
+
+# pylint: disable=redefined-outer-name
 
 # --------------------- Supporting Functions ----------------------
 
@@ -53,20 +55,35 @@ def get_resource(remote_api, resource_name, pkg_id):
                 break
     return res_data
 
+
 def resource_teardown(remote_api, pkg_name):
     '''
-    
+    a helper method with the code required to cleanup the resources that are
+    created for the testing
+    :param remote_api: a ckanapi.RemoteAPI object with auth headers
+    :param pkg_name: the name of the test package that the resource is
+        a part of
     '''
-    
-    resource_delete_if_exists
     pkg_data = remote_api.action.package_show(id=pkg_name)
-    for rsrc in pkg_name['resources']:
+    LOGGER.debug("pkg_data: %s", pkg_data)
+    for rsrc in pkg_data['resources']:
         LOGGER.debug("deleting resource: %s", rsrc['name'])
         remote_api.action.resource_delete(id=rsrc['id'])
     LOGGER.debug("deleting package: %s", pkg_name)
     remote_api.action.package_delete(id=pkg_name)
 
 # --------------------- Fixtures ----------------------
+
+
+@pytest.fixture
+def resource_get_id_fixture(get_resource_fixture):
+    '''
+    :param remote_api_admin_auth: a ckanapi remote object with auth
+    :param test_resource_name: test resource name
+    '''
+    res_id = get_resource_fixture['results'][0]['id']
+    LOGGER.debug("resource_id: %s", res_id)
+    yield res_id
 
 
 @pytest.fixture
@@ -80,17 +97,6 @@ def get_resource_fixture(res_create_if_not_exists,
         query="name:{0}".format(test_resource_name))
     LOGGER.debug("resource_data: %s", res_data)
     yield res_data
-
-
-@pytest.fixture
-def resource_get_id_fixture(get_resource_fixture):
-    '''
-    :param remote_api_admin_auth: a ckanapi remote object with auth
-    :param test_resource_name: test resource name
-    '''
-    res_id = get_resource_fixture['results'][0]['id']
-    LOGGER.debug("resource_id: %s", res_id)
-    yield res_id
 
 
 @pytest.fixture
@@ -135,8 +141,7 @@ def resource_exists_fixture(package_create_if_not_exists,
     :param remote_api_admin_auth: a ckanapi remote object with authenticated
     :param test_resource_name: the name of a package that exists
     '''
-    # TODO: get the package id
     pkgid = package_create_if_not_exists['id']
     exists = resource_exists(remote_api_super_admin_auth, test_resource_name,
-                            pkgid)
+                             pkgid)
     yield exists

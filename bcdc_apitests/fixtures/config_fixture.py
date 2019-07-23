@@ -6,13 +6,11 @@ Created on May 27, 2019
 putting global configuration parameters into this file
 
 '''
+# pylint: disable=redefined-outer-name, unused-wildcard-import
 
 import pytest
-import getpass
+
 from bcdc_apitests.config.testConfig import *
-
-
-# pylint: disable=redefined-outer-name
 
 
 @pytest.fixture(scope='session')
@@ -105,6 +103,7 @@ def test_roles():
     :return: a list of the different user configs
     '''
     return USER_CONFIG
+
 
 @pytest.fixture(scope="session")
 def test_session_organization():
