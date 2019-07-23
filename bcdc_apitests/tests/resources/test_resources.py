@@ -6,7 +6,6 @@ Created on Jun. 11, 2019
 
 import logging
 import requests
-import ckanapi
 
 LOGGER = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
@@ -38,10 +37,10 @@ def test_resource_create(conf_fixture, ckan_url, ckan_rest_dir, ckan_auth_header
     resp_json = res_data.json()
     LOGGER.debug('resp_json: %s', resp_json)
     LOGGER.debug('res_data.status_code: %s', res_data.status_code)
-    testStatus = res_data.status_code == 200
-    LOGGER.debug("test status: %s", testStatus)
-    assert testStatus == conf_fixture.test_result
-    if testStatus:
+    test_status = res_data.status_code == 200
+    LOGGER.debug("test status: %s", test_status)
+    assert test_status == conf_fixture.test_result
+    if test_status:
         # if the we can successfully create the resource then make sure that
         # it shows up in a package_show
         # check is resource exist and shows up in resource_show
@@ -159,7 +158,7 @@ def test_resource_search(conf_fixture, remote_api_auth, test_resource_name,
 
 
 # delete resource
-def test_resource_delete(conf_fixture, remote_api_auth, ckan_url,
+def test_resource_delete(conf_fixture, ckan_url,
                          ckan_rest_dir, ckan_auth_header, res_create_if_not_exists,
                          resource_get_id_fixture):
     '''
@@ -171,10 +170,9 @@ def test_resource_delete(conf_fixture, remote_api_auth, ckan_url,
     :param resource_get_id_fixture:
     '''
     # define api
-    remote_api = remote_api_auth
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'resource_delete')
     resp = requests.post(api_call, headers=ckan_auth_header,
-                            json={'id': resource_get_id_fixture})
+                         json={'id': resource_get_id_fixture})
     resp_data = resp.json()
     LOGGER.debug("resp_data: %s", resp_data)
     assert (resp.status_code == 200) == conf_fixture.test_result
@@ -192,4 +190,3 @@ def test_resource_delete(conf_fixture, remote_api_auth, ckan_url,
 
         resp_json = res_data.json()
         assert (not resp_json['success']) == conf_fixture.test_result
-

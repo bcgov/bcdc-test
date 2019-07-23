@@ -12,8 +12,8 @@ import time
 import ckanapi
 import pytest
 
-from bcdc_apitests.fixtures.ckan import remote_api_super_admin_auth
-from bcdc_apitests.fixtures.config_fixture import test_roles
+#from bcdc_apitests.fixtures.ckan import remote_api_super_admin_auth
+#from bcdc_apitests.fixtures.config_fixture import test_roles
 
 # adding imports here to allow ide code navigation even though they are already
 # declared in the conftest.py
@@ -21,14 +21,17 @@ LOGGER = logging.getLogger(__name__)
 
 # --------------------- Supporting Functions ----------------------
 
-# TODO: might be able to set this up in the automatic parameterization, and
-#       move to a fixture so that it can be re-used.
-# pylint: disable=unsubscriptable-object
+# pylint: disable=redefined-outer-name
 
 
 def get_user_data(remote_api, user, retry=0):
     '''
-    use the super admin to get the user info as other api tokens may not
+    :param remote_api: a ckanapi RemoteAPI object with super admin authentication
+    :param user: the name fo the user that we are looking for
+    :param retry:  the number of times to retry before fail, implemented this
+        because the api was being flaky and failing on the first attempt
+
+    using the remote_api gets the data associated with a specific user
     '''
     usr_data = {}
     try:
@@ -50,8 +53,10 @@ def get_user_data(remote_api, user, retry=0):
 
 def check_if_user_exist(remote_api_admin_auth, user):
     '''
+    :param remote_api: a ckanapi RemoteAPI object with super admin authentication
+    :param user: the name fo the user that we are looking for
+    :return: a boolean indicating if the "user" exists.
     '''
-    usr_data = {}
     usr_exists = False
     usr_data = get_user_data(remote_api_admin_auth, user)
     LOGGER.debug("usr_data: %s", usr_data)
@@ -61,6 +66,11 @@ def check_if_user_exist(remote_api_admin_auth, user):
 
 
 def check_if_user_active(remote_api_admin_auth, user):
+    '''
+    :param remote_api_admin_auth: a ckanapi.RemoteAPI object with authorization
+    :param user: the name of the user that we are searching for.
+    :return: boolean indicating if the user exists and is active
+    '''
     usr_active = True
     usr_data = get_user_data(remote_api_admin_auth, user)
     if usr_data['state'] == "deleted":
@@ -69,6 +79,10 @@ def check_if_user_active(remote_api_admin_auth, user):
 
 
 def user_delete(remote_api_admin_auth, user):
+    '''
+    :param remote_api_admin_auth: a ckanapi.RemoteAPI object with authorization
+    :param user: the name of the user that we are going to delete.
+    '''
     try:
         usr_data = remote_api_admin_auth.action.user_delete(id=user)
         LOGGER.debug("retruned data: %s", usr_data)
@@ -78,7 +92,12 @@ def user_delete(remote_api_admin_auth, user):
 
 
 def assign_user_role(remote_api_admin_auth, user, org_id, role):
-
+    '''
+    :param remote_api_admin_auth: a ckanapi.RemoteAPI object with authorization
+    :param user: the name of the user that we are going to delete.
+    :param org_id: the organization id that a user should be a part of
+    :param role: the role that the user should be assigned to.
+    '''
     resp = remote_api_admin_auth.action.organization_member_create(
         id=org_id, username=user, role=role)
     LOGGER.debug("setting test user role: %s", resp)
@@ -118,9 +137,8 @@ def user_setup_fixture(org_setup_fixture, remote_api_super_admin_auth,
         assign_user_role(remote_api_super_admin_auth, user, org_id, role)
         LOGGER.debug('user %s setup complete', user)
     yield
-    # TODO: commenting out for now
-#     for user in users:
-#         user_delete(remote_api_super_admin_auth, user)
+    for user in users:
+        user_delete(remote_api_super_admin_auth, user)
 
 
 @pytest.fixture()
@@ -154,7 +172,6 @@ def user_data_fixture_session(remote_api_super_admin_auth, user_label_fixture):
 
 class TooManyUsersException(Exception):
     '''
-    raised when multiple users are returned, when expecting a single user 
+    raised when multiple users are returned, when expecting a single user
     '''
     pass
-

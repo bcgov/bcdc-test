@@ -18,9 +18,9 @@ import pytest
 from bcdc_apitests.config.testConfig import BCDC_ROLE_LOOKUP
 from bcdc_apitests.config.testConfig import USER_CONFIG
 
-
 LOGGER = logging.getLogger(__name__)
 
+# pylint: disable=redefined-outer-name
 
 @pytest.fixture
 def data_label_fixture(conf_fixture):
@@ -51,12 +51,9 @@ def user_label_fixture(conf_fixture):
     # specified role and return the user
     user_names = []
     for conf_test_role in conf_fixture.test_users:
-        # replace the role with the role in the lookup BCDC_ROLE_LOOKUP
-        for role_name in conf_fixture.test_users:
-            # now get the authoritative role name
-            for auth_role_name in BCDC_ROLE_LOOKUP:
-                if conf_test_role in BCDC_ROLE_LOOKUP[auth_role_name]:
-                    conf_test_role = auth_role_name
+        for auth_role_name in BCDC_ROLE_LOOKUP:
+            if conf_test_role in BCDC_ROLE_LOOKUP[auth_role_name]:
+                conf_test_role = auth_role_name
 
         # now get the role from the USER_CONFIG
         user_lookup_found = False
@@ -76,15 +73,6 @@ def user_label_fixture(conf_fixture):
     LOGGER.debug("user_names: %s", user_names)
     yield user_names
 
-# TODO: this fixture should be parameterized not user_label_fixture and the
-#      data_fixture.  The conftest pytest_generate_test will read the test
-#      configuration and create a conf_test that applies to this specific
-#      test, all the information about the test is injected into this
-#      fixture.  If there are a bunch of tests with different users /
-#      datasets they will be described in the config and the conftest will
-#      create separate test cases for these.
-
-
 @pytest.fixture
 def conf_fixture(request):
     '''
@@ -96,5 +84,7 @@ def conf_fixture(request):
 
 
 class UserRoleConfigurationException(Exception):
+    '''
+    exception for when the user / role do not have expected values.
+    '''
     pass
-
