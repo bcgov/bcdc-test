@@ -42,7 +42,7 @@ node('master') {
                                 echo "tokenlength: ${#sonarToken}"
                                 echo $projectIdUrl
                                 curl --manual
-                                curl --verbose --user ${sonarToken}: --output 'junk.json' https://sonarqube.data.gov.bc.ca/api/ce/component?component=BCDC_tests_build
+                                curl https://sonarqube.data.gov.bc.ca/api/ce/component?component=BCDC_tests_build --verbose --user ${sonarToken}: --output 'junk.json'
                                 pwd
                                 ls -l
                                 ls -l $TMP
