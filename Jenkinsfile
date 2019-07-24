@@ -42,7 +42,7 @@ node('CAD') {
                                 set +x
                                 echo $projectIdUrl
                                 curl --version
-                                curl -u ${sonarToken}: $projectIdUrl -o projectId.json
+                                curl -u ${sonarToken}: $projectIdUrl --output ./projectId.json
                                 pwd
                                 ls -l
                             '''
