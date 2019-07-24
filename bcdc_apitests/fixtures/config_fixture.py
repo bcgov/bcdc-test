@@ -45,6 +45,19 @@ def test_package_name():
     '''
     return TEST_PACKAGE
 
+@pytest.fixture
+def test_package_state():
+    '''
+    :return: the name of the package to be used for the testing.
+    '''
+    return TEST_PACKAGE_STATE
+
+@pytest.fixture
+def test_package_visibility():
+    '''
+    :return: the name of the package to be used for the testing.
+    '''
+    return TEST_PACKAGE_VISIBILITY
 
 @pytest.fixture(scope="session")
 def session_test_package_name():

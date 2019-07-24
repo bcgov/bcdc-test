@@ -117,6 +117,16 @@ def test_pkg_data_updated(test_pkg_data):
     test_pkg_data['title'] = 'test package update'
     return test_pkg_data
 
+@pytest.fixture
+def test_pkg_data_prep(test_pkg_data, test_package_state, test_package_visibility):
+    '''
+    :param test_pkg_data: package data structure that can be used to load a new
+                          package
+    '''
+    logging.debug("test_package_name: %s", test_package_name)
+    test_pkg_data['edc_state'] = test_package_state
+    test_pkg_data['metadata_visibility'] = test_package_visibility
+    return test_pkg_data
 
 @pytest.fixture
 def test_org_data(test_data_dir, test_organization):
