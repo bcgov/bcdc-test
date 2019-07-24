@@ -42,7 +42,7 @@ node('CAD') {
                             '''
                       
                             // Get the project id
-                            pid = projectId($sonarToken)
+                            pid = projectId($env.sonarToken)
                             echo "pid:" + pid
                             aid = analysisId(pid)
                             echo "aid:" + aid
