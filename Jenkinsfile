@@ -12,23 +12,23 @@ node('master') {
                 sh 'if [ ! -d "$TEMP" ]; then mkdir $TEMP; fi'
                 checkout([$class: 'GitSCM', branches: [[name: "${env.TAGNAME}"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false]], gitTool: 'Default', submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/bcgov/bcdc-test']]])                
             }
-           // stage('prep Virtualenv') {
-           //     sh 'if [ -d "ve_bcdc_test" ]; then rm -Rf ve_bcdc_test; fi'
-           //     sh 'if [ -d "$VEDIR" ]; then rm -Rf $VEDIR; fi'
-           //     sh  '''
-           //         [ -d data ] || mkdir data
-           //         export TMP=$WORKSPACE/data
-           //         export TEMP=$WORKSPACE/data
-           //         python -m virtualenv --clear $VEDIR
-           //         source $VEDIR/bin/activate
-           //         python --version
-           //     '''
-                // comment out while work on other stages...
-                    //python -m pip install -U --force-reinstall pip || goto :error
-                    //python -m pip install --upgrade pip || goto :error
-                    //python -m pip install --no-cache-dir -r ./requirements.txt
-                    //python -m pip install --no-cache-dir -r ./requirements_build.txt
-            //}
+           stage('prep Virtualenv') {
+                sh 'if [ -d "ve_bcdc_test" ]; then rm -Rf ve_bcdc_test; fi'
+                sh 'if [ -d "$VEDIR" ]; then rm -Rf $VEDIR; fi'
+                sh  '''
+                    [ -d data ] || mkdir data
+                    export TMP=$WORKSPACE/data
+                    export TEMP=$WORKSPACE/data
+                    python -m virtualenv --clear $VEDIR
+                    source $VEDIR/bin/activate
+                    python --version
+                
+                    python -m pip install -U --force-reinstall pip || goto :error
+                    python -m pip install --upgrade pip || goto :error
+                    python -m pip install --no-cache-dir -r ./requirements.txt
+                    python -m pip install --no-cache-dir -r ./requirements_build.txt
+               '''
+            }
             stage ('SonarScan'){
                 withCredentials([string(credentialsId: 'sonarToken', variable: 'sonarToken')]) {
                     withEnv(['PATH=/apps/download/n/8/bin:/s00/bin:/apps/sonarscanner/bin:/bin:/usr/bin:/s00/libexec/git-core', 'LD_LIBRARY_PATH=/apps/download/n/8/lib:/s00/lib64:/apps/sonarscanner/lib:/lib64:/usr/lib64']) {
