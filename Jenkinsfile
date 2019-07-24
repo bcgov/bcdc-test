@@ -40,6 +40,7 @@ node('CAD') {
                                 sonar-scanner -Dsonar.sources=. -Dsonar.projectKey=$JOB_NAME -Dsonar.host.url=$SONARURL -Dsonar.python.pylint=$PYLINTPATH -Dsonar.login=${sonarToken}  -Dsonar.exclusions=ve/**,build/**
                                 echo "tokenlength: ${#sonarToken}"
                                 set +x
+                                echo $projectIdUrl
                                 curl -u ${sonarToken}: $projectIdUrl -o projectId.json
                             '''
                       
