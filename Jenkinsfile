@@ -43,7 +43,6 @@ node('master') {
                                 curl $projectIdUrl --output junk.json
                                 pwd
                                 ls -l
-                                ls -l $TMP
                             '''                            
                       
                             // Get the project id
