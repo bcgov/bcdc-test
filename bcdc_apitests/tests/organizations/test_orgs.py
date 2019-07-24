@@ -43,7 +43,7 @@ def test_organization_list(conf_fixture, org_create_if_not_exists_fixture,
     assert resp_data['success'] == conf_fixture.test_result, success_msg
 
     org_list = resp_data['result']
-
+    LOGGER.debug("orglist: %s", org_list)
     LOGGER.debug("orglist cnt: %s", len(org_list))
     org_list_msg = 'expecting an org list returned by organization_list when ' + \
         'called as {0} with data in it, recieved: {1}'

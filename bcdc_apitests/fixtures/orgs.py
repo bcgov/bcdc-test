@@ -92,6 +92,12 @@ def org_purge_if_exists(remote_api, test_organization):
     if exists:
         org_purge(remote_api, test_organization)
 
+def org_un_delete(remote_api, test_organization):
+    update_val = {'state': 'active', 
+                  'id': test_organization}
+    ret_val = remote_api.action.organization_patch(**update_val)
+    LOGGER.debug("ret_val: %s", ret_val)
+
 # --------------------- Fixtures ----------------------
 
 
@@ -134,9 +140,9 @@ def org_create_if_not_exists_fixture(remote_api_super_admin_auth,
     LOGGER.debug("test_org_data: %s", test_org_data)
     LOGGER.debug("org_exists_fixture: %s", org_exists_fixture)
     if org_exists_fixture:
-
         org_data = remote_api_super_admin_auth.action.organization_show(
             id=test_organization)
+        LOGGER.debug("org_data retrieved: %s", org_data)
     else:
         try:
             LOGGER.debug('attempting to create the org: %s', test_organization)
@@ -150,6 +156,8 @@ def org_create_if_not_exists_fixture(remote_api_super_admin_auth,
             org_data = remote_api_super_admin_auth.action.organization_create(
                 **test_org_data)
             LOGGER.debug("org_return: %s", org_data)
+    # make sure that the org is not in a deleted state.
+    org_un_delete(remote_api_super_admin_auth, test_organization)
     yield org_data
 
 
