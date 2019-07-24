@@ -42,7 +42,7 @@ node('CAD') {
                             '''
                       
                             // Get the project id
-                            pid = projectId(${sonarToken})
+                            pid = projectId($sonarToken)
                             echo "pid:" + pid
                             aid = analysisId(pid)
                             echo "aid:" + aid
@@ -74,11 +74,11 @@ node('CAD') {
     }
 }
     
-def projectId(sonarToken) {
+def projectId(apiToken) {
     //withCredentials([string(credentialsId: 'sonarToken', variable: 'sonarToken')]) {
-        sh 'echo "tokenlength: ${#sonarToken}"'
+        sh 'echo "tokenlength: ${#apiToken}"'
         env.projectIdUrl = env.SONARURL + "/api/ce/component?component=" + env.JOB_NAME
-        sh 'curl -u $sonarToken: $projectIdUrl -o projectId.json'
+        sh 'curl -u $apiToken: $projectIdUrl -o projectId.json'
         project = readJSON file: 'projectId.json'
         return project[ "current"][ "id" ]
     //}
