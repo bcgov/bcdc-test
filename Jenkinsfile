@@ -78,7 +78,7 @@ node('master') {
     }
 }
     
-def projectId(projectid) {
+def projectId() {
     //withCredentials([string(credentialsId: 'sonarToken', variable: 'sonarToken')]) {
         //sh 'echo "tokenlength: ${#apiToken}"'
         //env.projectIdUrl = env.SONARURL + "/api/ce/component?component=" + env.JOB_NAME
