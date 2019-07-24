@@ -11,48 +11,23 @@ b) create package with org insert the org just created for this package.
 
 '''
 
+import inspect
 import logging
+import time
 
 import ckanapi
 import pytest  # @UnusedImport
 import requests
-from _pytest.python import Metafunc
 
-logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
+LOGGER = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
 # pylint: disable=redefined-outer-name
 # pylint: disable=unused-argument
 
 
-#TODO: move testpkg teardown to conftest, currently in test method to help while running as single test
-'''
-- have a package_test_data module that will
-  - return the params based on an input of the module name
-  - returns
-
-'''
-
-
-# @pytest.fixture(scope='module', params=[[1, 2], [1, 2]])
-# def get_package_test_data(request, ckan_auth_header, test_pkg_data):
-#     '''
-#     To parameterize the package tests need to get different:
-#       - Authorization header (no header, viewer, editor, admin)
-#       - package data (dataset 1, dataset 2, dataset 3)
-#     '''
-#     logger.debug("func name: %s, %s", __name__)
-#     logger.debug("ckan_auth_header: %s", ckan_auth_header)
-#     logger.debug("test_pkg_data: %s", test_pkg_data)
-#     logger.debug("param: %s", request.param)
-#     
-#     return ckan_auth_header, test_pkg_data, True
-
-
-
-    
-def test_add_package_success(ckan_auth_header, test_pkg_data, expected, test_pkg_teardown, ckan_url, ckan_rest_dir):
-
-#def test_add_package_success(get_package_test_data, ckan_url, ckan_rest_dir):
+def test_package_create(conf_fixture, ckan_auth_header, test_pkg_data,
+                        test_pkg_teardown, package_delete_if_exists, ckan_url,
+                        ckan_rest_dir):
 
     '''
     makes simple request to create package and verifies it gets
@@ -61,58 +36,114 @@ def test_add_package_success(ckan_auth_header, test_pkg_data, expected, test_pkg
     Using requests to form this call to get status code and for increased level
     of granularity over
     '''
-    #ckan_auth_header = get_package_test_data[0]
-    #test_pkg_data = get_package_test_data[1]
-    #expected = get_package_test_data[2]
+    # debugging the parameterization, makes sure this test is getting the correct
+    # parameters
+    func_name = inspect.stack()[0][3]
+    LOGGER.debug("func_name %s, %s", func_name, conf_fixture.test_function)
+    if func_name <> conf_fixture.test_function:
+        raise ValueError("incorrect conf_fixtures was sent")
+
+    LOGGER.debug("conf_fixture: expected %s", conf_fixture.test_result)
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'package_create')
-    logger.debug('api_call: %s', api_call)
-
+    LOGGER.debug('api_call: %s', api_call)
+    LOGGER.debug('ckan_auth_header: %s', ckan_auth_header)
+    LOGGER.debug('test_pkg_data: %s', test_pkg_data)
     resp = requests.post(api_call, headers=ckan_auth_header, json=test_pkg_data)
-    logger.debug("resp: %s", resp.text)
-    logger.info("status code: %s", resp.status_code)
-    #assert resp.status_code == 200
-    assert resp.ok == expected
+    if resp.status_code == 502:
+        # try again
+        time.sleep(3)
+        LOGGER.debug('api_call: %s', ckan_auth_header)
+        LOGGER.debug('api_call: %s', test_pkg_data)
+        resp = requests.post(api_call, headers=ckan_auth_header, json=test_pkg_data)
+    LOGGER.debug("resp: %s", resp.text)
+    LOGGER.info("status code: %s", resp.status_code)
+    assert (resp.status_code == 200) == conf_fixture.test_result
 
 
-def test_package_show(remote_api_admin_auth, test_package_name):
+def test_package_show(conf_fixture, remote_api_auth, test_package_name,
+                      package_create_if_not_exists):
     '''
     verify package data can be retrieved using package_show.
 
     :param param: remote_api_admin_auth
     '''
-    pkg_show_data = remote_api_admin_auth.action.package_show(id=test_package_name)
-    logger.debug("pkg_show_data: %s", pkg_show_data)
-    assert pkg_show_data['name'] == test_package_name
+    # debugging the parameterization, makes sure this test is getting the correct
+    # parameters
+    func_name = inspect.stack()[0][3]
+    LOGGER.debug("func_name %s, %s", func_name, conf_fixture.test_function)
+    if func_name <> conf_fixture.test_function:
+        raise ValueError("incorrect conf_fixtures was sent")
+
+    LOGGER.debug("conf_fixture: expected %s", conf_fixture.test_result)
+    LOGGER.debug("conf_fixture:  %s", conf_fixture)
+    # should this be a requests call instead of ckanapi?
+    pkg_show_data = remote_api_auth.action.package_show(id=test_package_name)
+    LOGGER.debug("pkg_show_data: %s", pkg_show_data)
+    LOGGER.debug("package name: %s", pkg_show_data['name'])
+    LOGGER.debug("expected name: %s", test_package_name)
+    LOGGER.debug("expected outcome: %s", conf_fixture.test_result)
+    assert (pkg_show_data['name'] == test_package_name) == conf_fixture.test_result
 
 
-def test_package_update(remote_api_admin_auth, test_pkg_data, ckan_url,
-                        ckan_rest_dir, ckan_auth_header):
+def test_package_update(conf_fixture, remote_api_auth, test_pkg_data, ckan_url,
+                        ckan_rest_dir, ckan_auth_header,
+                        package_create_if_not_exists, test_pkg_teardown):
     '''
     package update test will use requests
-    :param remote_api_admin_auth: a ckanapi remote object with auth
+    :param conf_fixture: a test parameters object that wraps the records
+                         described in test_data.testParams.json.
+    :type conf_fixture: helpers.read_test_config.TestParameters
+    :param remote_api_auth: a ckanapi remote object with auth
     :param test_pkg_data: the package data
     :param ckan_url: ckan domain
     :param ckan_rest_dir: path to rest dir
-    :param ckan_auth_header: authorization header to use in request
+    :param ckan_auth_header: authorization header to use in request, changes
+                             based on the different users that will use the
+                             test
+    :param package_create_if_not_exists: this test needs the test package to
+                        exist when its running.  Creates it if it does not
+                        already exist
     '''
+    # debugging the parameterization, makes sure this test is getting the correct
+    # parameters
+    func_name = inspect.stack()[0][3]
+    LOGGER.debug("func_name %s, %s", func_name, conf_fixture.test_function)
+    if func_name <> conf_fixture.test_function:
+        raise ValueError("incorrect conf_fixtures was sent")
+
     test_package_name = test_pkg_data['name']
+    original_title = test_pkg_data['title']
     test_pkg_data['title'] = 'zzz changed the title'
-    pkg_show_data_orig = remote_api_admin_auth.action.package_show(id=test_package_name)
-    # logger.debug("pkg_show_data: %s", pkg_show_data)
+    pkg_show_data_orig = remote_api_auth.action.package_show(id=test_package_name)
+    # LOGGER.debug("pkg_show_data: %s", pkg_show_data)
 
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'package_update')
     resp = requests.post(api_call, headers=ckan_auth_header, json=test_pkg_data)
-    logger.debug("resp: %s", resp.text)
-    logger.debug("resp.status_code: %s", resp.status_code)
-    assert resp.status_code == 200
+    LOGGER.debug("resp.status_code: %s", resp.status_code)
+    LOGGER.debug("resp.status_code: %s", resp.text)
+    assert (resp.status_code == 200) == conf_fixture.test_result
     # now double check that the data has been changed
-    pkg_show_data = remote_api_admin_auth.action.package_show(id=test_package_name)
-    assert pkg_show_data['title'] == test_pkg_data['title']
-    assert pkg_show_data_orig['title'] != pkg_show_data['title']
+    pkg_show_data = remote_api_auth.action.package_show(id=test_package_name)
+    assert (pkg_show_data['title'] == test_pkg_data['title']) == conf_fixture.test_result
+    assert (pkg_show_data_orig['title'] != pkg_show_data['title']) == conf_fixture.test_result
+
+    # now change back to original values so test will work on next iteration,
+    # but also alows further testing of the package_update
+    # only run if the data was successfully changed.
+    if pkg_show_data['title'] == test_pkg_data['title']:
+        test_pkg_data['title'] = original_title
+        resp = requests.post(api_call, headers=ckan_auth_header, json=test_pkg_data)
+        assert (resp.status_code == 200) == conf_fixture.test_result
+        pkg_show_data = remote_api_auth.action.package_show(id=test_package_name)
+        assert (pkg_show_data['title'] == original_title) == conf_fixture.test_result
 
 
 @pytest.mark.xfail
-def test_verify_package_count(ckan_url, ckan_rest_dir, ckan_auth_header):
+def test_package_list_vs_package_show(conf_fixture,  # pylint: disable=invalid-name, too-many-arguments
+                                      ckan_url,
+                                      ckan_rest_dir,
+                                      ckan_auth_header,
+                                      package_create_if_not_exists):
     '''
     verify the count reported by package_search matches packages
     returned by package_list, als seeing as a package has been
@@ -122,72 +153,80 @@ def test_verify_package_count(ckan_url, ckan_rest_dir, ckan_auth_header):
     :param ckan_rest_dir: directory path to rest calls
     :param ckan_auth_header: header struct with auth token
     '''
-    # verify that the pkg_search and package_list report the same
-    # total number of packages
+    # debugging the parameterization, makes sure this test is getting the correct
+    # parameters
+    func_name = inspect.stack()[0][3]
+    LOGGER.debug("func_name %s, %s", func_name, conf_fixture.test_function)
+    if func_name <> conf_fixture.test_function:
+        raise ValueError("incorrect conf_fixtures was sent")
 
     # using requests as can't get the limit to work with ckanapi.
     package_list_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'package_list')
     params = {'limit': 500, 'offset': 0}
     package_list_cnt = 0
     while True:
-        logger.debug("offset: %s", params['offset'])
+        LOGGER.debug("offset: %s", params['offset'])
         resp = requests.get(package_list_call, headers=ckan_auth_header,
                             params=params)
-        logger.debug("status: %s", resp.status_code)
+        LOGGER.debug("status: %s", resp.status_code)
         pkg_list = resp.json()
         package_list_cnt = package_list_cnt + len(pkg_list['result'])
-        logger.debug("package cnt: %s %s", package_list_cnt,
+        LOGGER.debug("package cnt: %s %s", package_list_cnt,
                      len(pkg_list['result']))
         if len(pkg_list['result']) < params['limit']:
-            logger.debug("end of pages, breaking out")
+            LOGGER.debug("end of pages, breaking out")
             break
         params['offset'] = params['limit'] + params['offset']
 
-    logger.debug("final package cnt from packagelist: %s", package_list_cnt)
+    LOGGER.debug("final package cnt from packagelist: %s", package_list_cnt)
 
     remote_api = ckanapi.RemoteCKAN(ckan_url)
     pkg_search = remote_api.action.package_search()
 
-    logger.debug("pkg_search cnt: %s", pkg_search['count'])
-    logger.debug("pkglist cnt: %s", package_list_cnt)
-    assert pkg_search['count'] == package_list_cnt
-    assert len(pkg_list) >= 1
+    LOGGER.debug("pkg_search cnt: %s", pkg_search['count'])
+    LOGGER.debug("pkglist cnt: %s", package_list_cnt)
+    assert (pkg_search['count'] == package_list_cnt) == conf_fixture.test_result
+    assert (len(pkg_list) >= 1) == conf_fixture.test_result
 
 
-def test_package_delete(ckan_url, ckan_auth_header,
-                        ckan_rest_dir, test_package_name):
+def test_package_delete(conf_fixture, ckan_url,  # pylint: disable=invalid-name
+                        ckan_auth_header, ckan_rest_dir, test_package_name,
+                        package_create_if_not_exists):
     '''
-    verifies that a package can actually be deleted
+    verifies that a package can actually be deleted,
+
+     - removed the purge calls because purge is completed by superadmin
+       no by the test user.
     '''
-    #delete pkg
+    # debugging the parameterization, makes sure this test is getting the correct
+    # parameters
+    func_name = inspect.stack()[0][3]
+    LOGGER.debug("func_name %s, %s", func_name, conf_fixture.test_function)
+    if func_name <> conf_fixture.test_function:
+        raise ValueError("incorrect conf_fixtures was sent")
+
+    # delete pkg
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'package_delete')
-    logger.debug('api_call: %s', api_call)
+    LOGGER.debug('api_call: %s', api_call)
     delete_data = {'id': test_package_name}
 
     resp = requests.post(api_call, headers=ckan_auth_header, json=delete_data)
-    logger.debug('status code: %s', resp.status_code)
+    LOGGER.debug('status code: %s', resp.status_code)
     resp_json = resp.json()
-    logger.debug("resp: %s", resp.text)
-
-
-    # purge pkg
-    api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'dataset_purge')
-    logger.debug('api_call: %s', api_call)
-    delete_data = {'id': test_package_name}
-
-    resp = requests.post(api_call, headers=ckan_auth_header, json=delete_data)
-    logger.debug('PURGE: %s', resp.status_code)
-
-
-    assert resp.status_code == 200
-    assert resp_json['success']
+    LOGGER.debug("resp: %s", resp.text)
+    LOGGER.debug("resp_json['success'] type(): %s, %s, %s", type(resp_json['success']),
+                 resp_json['success'], conf_fixture.test_result)
+    assert (resp.status_code == 200) == conf_fixture.test_result
+    assert resp_json['success'] == conf_fixture.test_result
 
 
 # its known that this test will currently fail.  remove this decorator once this
 # issue is patched
 @pytest.mark.xfail
-def test_package_create_invalid( ckan_url, ckan_auth_header,
-                                ckan_rest_dir, test_pkg_data_core_only):
+def test_create_package_coredataonly(conf_fixture, ckan_url,  # pylint: disable=invalid-name
+                                     ckan_auth_header, ckan_rest_dir,
+                                     test_pkg_data_core_only,
+                                     package_delete_if_exists):
     '''
     CKAN Documentation suggests these are the core attributes required for a
     package:
@@ -211,37 +250,42 @@ def test_package_create_invalid( ckan_url, ckan_auth_header,
 
     using pytest_check to provide delayed assertion
     '''
+    # debugging the parameterization, makes sure this test is getting the correct
+    # parameters
+    func_name = inspect.stack()[0][3]
+    LOGGER.debug("func_name %s, %s", func_name, conf_fixture.test_function)
+    if func_name <> conf_fixture.test_function:
+        raise ValueError("incorrect conf_fixtures was sent")
+
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'package_create')
-    logger.debug('api_call: %s', api_call)
+    LOGGER.debug('api_call: %s', api_call)
 
     resp_create = requests.post(api_call, headers=ckan_auth_header,
                                 json=test_pkg_data_core_only)
-    logger.debug("resp: %s", resp_create.text)
+    LOGGER.debug("resp: %s", resp_create.text)
     cant_create_msg = 'Attempt to call %s returned %s'
     cant_create_msg = cant_create_msg.format(api_call,
                                              resp_create.status_code)
-    assert resp_create.status_code == 200, cant_create_msg
+    # core data only create is successful.
+    assert (resp_create.status_code <> 200) == conf_fixture.test_result, \
+        cant_create_msg
 
     # now make sure the data is viewable
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'package_show')
-    logger.debug('api_call: %s', api_call)
+    LOGGER.debug('api_call: %s', api_call)
     resp_show = requests.post(api_call, headers=ckan_auth_header,
                               json={'id': test_pkg_data_core_only['name']})
-    logger.debug('resp: %s', resp_show.text)
+    LOGGER.debug('resp: %s', resp_show.text)
     non_200_msg = 'package_show on package {0} returned a status_code {1} when ' + \
                   'package_create reported {2}'
 
     non_200_msg = non_200_msg.format(test_pkg_data_core_only['name'],
                                      resp_show.status_code,
                                      non_200_msg)
-    assert resp_show.status_code == 200, non_200_msg
 
-    logger.debug("resp text: %s", resp_show.text)
-    logger.debug("tear down has been called")
+    # core only data is successful in viewing
+    assert (resp_show.status_code == 200) == resp_create.status_code, \
+        non_200_msg
 
-
-# post test cleanup removal of pkg if previous test fails. this is to be apart of the pre/post run at module level
-# TODO: move this into a conftest
-def test_post_cleanup(test_pkg_teardown):
-    pkg = test_pkg_teardown
-    logger.debug('post cleanup: %s', pkg)
+    LOGGER.debug("resp text: %s", resp_show.text)
+    LOGGER.debug("tear down has been called")

@@ -19,55 +19,66 @@ import pytest
 
 from .config_fixture import test_package_name
 from .config_fixture import test_user
-import bcdc_apitests.helpers.file_utils
 
-logger = logging.getLogger(__name__)
+from bcdc_apitests.helpers.file_utils import FileUtils
+LOGGER = logging.getLogger(__name__)
 
-@pytest.fixture
+
+@pytest.fixture(scope='session')
 def test_data_dir():
     '''
     :return: the data directory
     '''
-    file_utils = bcdc_apitests.helpers.file_utils.FileUtils
-    #pkg_json_dir = os.path.join(os.path.dirname(__file__), '..', 'test_data')
+    file_utils = FileUtils()
+    # pkg_json_dir = os.path.join(os.path.dirname(__file__), '..', 'test_data')
     pkg_json_dir = file_utils.get_test_data_dir()
     yield pkg_json_dir
 
+
 @pytest.fixture
-def test_pkg_data(org_create_if_not_exists_fixture, test_data_dir, test_package_name, test_user):
-    #TODO: should get a fixture that creates the org if it doesn't exist
+def test_pkg_data(org_create_if_not_exists_fixture, test_data_dir,
+                  test_package_name, test_user, data_label_fixture):
     '''
     :param test_data_dir: the data directory fixture, provides the directory
                           where data is located
     :param test_package_name: the name of the test package
     '''
     org_id = org_create_if_not_exists_fixture['id']
-    logger.debug("test_package_name: %s", test_package_name)
-    logger.debug("test user: %s", test_user)
-    json_file = os.path.join(test_data_dir, 'pkgData_min.json')
+    LOGGER.debug("test_package_name: %s", test_package_name)
+    LOGGER.debug("test user: %s", test_user)
+    json_file = os.path.join(test_data_dir, data_label_fixture[0])
     with open(json_file, 'r') as json_file_hand:
         datastore = json.load(json_file_hand)
         datastore['name'] = test_package_name
         datastore['title'] = '{0} {1}'.format(datastore['title'], test_user)
         datastore['org'] = org_id
         datastore['owner_org'] = org_id
+        datastore['sub_org'] = org_id
+
+        # for now removing any group references. Should do group testing later
+        # created a ticket to keep track of that issue DDM-738.
+        if 'groups' in datastore:
+            del datastore['groups']
     return datastore
 
 
 @pytest.fixture
-def resource_data(test_data_dir, test_resource_name):
+def resource_data(package_create_if_not_exists, test_data_dir,
+                  test_resource_name):
     '''
     :param test_data_dir: The directory where the data files are
         expected to be
     :param test_resource_name: the name of the resource that should
         be used for this test
     '''
-    logging.debug("test_package_name: %s", test_package_name)
+
+    logging.debug("test_resource_name: %s", test_resource_name)
     json_file = os.path.join(test_data_dir, 'resource.json')
     with open(json_file, 'r') as json_file_hand:
-        datastore = json.load(json_file_hand)
-        datastore['name'] = test_resource_name
-    return datastore
+        resource = json.load(json_file_hand)
+        resource['name'] = test_resource_name
+        resource['package_id'] = package_create_if_not_exists['id']
+    return resource
 
 
 @pytest.fixture
@@ -118,4 +129,17 @@ def test_org_data(test_data_dir, test_organization):
     with open(json_file, 'r') as json_file_hand:
         org_data = json.load(json_file_hand)
         org_data['name'] = test_organization
+    return org_data
+
+
+@pytest.fixture(scope='session')
+def session_test_org_data(test_data_dir, test_session_organization):
+    '''
+    :return:  an organization data structure that can be used for testing
+    '''
+    json_file = os.path.join(test_data_dir, 'ownerOrg.json')
+    LOGGER.debug("json file path: %s", json_file)
+    with open(json_file, 'r') as json_file_hand:
+        org_data = json.load(json_file_hand)
+        org_data['name'] = test_session_organization
     return org_data
