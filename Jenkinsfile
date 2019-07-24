@@ -41,9 +41,10 @@ node('CAD') {
                                 echo "tokenlength: ${#sonarToken}"
                                 echo $projectIdUrl
                                 curl --version
-                                curl -u ${sonarToken}: $projectIdUrl --output ./projectId.json
+                                curl -u ${sonarToken}: $projectIdUrl -o $TMP/junk.json
                                 pwd
                                 ls -l
+                                ls -l $TMP
                             '''
                       
                             // Get the project id
