@@ -42,7 +42,7 @@ node('master') {
                                 echo "tokenlength: ${#sonarToken}"
                                 echo $projectIdUrl
                                 curl --version
-                                curl -o $TMP/junk.json -u ${sonarToken}: $projectIdUrl 
+                                curl -o junk.json -u ${sonarToken}: $projectIdUrl 
                                 pwd
                                 ls -l
                                 ls -l $TMP
