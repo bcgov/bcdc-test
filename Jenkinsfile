@@ -37,6 +37,7 @@ node('master') {
                         //  Run the sonar scanner
                             env.projectIdUrl = env.SONARURL + "/api/ce/component?component=" + env.JOB_NAME
                             sh '''
+                                [ -d $TMP ] || mkdir $TMP
                                 sonar-scanner -Dsonar.sources=. -Dsonar.projectKey=$JOB_NAME -Dsonar.host.url=$SONARURL -Dsonar.python.pylint=$PYLINTPATH -Dsonar.login=${sonarToken}  -Dsonar.exclusions=ve/**,build/**
                                 echo "tokenlength: ${#sonarToken}"
                                 echo $projectIdUrl
@@ -46,7 +47,7 @@ node('master') {
                                 ls -l
                                 ls -l $TMP
                             '''
-                            sh 'curl -o $TMP/junk.json -u ${sonarToken}: $projectIdUrl' 
+                            sh 'curl -o junk.json -u ${sonarToken}: $projectIdUrl' 
                             
                       
                             // Get the project id
