@@ -41,8 +41,7 @@ node('master') {
                                 sonar-scanner -Dsonar.sources=. -Dsonar.projectKey=$JOB_NAME -Dsonar.host.url=$SONARURL -Dsonar.python.pylint=$PYLINTPATH -Dsonar.login=${sonarToken}  -Dsonar.exclusions=ve/**,build/**
                                 echo "tokenlength: ${#sonarToken}"
                                 echo $projectIdUrl
-                                curl --manual
-                                curl https://sonarqube.data.gov.bc.ca/api/ce/component?component=BCDC_tests_build --verbose --user ${sonarToken}: --output 'junk.json'
+                                curl https://sonarqube.data.gov.bc.ca/api/ce/component?component=BCDC_tests_build --verbose --user ${sonarToken}:${sonarToken} --output 'junk.json'
                                 pwd
                                 ls -l
                                 ls -l $TMP
