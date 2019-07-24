@@ -22,11 +22,12 @@ node('CAD') {
                     python -m virtualenv --clear $VEDIR
                     source $VEDIR/bin/activate
                     python --version
-                    python -m pip install -U --force-reinstall pip || goto :error
-                    python -m pip install --upgrade pip || goto :error
-                    python -m pip install --no-cache-dir -r ./requirements.txt
-                    python -m pip install --no-cache-dir -r ./requirements_build.txt
                 '''
+                // comment out while work on other stages...
+                    //python -m pip install -U --force-reinstall pip || goto :error
+                    //python -m pip install --upgrade pip || goto :error
+                    //python -m pip install --no-cache-dir -r ./requirements.txt
+                    //python -m pip install --no-cache-dir -r ./requirements_build.txt
             }
             stage ('SonarScan'){
                 withCredentials([string(credentialsId: 'sonarToken', variable: 'sonarToken')]) {
