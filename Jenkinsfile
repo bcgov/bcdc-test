@@ -41,7 +41,7 @@ node('CAD') {
                                 echo "tokenlength: ${#sonarToken}"
                                 echo $projectIdUrl
                                 curl --version
-                                curl -u ${sonarToken}: $projectIdUrl -o $TMP/junk.json
+                                curl -o $TMP/junk.json -u ${sonarToken}: $projectIdUrl 
                                 pwd
                                 ls -l
                                 ls -l $TMP
