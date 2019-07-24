@@ -19,7 +19,6 @@ node('CAD') {
                     [ -d data ] || mkdir data
                     export TMP=$WORKSPACE/data
                     export TEMP=$WORKSPACE/data
-                    python -m pip install virtualenv
                     python -m virtualenv --clear $VEDIR
                     source $VEDIR/bin/activate
                     python --version
