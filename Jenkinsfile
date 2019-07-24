@@ -41,8 +41,7 @@ node('master') {
                                 sonar-scanner -Dsonar.sources=. -Dsonar.projectKey=$JOB_NAME -Dsonar.host.url=$SONARURL -Dsonar.python.pylint=$PYLINTPATH -Dsonar.login=${sonarToken}  -Dsonar.exclusions=ve/**,build/**
                                 echo "tokenlength: ${#sonarToken}"
                                 echo $projectIdUrl
-                                curl --version
-                                curl -o junk.json -u ${sonarToken}: $projectIdUrl 
+                                curl -u ${sonarToken}: -o junk.json $projectIdUrl 
                                 pwd
                                 ls -l
                                 ls -l $TMP
