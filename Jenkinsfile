@@ -43,6 +43,8 @@ node('CAD') {
                                 echo $projectIdUrl
                                 curl --version
                                 curl -u ${sonarToken}: $projectIdUrl -o projectId.json
+                                pwd
+                                ls -l
                             '''
                       
                             // Get the project id
