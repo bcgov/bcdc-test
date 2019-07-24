@@ -40,14 +40,11 @@ node('master') {
                                 [ -d $TMP ] || mkdir $TMP
                                 sonar-scanner -Dsonar.sources=. -Dsonar.projectKey=$JOB_NAME -Dsonar.host.url=$SONARURL -Dsonar.python.pylint=$PYLINTPATH -Dsonar.login=${sonarToken}  -Dsonar.exclusions=ve/**,build/**
                                 echo "tokenlength: ${#sonarToken}"
-                                echo $projectIdUrl
-                                curl https://sonarqube.data.gov.bc.ca/api/ce/component?component=BCDC_tests_build --output junk.json
+                                curl $projectIdUrl --output junk.json
                                 pwd
                                 ls -l
                                 ls -l $TMP
-                            '''
-                            sh 'curl  -u ${sonarToken}:  -o junk.json $projectIdUrl' 
-                            
+                            '''                            
                       
                             // Get the project id
                             pid = projectId('projectId.json')
@@ -97,7 +94,7 @@ def analysisId(id) {
     withCredentials([string(credentialsId: 'sonarToken', variable: 'sonarToken')]) {
         echo "input id:" + id
         env.taskIdUrl = env.SONARURL + "/api/ce/task?id=" + id
-        sh 'curl -u ${sonarToken}: $taskIdUrl -o taskId.json'
+        sh 'curl $taskIdUrl -o taskId.json'
         task = readJSON file: 'taskId.json'
         return task[ "task" ][ "analysisId" ]
     }
