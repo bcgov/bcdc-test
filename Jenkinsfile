@@ -35,14 +35,15 @@ node('CAD') {
                         tool name: 'sonarscanner'
                         withSonarQubeEnv('CODEQA'){
                         //  Run the sonar scanner
-                        
+                            
                             sh '''
                                 sonar-scanner -Dsonar.sources=. -Dsonar.projectKey=$JOB_NAME -Dsonar.host.url=$SONARURL -Dsonar.python.pylint=$PYLINTPATH -Dsonar.login=${sonarToken}  -Dsonar.exclusions=ve/**,build/**
                                 echo "tokenlength: ${#sonarToken}"
+                                curl -u ${sonarToken}: $projectIdUrl -o projectId.json
                             '''
                       
                             // Get the project id
-                            pid = projectId('${sonarToken}')
+                            pid = projectId('projectId.json')
                             echo "pid:" + pid
                             aid = analysisId(pid)
                             echo "aid:" + aid
@@ -74,11 +75,11 @@ node('CAD') {
     }
 }
     
-def projectId(apiToken) {
+def projectId(projectid) {
     //withCredentials([string(credentialsId: 'sonarToken', variable: 'sonarToken')]) {
         sh 'echo "tokenlength: ${#apiToken}"'
-        env.projectIdUrl = env.SONARURL + "/api/ce/component?component=" + env.JOB_NAME
-        sh 'curl -u $apiToken: $projectIdUrl -o projectId.json'
+        //env.projectIdUrl = env.SONARURL + "/api/ce/component?component=" + env.JOB_NAME
+        //sh 'curl -u $apiToken: $projectIdUrl -o projectId.json'
         project = readJSON file: 'projectId.json'
         return project[ "current"][ "id" ]
     //}
