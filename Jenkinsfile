@@ -52,7 +52,7 @@ node('master') {
                             echo "aid:" + aid
                             env.qualityGateUrl = env.SONARURL + "/api/qualitygates/project_status?analysisId=" + aid
                       
-                            sh 'curl -u ${sonarToken}: $qualityGateUrl -o qualityGate.json'
+                            sh 'curl  $qualityGateUrl -o qualityGate.json'
                             def qualitygate = readJSON file: 'qualityGate.json'
                             echo qualitygate.toString()
                             if ("ERROR".equals(qualitygate["projectStatus"]["status"])) {
