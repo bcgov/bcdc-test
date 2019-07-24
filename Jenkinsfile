@@ -35,7 +35,7 @@ node('CAD') {
                         tool name: 'sonarscanner'
                         withSonarQubeEnv('CODEQA'){
                         //  Run the sonar scanner
-                            
+                            env.projectIdUrl = env.SONARURL + "/api/ce/component?component=" + env.JOB_NAME
                             sh '''
                                 sonar-scanner -Dsonar.sources=. -Dsonar.projectKey=$JOB_NAME -Dsonar.host.url=$SONARURL -Dsonar.python.pylint=$PYLINTPATH -Dsonar.login=${sonarToken}  -Dsonar.exclusions=ve/**,build/**
                                 echo "tokenlength: ${#sonarToken}"
@@ -78,7 +78,7 @@ node('CAD') {
     
 def projectId(projectid) {
     //withCredentials([string(credentialsId: 'sonarToken', variable: 'sonarToken')]) {
-        sh 'echo "tokenlength: ${#apiToken}"'
+        //sh 'echo "tokenlength: ${#apiToken}"'
         //env.projectIdUrl = env.SONARURL + "/api/ce/component?component=" + env.JOB_NAME
         //sh 'curl -u $apiToken: $projectIdUrl -o projectId.json'
         project = readJSON file: 'projectId.json'
