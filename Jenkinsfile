@@ -1,4 +1,4 @@
-node('CAD') {
+node('master') {
     try{
         veDir = "ve"
         withEnv([
