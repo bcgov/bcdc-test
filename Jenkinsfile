@@ -74,7 +74,6 @@ node('CAD') {
     
 def projectId() {
     withCredentials([string(credentialsId: 'sonarToken', variable: 'sonarToken')]) {
-
         env.projectIdUrl = env.SONARURL + "/api/ce/component?component=" + env.JOB_NAME
         sh 'curl -u ${sonarToken}: $projectIdUrl -o projectId.json'
         project = readJSON file: 'projectId.json'
