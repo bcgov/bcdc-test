@@ -8,10 +8,25 @@ node('CAD') {
                  "VEDIR=${veDir}",
                  "PYLINTPATH=${WORKSPACE}/${veDir}/Scripts/pylint.exe",
                  ]) {
-            stage('checkout') {
+           stage('checkout') {
                 sh 'if [ ! -d "$TEMP" ]; then mkdir $TEMP; fi'
                 checkout([$class: 'GitSCM', branches: [[name: "${env.TAGNAME}"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false]], gitTool: 'Default', submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/bcgov/bcdc-test']]])                
-            }
+           }
+           stage('parse webhook') {
+           // get jq
+               sh '''
+                   if [ ! -f "./jq" ]; then
+                       curl -o jq https://stedolan.github.io/jq/download/linux64/jq
+                       chmod +x jq
+                   fi
+                   echo 'payload', ${payload}
+                   echo $payload
+               '''
+           // parse the webhook to determine if 
+                            
+                            
+           }
+           /*
            stage('prep Virtualenv') {
                 sh 'if [ -d "ve_bcdc_test" ]; then rm -Rf ve_bcdc_test; fi'
                 sh 'if [ -d "$VEDIR" ]; then rm -Rf $VEDIR; fi'
@@ -29,6 +44,7 @@ node('CAD') {
                     python -m pip install --no-cache-dir -r ./requirements_build.txt
                '''
             }
+           
             stage ('SonarScan'){
                 withCredentials([string(credentialsId: 'sonarToken', variable: 'sonarToken')]) {
                     withEnv(['PATH=/apps/download/n/8/bin:/s00/bin:/apps/sonarscanner/bin:/bin:/usr/bin:/s00/libexec/git-core', 'LD_LIBRARY_PATH=/apps/download/n/8/lib:/s00/lib64:/apps/sonarscanner/lib:/lib64:/usr/lib64']) {
@@ -70,6 +86,7 @@ node('CAD') {
                     python -m twine upload dist/*
                 '''
             }
+             */
         }
     } catch (e) {
         currentBuild.result = "FAILED"
