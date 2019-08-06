@@ -79,13 +79,9 @@ node('CAD') {
 }
     
 def projectId() {
-    //withCredentials([string(credentialsId: 'sonarToken', variable: 'sonarToken')]) {
-        //sh 'echo "tokenlength: ${#apiToken}"'
-        //env.projectIdUrl = env.SONARURL + "/api/ce/component?component=" + env.JOB_NAME
-        //sh 'curl -u $apiToken: $projectIdUrl -o projectId.json'
+        // curl on box doesn't seem to work with -u so doing this without creds 
         project = readJSON file: 'projectId.json'
         return project[ "current"][ "id" ]
-    //}
        
 }
 
