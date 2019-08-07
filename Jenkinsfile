@@ -9,11 +9,11 @@ node('CAD') {
                  "PYLINTPATH=${WORKSPACE}/${veDir}/Scripts/pylint.exe",
                  ]) {
            stage('checkout') {
-                sh 'if [ ! -d "$TEMP" ]; then mkdir $TEMP; fi'
+               sh 'if [ ! -d "$TEMP" ]; then mkdir $TEMP; fi'
+               checkout([$class: 'GitSCM', branches: [[name: '*/jf_dev']], doGenerateSubmoduleConfigurations: false, extensions: [], gitTool: 'Default', submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/bcgov/bcdc-test']]])
                properties ( [[$class: 'ParametersDefinitionProperty', parameterDefinitions: [[$class: 'StringParameterDefinition', defaultValue: '', description: '', name: 'payload']]]] )
                echo ("This build is built with the payload: $payload")
-                
-                checkout([$class: 'GitSCM', branches: [[name: '*/jf_dev']], doGenerateSubmoduleConfigurations: false, extensions: [], gitTool: 'Default', submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/bcgov/bcdc-test']]])           
+                           
            }
            stage('parse webhook') {
            // get jq
