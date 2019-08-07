@@ -14,6 +14,8 @@ node('CAD') {
            }
            stage('parse webhook') {
            // get jq
+               properties ( [[$class: 'ParametersDefinitionProperty', parameterDefinitions: [[$class: 'StringParameterDefinition', defaultValue: '', description: '', name: 'payload']]]] )
+               echo ("This build is built with the payload: $payload")
                sh '''
                    if [ ! -f "./jq" ]; then
                        curl -o jq https://stedolan.github.io/jq/download/linux64/jq
