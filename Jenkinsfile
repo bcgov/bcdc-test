@@ -26,7 +26,7 @@ node('CAD') {
                    fi
                    echo 'payload', ${payload}
                    echo $payload
-                   export
+                   export 
                '''
            // parse the webhook to determine if 
                             
