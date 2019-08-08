@@ -21,8 +21,9 @@ node('CAD') {
                    fi
                    
                    merged_and_close=false
+                   
                    # get the last event sent to github
-                   eventType = $(curl -sS https://api.github.com/repos/bcgov/bcdc-test/events | ./jq '.[0] | .type')
+                   eventType=$(curl -sS https://api.github.com/repos/bcgov/bcdc-test/events | ./jq '.[0] | .type')
                    
                    # get rid of quotes
                    eventtype=$(echo "$eventtype" | tr -d '"')
