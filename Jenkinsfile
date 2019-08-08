@@ -57,7 +57,7 @@ node('CAD') {
                echo $merged_and_close
 
                '''
-               echo "MERGED_AND_CLOSED=${MERGED_AND_CLOSED}"
+               echo "MERGED_AND_CLOSED=${merged_and_closed}"
            // parse the webhook to determine if 
                             
                             
