@@ -13,44 +13,49 @@ node('CAD') {
                checkout([$class: 'GitSCM', branches: [[name: '*/jf_dev']], doGenerateSubmoduleConfigurations: false, extensions: [], gitTool: 'Default', submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/bcgov/bcdc-test']]])                           
            }
            stage('parse webhook') {
-               sh '''
+               def merged_and_closed = sh returnStdout:true, script: '''
+           
                    # Get JQ 
                    if [ ! -f "./jq" ]; then
                        curl -o jq https://stedolan.github.io/jq/download/linux64/jq
                        chmod +x jq
                    fi
                    
-                   merged_and_close=false
-                   
-                   # get the last event sent to github
-                   eventType=$(curl -sS https://api.github.com/repos/bcgov/bcdc-test/events | ./jq '.[0] | .type')
-                   
-                   # get rid of quotes
-                   eventtype=$(echo "$eventtype" | tr -d '"')
-                   
-                   # if its a pr get the pr number
-                   if [[ $eventtype = "PullRequestEvent" ]]; 
+                    merged_and_close=false
+                    jqeventref='.[28] | '
+                    eventurl='https://api.github.com/repos/bcgov/bcdc-test/events?page=3'
+                    eventjson=$(curl -sS $eventurl)
+                    echo curl -sS $eventurl 
+                    echo $jqeventref
+                    curl -sS $eventurl | ./jq "$jqeventref .type"
+                    
+                    # get the last event sent to github
+                    eventtype=$(echo $eventjson | ./jq "$jqeventref .type" | tr -d '"')
+                    echo "eventtype is $eventtype"
+                    
+                    # if its a pr get the pr number
+                    if [[ $eventtype = "PullRequestEvent" ]]; 
+                    then
+                       prnum=$(echo $eventjson | ./jq "$jqeventref .payload.number" | tr -d '"')
+                       echo prnum is $prnum
+                       
+                       # is the pr closed
+                       action=$(echo $eventjson | ./jq "$jqeventref .payload.action" | tr -d '"')
+                       echo action is $action
+                    
+                       if [[ $action = "closed" ]];
                        then
-                           prnum=$(curl -sS https://api.github.com/repos/bcgov/bcdc-test/events | ./jq '.[0] | .payload.number')
-                           
-                           # is the pr closed
-                           action= $(curl -sS https://api.github.com/repos/bcgov/bcdc-test/events | ./jq '.[0] | .payload.action')
-                           
-                           # get rid of quotes
-                           action=$(echo "$action" | tr -d '"')
-                           if [[ $action = "closed" ]];
-                               then
-                                   # make sure its also merged
-                                   status_code=$(curl -s -o /dev/null -I -w "%{http_code}" https://api.github.com/repos/bcgov/bcdc-test/pulls/$prnum/merge)
-                                   if [ $status_code -eq  204 ];
-                                       then 
-                                           merged_and_close=true
-                                   fi
+                           # make sure its also merged
+                           status_code=$(curl -s -o /dev/null -I -w "%{http_code}" https://api.github.com/repos/bcgov/bcdc-test/pulls/$prnum/merge)
+                           echo status_code is $status_code
+                           if [ $status_code -eq  204 ];
+                               then 
+                                   merged_and_close=true
                            fi
-                   fi
-                   
-                   
-                   export MERGED_AND_CLOSED=$merged_and_close
+                       fi
+                    fi
+               echo $merged_and_close
+
                '''
                echo "MERGED_AND_CLOSED=${MERGED_AND_CLOSED}"
            // parse the webhook to determine if 
