@@ -10,24 +10,48 @@ node('CAD') {
                  ]) {
            stage('checkout') {
                sh 'if [ ! -d "$TEMP" ]; then mkdir $TEMP; fi'
-               checkout([$class: 'GitSCM', branches: [[name: '*/jf_dev']], doGenerateSubmoduleConfigurations: false, extensions: [], gitTool: 'Default', submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/bcgov/bcdc-test']]])
-               properties ( [[$class: 'ParametersDefinitionProperty', parameterDefinitions: [[$class: 'StringParameterDefinition', defaultValue: '', description: '', name: 'payload']]]] )
-               echo ("This build is built with the payload: $payload")
-                           
+               checkout([$class: 'GitSCM', branches: [[name: '*/jf_dev']], doGenerateSubmoduleConfigurations: false, extensions: [], gitTool: 'Default', submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/bcgov/bcdc-test']]])                           
            }
            stage('parse webhook') {
-           // get jq
-               properties ( [[$class: 'ParametersDefinitionProperty', parameterDefinitions: [[$class: 'StringParameterDefinition', defaultValue: '', description: '', name: 'payload']]]] )
-               echo ("This build is built with the payload: $payload")
                sh '''
+                   # Get JQ 
                    if [ ! -f "./jq" ]; then
                        curl -o jq https://stedolan.github.io/jq/download/linux64/jq
                        chmod +x jq
                    fi
-                   echo 'payload', ${payload}
-                   echo $payload
-                   export 
-               ''' 
+                   
+                   merged_and_close=false
+                   # get the last event sent to github
+                   eventType = $(curl -sS https://api.github.com/repos/bcgov/bcdc-test/events | ./jq '.[0] | .type')
+                   
+                   # get rid of quotes
+                   eventtype=$(echo "$eventtype" | tr -d '"')
+                   
+                   # if its a pr get the pr number
+                   if [[ $eventtype = "PullRequestEvent" ]]; 
+                       then
+                           prnum=$(curl -sS https://api.github.com/repos/bcgov/bcdc-test/events | ./jq '.[0] | .payload.number')
+                           
+                           # is the pr closed
+                           action= $(curl -sS https://api.github.com/repos/bcgov/bcdc-test/events | ./jq '.[0] | .payload.action')
+                           
+                           # get rid of quotes
+                           action=$(echo "$action" | tr -d '"')
+                           if [[ $action = "closed" ]];
+                               then
+                                   # make sure its also merged
+                                   status_code=$(curl -s -o /dev/null -I -w "%{http_code}" https://api.github.com/repos/bcgov/bcdc-test/pulls/$prnum/merge)
+                                   if [ $status_code -eq  204 ];
+                                       then 
+                                           merged_and_close=true
+                                   fi
+                           fi
+                   fi
+                   
+                   
+                   export MERGED_AND_CLOSED=$merged_and_close
+               '''
+               echo "MERGED_AND_CLOSED=${MERGED_AND_CLOSED}"
            // parse the webhook to determine if 
                             
                             
