@@ -30,37 +30,36 @@ node('CAD') {
                     jqeventref='.[28] | '
                     eventurl='https://api.github.com/repos/bcgov/bcdc-test/events?page=3'
                     eventjson=$(curl -sS $eventurl)
-                    echo curl -sS $eventurl 
-                    echo $jqeventref
-                    curl -sS $eventurl | ./jq "$jqeventref .type"
+                    #echo curl -sS $eventurl 
+                    #echo $jqeventref
+                    #curl -sS $eventurl | ./jq "$jqeventref .type"
                     
                     # get the last event sent to github
                     eventtype=$(echo $eventjson | ./jq "$jqeventref .type" | tr -d '"')
-                    echo "eventtype is $eventtype"
+                    #echo "eventtype is $eventtype"
                     
                     # if its a pr get the pr number
                     if [[ $eventtype = "PullRequestEvent" ]]; 
                     then
                        prnum=$(echo $eventjson | ./jq "$jqeventref .payload.number" | tr -d '"')
-                       echo prnum is $prnum
+                       #echo prnum is $prnum
                        
                        # is the pr closed
                        action=$(echo $eventjson | ./jq "$jqeventref .payload.action" | tr -d '"')
-                       echo action is $action
+                       #echo action is $action
                     
                        if [[ $action = "closed" ]];
                        then
                            # make sure its also merged
                            status_code=$(curl -s -o /dev/null -I -w "%{http_code}" https://api.github.com/repos/bcgov/bcdc-test/pulls/$prnum/merge)
-                           echo status_code is $status_code
+                           #echo status_code is $status_code
                            if [ $status_code -eq  204 ];
                                then 
                                    merged_and_close=true
                            fi
                        fi
                     fi
-               echo $merged_and_close
-
+               echo inscript merge close is $merged_and_close
                '''
                echo "MERGED_AND_CLOSED=${merged_and_closed}"
            // parse the webhook to determine if 
