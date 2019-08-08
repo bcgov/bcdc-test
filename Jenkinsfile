@@ -13,13 +13,18 @@ node('CAD') {
                checkout([$class: 'GitSCM', branches: [[name: '*/jf_dev']], doGenerateSubmoduleConfigurations: false, extensions: [], gitTool: 'Default', submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/bcgov/bcdc-test']]])                           
            }
            stage('parse webhook') {
+               // get jq
+               sh 
+               '''
+               # Get JQ 
+               if [ ! -f "./jq" ]; then
+                   curl -o jq https://stedolan.github.io/jq/download/linux64/jq
+                   chmod +x jq
+               fi
+               '''
+               sh 
                def merged_and_closed = sh returnStdout:true, script: '''
            
-                   # Get JQ 
-                   if [ ! -f "./jq" ]; then
-                       curl -o jq https://stedolan.github.io/jq/download/linux64/jq
-                       chmod +x jq
-                   fi
                    
                     merged_and_close=false
                     jqeventref='.[28] | '
