@@ -14,15 +14,13 @@ node('CAD') {
            }
            stage('parse webhook') {
                // get jq
-               sh 
-               '''
+               sh '''
                # Get JQ 
                if [ ! -f "./jq" ]; then
                    curl -o jq https://stedolan.github.io/jq/download/linux64/jq
                    chmod +x jq
                fi
                '''
-               sh 
                def merged_and_closed = sh returnStdout:true, script: '''
            
                    
