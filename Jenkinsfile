@@ -6,7 +6,7 @@ node('CAD') {
                  "TMP=${WORKSPACE}/tmp",
                  "JOB_NAME=BCDC_tests_build",
                  "VEDIR=${veDir}",
-                 "PYLINTPATH=${WORKSPACE}/${veDir}/Scripts/pylint.exe",
+                 "PYLINTPATH=${WORKSPACE}/${veDir}/bin/pylint",
                  ]) {
            stage('checkout') {
                sh 'if [ ! -d "$TEMP" ]; then mkdir $TEMP; fi'
