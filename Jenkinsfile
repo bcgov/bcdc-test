@@ -63,7 +63,7 @@ node('CAD') {
                echo "done" + MERGED_AND_CLOSED                    
            }
            stage('test var') {
-               echo "merge close value is:" + MERGED_AND_CLOSED                    
+               echo "merge close value is:" + MERGED_AND_CLOSED + ":" + MERGED_AND_CLOSED.getClass()
            
               if (!MERGED_AND_CLOSED) {
                   echo "merge close is true proceeding:" + MERGED_AND_CLOSED                               
