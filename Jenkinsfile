@@ -59,7 +59,7 @@ node('CAD') {
                echo $merged_and_close
                '''
                echo "MERGED_AND_CLOSED=${merged_and_closed}"
-               env.MERGED_AND_CLOSED = ${merged_and_closed}
+               env.MERGED_AND_CLOSED = merged_and_closed
                echo "done"                           
            }
            stage('test var') {
