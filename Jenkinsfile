@@ -64,17 +64,19 @@ node('CAD') {
                echo "done" + MERGED_AND_CLOSED                    
            }
            stage('test var') {
-               echo "merge close value is:" + MERGED_AND_CLOSED + ":" + MERGED_AND_CLOSED.getClass()
+              // echo "merge close value is:" + MERGED_AND_CLOSED + ":" + MERGED_AND_CLOSED.getClass()
            
-              if (MERGED_AND_CLOSED == 'false') {
+              if (MERGED_AND_CLOSED == 'true') {
                   echo "merge close is true proceeding:" + MERGED_AND_CLOSED                               
               } else {
                   echo "merge close is false proceeding:" + MERGED_AND_CLOSED                                                   
                 }              
            }
 
-           /*
+           
            stage('prep Virtualenv') {
+               if (MERGED_AND_CLOSED == 'true') {
+               
                 sh 'if [ -d "ve_bcdc_test" ]; then rm -Rf ve_bcdc_test; fi'
                 sh 'if [ -d "$VEDIR" ]; then rm -Rf $VEDIR; fi'
                 sh  '''
@@ -89,9 +91,10 @@ node('CAD') {
                     python -m pip install --upgrade pip || goto :error
                     python -m pip install --no-cache-dir -r ./requirements.txt
                     python -m pip install --no-cache-dir -r ./requirements_build.txt
-               '''
+                   '''
+               }
             }
-           
+            /*
             stage ('SonarScan'){
                 withCredentials([string(credentialsId: 'sonarToken', variable: 'sonarToken')]) {
                     withEnv(['PATH=/apps/download/n/8/bin:/s00/bin:/apps/sonarscanner/bin:/bin:/usr/bin:/s00/libexec/git-core', 'LD_LIBRARY_PATH=/apps/download/n/8/lib:/s00/lib64:/apps/sonarscanner/lib:/lib64:/usr/lib64']) {
