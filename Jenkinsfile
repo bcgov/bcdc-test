@@ -60,12 +60,13 @@ node('CAD') {
                '''
                echo "MERGED_AND_CLOSED=${merged_and_closed}"
                MERGED_AND_CLOSED = merged_and_closed
+               MERGED_AND_CLOSED = MERGED_AND_CLOSED.replaceAll("\\n", "").replaceAll("\\r", "")
                echo "done" + MERGED_AND_CLOSED                    
            }
            stage('test var') {
                echo "merge close value is:" + MERGED_AND_CLOSED + ":" + MERGED_AND_CLOSED.getClass()
            
-              if (!MERGED_AND_CLOSED) {
+              if (MERGED_AND_CLOSED == 'false') {
                   echo "merge close is true proceeding:" + MERGED_AND_CLOSED                               
               } else {
                   echo "merge close is false proceeding:" + MERGED_AND_CLOSED                                                   
