@@ -1,13 +1,13 @@
 node('CAD') {
     try{
         veDir = "ve"
+        MERGED_AND_CLOSED=''
         withEnv([
                  "TEMP=${WORKSPACE}/tmp",
                  "TMP=${WORKSPACE}/tmp",
                  "JOB_NAME=BCDC_tests_build",
                  "VEDIR=${veDir}",
-                 "PYLINTPATH=${WORKSPACE}/${veDir}/bin/pylint",
-                 "MERGED_AND_CLOSED=''"
+                 "PYLINTPATH=${WORKSPACE}/${veDir}/bin/pylint"
                  ]) {
            stage('checkout') {
                sh 'if [ ! -d "$TEMP" ]; then mkdir $TEMP; fi'
@@ -59,11 +59,11 @@ node('CAD') {
                echo $merged_and_close
                '''
                echo "MERGED_AND_CLOSED=${merged_and_closed}"
-               env.MERGED_AND_CLOSED = merged_and_closed
-               echo "done" + env.MERGED_AND_CLOSED                    
+               MERGED_AND_CLOSED = merged_and_closed
+               echo "done" + MERGED_AND_CLOSED                    
            }
            stage('test var') {
-              echo "merge close value" + env.MERGED_AND_CLOSED
+              echo "merge close value" + MERGED_AND_CLOSED
            }
 
            /*
