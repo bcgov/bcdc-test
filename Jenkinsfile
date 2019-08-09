@@ -24,8 +24,9 @@ node('CAD') {
                 '''
                 def merged_and_closed = sh returnStdout:true, script: '''
                     merged_and_close=false
-                    jqeventref='.[28] | '
-                    eventurl='https://api.github.com/repos/bcgov/bcdc-test/events?page=3'
+                    
+                    jqeventref='.[0] | '
+                    eventurl='https://api.github.com/repos/bcgov/bcdc-test/events'
                     eventjson=$(curl -sS $eventurl)
                     #echo curl -sS $eventurl 
                     #echo $jqeventref
