@@ -62,7 +62,7 @@ node('CAD') {
                env.MERGED_AND_CLOSED = ${merged_and_closed}                            
            }
            stage('test var') {
-               echo "merged status is ${env.MERGED_AND_CLOSED}"
+               echo "merged status is $MERGED_AND_CLOSED"
            }
 
            /*
