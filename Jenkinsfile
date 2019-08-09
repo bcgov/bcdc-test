@@ -7,6 +7,7 @@ node('CAD') {
                  "JOB_NAME=BCDC_tests_build",
                  "VEDIR=${veDir}",
                  "PYLINTPATH=${WORKSPACE}/${veDir}/bin/pylint",
+                 "MERGED_AND_CLOSED=''"
                  ]) {
            stage('checkout') {
                sh 'if [ ! -d "$TEMP" ]; then mkdir $TEMP; fi'
@@ -22,8 +23,6 @@ node('CAD') {
                fi
                '''
                def merged_and_closed = sh returnStdout:true, script: '''
-           
-                   
                     merged_and_close=false
                     jqeventref='.[28] | '
                     eventurl='https://api.github.com/repos/bcgov/bcdc-test/events?page=3'
@@ -57,13 +56,15 @@ node('CAD') {
                            fi
                        fi
                     fi
-               echo inscript merge close is $merged_and_close
+               echo $merged_and_close
                '''
                echo "MERGED_AND_CLOSED=${merged_and_closed}"
-           // parse the webhook to determine if 
-                            
-                            
+               env.MERGED_AND_CLOSED = ${merged_and_closed}                            
            }
+           stage('test var') {
+               echo "merged status is ${env.MERGED_AND_CLOSED}"
+           }
+
            /*
            stage('prep Virtualenv') {
                 sh 'if [ -d "ve_bcdc_test" ]; then rm -Rf ve_bcdc_test; fi'
