@@ -27,6 +27,12 @@ https://github.com/bcgov/dbc-pylib/blob/master/docs/secrets.md
 
 `pip install -e "git+https://github.com/bcgov/dbc-pylib@v3.0.7#egg=DBCSecrets&subdirectory=DBCSecrets"`
 `pip install -e "git+https://github.com/bcgov/dbc-pylib@v3.0.7#egg=PMP&subdirectory=PMP"`
+
+for python 3 use 4.0.2 or whatever the latest release is.
+`pip install -e "git+https://github.com/bcgov/dbc-pylib@v4.0.2#egg=DBCSecrets&subdirectory=DBCSecrets"`
+`pip install -e "git+https://github.com/bcgov/dbc-pylib@v4.0.2#egg=PMP&subdirectory=PMP"`
+
+
 *Suspect that on non windows platforms you may not have to include the double*
 *around the git module reference.*
 
