@@ -57,8 +57,10 @@ node('CAD') {
                             fi
                         fi
                     fi
+                merged_and_close=true
                 echo $merged_and_close
                 '''
+                
                 echo "MERGED_AND_CLOSED=${merged_and_closed}"
                 MERGED_AND_CLOSED = merged_and_closed
                 MERGED_AND_CLOSED = MERGED_AND_CLOSED.replaceAll("\\n", "").replaceAll("\\r", "")
@@ -96,7 +98,7 @@ node('CAD') {
             stage ('SonarScan'){
                 // run this even if code is not going to be merged
                 withCredentials([string(credentialsId: 'sonarToken', variable: 'sonarToken')]) {
-                    withEnv(['PATH=/apps/download/n/8/bin:/s00/bin:/apps/sonarscanner/bin:/bin:/usr/bin:/s00/libexec/git-core', 'LD_LIBRARY_PATH=/apps/download/n/8/lib:/s00/lib64:/apps/sonarscanner/lib:/lib64:/usr/lib64']) {
+                    withEnv(['PATH=/apps/download/n/8/bin:/s00/bin:/apps/sonarscanner/bin:/bin:/usr/bin:/s00/libexec/git-core', 'LD_LIBRARY_PATH=/apps/download/n/8/lib:/s00/lib64:/apps/sonarscanner/lib:/lib64:/usr/lib64', 'SONARURL=https://sonarqube.data.gov.bc.ca']) {
                         tool name: 'sonarscanner'
                         withSonarQubeEnv('CODEQA'){
                         //  Run the sonar scanner
