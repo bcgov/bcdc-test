@@ -136,7 +136,7 @@ node('CAD') {
                 	httpRequest httpMode: 'POST', responseHandle: 'NONE', url: oc_build_url
                 }
             }
-         
+       
             /*
             stage('Build') {
                 if (MERGED_AND_CLOSED == 'true') {
