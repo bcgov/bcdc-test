@@ -1,1 +1,7 @@
 *.pyc
+ve/
+build/
+secrets/
+
+
+
