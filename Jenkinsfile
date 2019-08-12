@@ -7,11 +7,12 @@ node('CAD') {
                  "TMP=${WORKSPACE}/tmp",
                  "JOB_NAME=BCDC_tests_build",
                  "VEDIR=${veDir}",
-                 "PYLINTPATH=${WORKSPACE}/${veDir}/bin/pylint"
+                 "PYLINTPATH=${WORKSPACE}/${veDir}/bin/pylint",
+                 "GIT_BRANCH=DDM-676-py3"
                  ]) {
             stage('checkout') {
                 sh 'if [ ! -d "$TEMP" ]; then mkdir $TEMP; fi'
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], gitTool: 'Default', submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/bcgov/bcdc-test']]])                           
+                checkout([$class: 'GitSCM', branches: [[name: '*/$GIT_BRANCH']], doGenerateSubmoduleConfigurations: false, extensions: [], gitTool: 'Default', submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/bcgov/bcdc-test']]])                           
             }
             stage('parse webhook') {
                 // get jq
@@ -75,6 +76,7 @@ node('CAD') {
                     echo "merge close is false proceeding:" + MERGED_AND_CLOSED                                                   
                 }              
             }
+            /*
             stage('prep Virtualenv') {
                 if (MERGED_AND_CLOSED == 'true') {
                
@@ -95,6 +97,7 @@ node('CAD') {
                         '''
                 }
             }
+            */
             stage ('SonarScan'){
                 // run this even if code is not going to be merged
                 withCredentials([string(credentialsId: 'sonarToken', variable: 'sonarToken')]) {
@@ -130,6 +133,12 @@ node('CAD') {
                     }
                 }
             }
+            stage ('OC Build') {
+                withCredentials([string(credentialsId: 'Openshift_build_webhook', variable: 'oc_build_url')]) {
+                	httpRequest httpMode: 'POST', responseHandle: 'NONE', url: oc_build_url
+                }
+            }
+            /*
             stage('Build') {
                 if (MERGED_AND_CLOSED == 'true') {
                     sh '''
@@ -139,6 +148,7 @@ node('CAD') {
                     '''
                 }
             }
+            */
         }
     } catch (e) {
         currentBuild.result = "FAILED"
