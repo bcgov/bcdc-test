@@ -133,7 +133,7 @@ node('CAD') {
             }
             stage ('OC Build') {
                 withCredentials([string(credentialsId: 'Openshift_build_webhook', variable: 'oc_build_url')]) {
-                	httpRequest httpMode: 'POST', responseHandle: 'NONE', url: oc_build_url
+                	httpRequest httpMode: 'POST', responseHandle: 'NONE', url: oc_build_url 
                 }
             }
  
