@@ -138,7 +138,7 @@ node('CAD') {
             }
 
             /*
-            // junkk
+            // junkkk
             stage('Build') {
                 if (MERGED_AND_CLOSED == 'true') {
                     sh '''
