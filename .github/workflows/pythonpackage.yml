@@ -21,7 +21,9 @@ jobs:
       with:
         version: ${{ matrix.python-version }}
     - name: Install and run Sonar
-      secrets: ["SONAR_URL", "SONAR_TOKEN"]
+      env: 
+        SONAR_URL: ${{ secrets.SONAR_URL }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
         wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.2.0.1227-linux.zip
         unzip sonar-scanner-cli-3.2.0.1227-linux.zip
