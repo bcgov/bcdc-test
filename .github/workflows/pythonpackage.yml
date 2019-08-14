@@ -35,18 +35,20 @@ jobs:
         sonar_aid=$(curl $aid_url | jq '.task.analysisId' | tr -d '"')
         sonar_qg_url=$SONAR_URL/api/qualitygates/project_status?analysisId=$sonar_aid
         sonar_status=$(curl $sonar_qg_url | jq '.projectStatus.status' | tr -d '"')
-        if [ $sonar_status==ERROR ] 
+        if [ "$sonar_status" == "ERROR" ]
             then
                 exit 1
         else
             exit 0
         fi
-    - name: Install dependencies
+    - name: Build and Upload
       if: success()
+      env:
+          TWINE_USERNAME:  ${{ secrets.TWINE_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
-    - name: Test with pytest
-      run: |
-        pip install pytest
-        pytest
+        pip install -r requirements_build.txt
+        python setup.py sdist bdist_wheel
+        python -m twine upload dist/*
+        
