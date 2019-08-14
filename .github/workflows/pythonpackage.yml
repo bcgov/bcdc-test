@@ -17,18 +17,38 @@ jobs:
         python-version: [3.6]
 
     steps:
+    - uses: actions/checkout@master
     - name: evaluate pr type
       env: 
         GITHUB_CONTEXT: ${{ toJson(github) }}
       run: |
         echo "$GITHUB_CONTEXT"
-        event_name=$(jq $GITHUB_CONTEXT '.event_name' | tr -d '"')
-        if [[ $event_name = "pull_request" ]]; 
+        event_name=$(echo $GITHUB_CONTEXT | jq '.event_name' | tr -d '"')
+        if [[ $event_name = "pull_request" ]];
+        then
+            # get pr number
+            pr_number=$(echo $GITHUB_CONTEXT | jq '.event.number' | tr -d '"')
+            action=$(echo $GITHUB_CONTEXT | jq '.event.action' | tr -d '"')
+            
+            #commit_sha=$(echo $GITHUB_CONTEXT | jq '.sha' | tr -d '"')
+            #commit_url=$(echo $GITHUB_CONTEXT | jq  '.event.repository.commits_url' | tr -d '"' | sed  --expression="s/{\/sha}$/\/$commit_sha/g")
+            
+            if [[ $action = "closed" ]];
+            then
+                # is it merged
+                status_code=$(curl -s -o /dev/null -I -w "%{http_code}" https://api.github.com/repos/bcgov/bcdc-test/pulls/$prnum/merge)
+                if [ $status_code -eq  204 ];
+                then
+                    echo pr number $prnum has been merged
+                    exit 0
+                else
+                    echo pr number $prnum has not been merged
+                    exit 1
+                fi
+            fi
             echo pull request
         fi
         repo_url=$(jq '.event.repository.merges_url' | tr -d '"')
-        exit 1
-    - uses: actions/checkout@master
     - name: Set up Python ${{ matrix.python-version }}
       if: success()
       uses: actions/setup-python@v1
