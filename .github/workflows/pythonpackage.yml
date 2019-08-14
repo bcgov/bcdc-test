@@ -4,7 +4,6 @@ on:
   push:
     branches:
     - DDM-676-py3
-
 jobs:
   build:
 
@@ -15,8 +14,14 @@ jobs:
         python-version: [3.6]
 
     steps:
+    - name: evaluate pr type
+      env: GITHUB_CONTEXT: ${{ toJson(github)}}
+      run: |
+        echo "$GITHUB_CONTEXT"
+        exit 1
     - uses: actions/checkout@master
     - name: Set up Python ${{ matrix.python-version }}
+      if: success()
       uses: actions/setup-python@v1
       with:
         version: ${{ matrix.python-version }}
