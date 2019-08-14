@@ -12,7 +12,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.5, 3.6, 3.7]
+        python-version: [3.6]
 
     steps:
     - uses: actions/checkout@master
@@ -36,7 +36,7 @@ jobs:
         sonar_aid=$(curl $aid_url | jq '.task.analysisId' | tr -d '"')
         sonar_qg_url=$SONAR_URL/api/qualitygates/project_status?analysisId=$sonar_aid
         sonar_status=$(curl $sonar_qg_url | jq '.projectStatus.status' | tr -d '"')
-        export SONAR_STATUS = $sonar_status
+        export SONAR_STATUS=$sonar_status
     - name: Install dependencies
       run: |
         echo sonar status $SONAR_STATUS
