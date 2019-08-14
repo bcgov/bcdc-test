@@ -1,10 +1,12 @@
 name: Python package
 
 on: 
-  push
+  push:
     branches:
       - DDM-676-py3
-  pull_request
+      - dev
+      - master
+  pull_request:
     
 jobs:
   build:
