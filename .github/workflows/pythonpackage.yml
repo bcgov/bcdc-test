@@ -6,7 +6,6 @@ on:
     - DDM-676-py3
 jobs:
   build:
-
     runs-on: ubuntu-18.04
     strategy:
       max-parallel: 4
