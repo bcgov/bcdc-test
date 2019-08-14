@@ -8,7 +8,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     strategy:
       max-parallel: 4
       matrix:
@@ -24,12 +24,22 @@ jobs:
       env: 
         SONAR_URL: ${{ secrets.SONAR_URL }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        JOB_NAME: BCDC_tests_build
+        SONAR_STATUS: 
       run: |
         wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.2.0.1227-linux.zip
         unzip sonar-scanner-cli-3.2.0.1227-linux.zip
-        ./sonar-scanner-3.2.0.1227-linux/bin/sonar-scanner -Dsonar.sources=. -Dsonar.projectKey=BCDC_tests_build -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_TOKEN -Dsonar.exclusions=ve/**,build/**
+        ./sonar-scanner-3.2.0.1227-linux/bin/sonar-scanner -Dsonar.sources=. -Dsonar.projectKey=$JOB_NAME -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_TOKEN -Dsonar.exclusions=ve/**,build/**,sonar-scanner-3.2.0.1227-linux/**
+        pid_url=$SONAR_URL/api/ce/component?component=$JOB_NAME
+        sonar_pid=$(curl $pid_url | jq '.current.id' | tr -d '"')
+        aid_url=$SONAR_URL/api/ce/task?id=$sonar_pid
+        sonar_aid=$(curl $aid_url | jq '.task.analysisId' | tr -d '"')
+        sonar_qg_url=$SONAR_URL/api/qualitygates/project_status?analysisId=$sonar_aid
+        sonar_status=$(curl $sonar_qg_url | jq '.projectStatus.status' | tr -d '"')
+        export SONAR_STATUS = $sonar_status
     - name: Install dependencies
       run: |
+        echo sonar status $SONAR_STATUS
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Test with pytest
