@@ -3,11 +3,11 @@ name: Python package
 on: 
   push:
     branches:
-      - DDM-676-py3
-      - dev
-      - master
+      - no-branch
   pull_request:
-    
+    branches:
+      - master
+      - dev
 jobs:
   build:
     runs-on: ubuntu-18.04
