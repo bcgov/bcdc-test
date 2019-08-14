@@ -1,7 +1,7 @@
 name: Python package
 
 on: 
-  push:
+  [push, pull_request]:
     branches:
     - DDM-676-py3
 jobs:
@@ -18,6 +18,11 @@ jobs:
         GITHUB_CONTEXT: ${{ toJson(github) }}
       run: |
         echo "$GITHUB_CONTEXT"
+        event_name=$(jq $GITHUB_CONTEXT '.event_name' | tr -d '"')
+        if [[ $event_name = "pull_request" ]]; 
+            echo pull request
+        fi
+        repo_url=$(jq '.event.repository.merges_url' | tr -d '"')
         exit 1
     - uses: actions/checkout@master
     - name: Set up Python ${{ matrix.python-version }}
