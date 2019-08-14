@@ -25,7 +25,6 @@ jobs:
         SONAR_URL: ${{ secrets.SONAR_URL }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         JOB_NAME: BCDC_tests_build
-        SONAR_STATUS: 
       run: |
         curl -o sonar.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.2.0.1227-linux.zip
         unzip sonar.zip
@@ -36,10 +35,15 @@ jobs:
         sonar_aid=$(curl $aid_url | jq '.task.analysisId' | tr -d '"')
         sonar_qg_url=$SONAR_URL/api/qualitygates/project_status?analysisId=$sonar_aid
         sonar_status=$(curl $sonar_qg_url | jq '.projectStatus.status' | tr -d '"')
-        export SONAR_STATUS=$sonar_status
+        if [ $sonar_status==ERROR ] 
+            then
+                exit 1
+        else
+            exit 0
+        fi
     - name: Install dependencies
+      if: success()
       run: |
-        echo sonar status $SONAR_STATUS
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Test with pytest
