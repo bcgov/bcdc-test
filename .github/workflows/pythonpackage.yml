@@ -23,6 +23,7 @@ jobs:
         GITHUB_CONTEXT: ${{ toJson(github) }}
       run: |
         echo "$GITHUB_CONTEXT"
+        pr_closed_merged=false
         event_name=$(echo $GITHUB_CONTEXT | jq '.event_name' | tr -d '"')
         if [[ $event_name = "pull_request" ]];
         then
@@ -40,13 +41,16 @@ jobs:
                 if [ $status_code -eq  204 ];
                 then
                     echo pr number $prnum has been merged
-                    exit 0
-                else
-                    echo pr number $prnum has not been merged
-                    exit 1
+                    pr_closed_merged=true
                 fi
             fi
             echo pull request
+        fi
+        if $pr_closed_merged;
+        then
+            exit 0
+        else
+            exit 1
         fi
         repo_url=$(jq '.event.repository.merges_url' | tr -d '"')
     - name: Set up Python ${{ matrix.python-version }}
