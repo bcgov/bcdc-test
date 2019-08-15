@@ -9,24 +9,14 @@ on:
       - master
       - dev
 jobs:
-  build:
+  sonar_scan:
     runs-on: ubuntu-18.04
     strategy:
       max-parallel: 4
       matrix:
         python-version: [3.6]
-
     steps:
     - uses: actions/checkout@master
-    
-    
-    - name: Set up Python ${{ matrix.python-version }}
-      if: success()
-      uses: actions/setup-python@v1
-      with:
-        version: ${{ matrix.python-version }}
-        
-        
     - name: Install and run Sonar
       env: 
         SONAR_URL: ${{ secrets.SONAR_URL }}
@@ -49,16 +39,21 @@ jobs:
             exit 0
         fi
         
-    - name: testing something
-      env: 
-        JOB: ${{ toJson(job) }}
-      run:
-        echo JOB IS...
-        echo $JOB
-        exit 1
-        
+  build:
+    needs: sonar_scan
+    runs-on: ubuntu-18.04
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.6]
+
+    steps:
+    - uses: actions/checkout@master
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        version: ${{ matrix.python-version }}
     - name: evaluate pr type
-      if: success()
       env: 
         GITHUB_CONTEXT: ${{ toJson(github) }}
       run: |
