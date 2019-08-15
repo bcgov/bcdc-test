@@ -134,5 +134,5 @@ if not next_version:
 if next_version == version or is_less_than(next_version, version):
     next_version = increment_version(version)
 
-print 'current version is', version
-print 'next version is', next_version
+print('current version is: {version}')
+print('next version is: {next_version}')

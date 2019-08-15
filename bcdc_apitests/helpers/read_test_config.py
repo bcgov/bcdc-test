@@ -124,7 +124,7 @@ class TestConfig(object):
     def __str__(self):
         return str(self.test_params)
 
-    def next(self):
+    def __next__(self):
         '''
         iteration will iterate over each combination of users and data for the
         current module / function
