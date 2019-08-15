@@ -21,7 +21,6 @@ LOGGER = logging.getLogger(__name__)
 # formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(lineno)d - %(message)s')
 # hndlr.setFormatter(formatter)
 # LOGGER.addHandler(hndlr)
-# LOGGER.debug("test")
 
 
 def get_package_version():
