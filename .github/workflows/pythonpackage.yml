@@ -35,7 +35,6 @@ jobs:
         else
             exit 0
         fi
-        
   build:
     needs: sonar_scan
     runs-on: ubuntu-18.04
