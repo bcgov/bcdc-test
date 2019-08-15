@@ -9,10 +9,12 @@ Evaluates it to determine if this action is part of a pullrequest that has been
 merged and closed.
 
 '''
-import sys
-import requests
 import json
 import pprint
+import sys
+
+import requests
+
 
 class GitHubAPIWrapper(object):
     
