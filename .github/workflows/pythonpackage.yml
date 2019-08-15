@@ -19,7 +19,7 @@ jobs:
     steps:
     -name: test id
      env: 
-       JOB: ${{ toJson(jobs) }}
+       JOB: ${{ toJson(job) }}
      run:
        echo JOB IS...
        echo $JOB
