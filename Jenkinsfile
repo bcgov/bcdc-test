@@ -7,11 +7,12 @@ node('CAD') {
                  "TMP=${WORKSPACE}/tmp",
                  "JOB_NAME=BCDC_tests_build",
                  "VEDIR=${veDir}",
-                 "PYLINTPATH=${WORKSPACE}/${veDir}/bin/pylint"
+                 "PYLINTPATH=${WORKSPACE}/${veDir}/bin/pylint",
+                 "GIT_BRANCH=DDM-676-py3"
                  ]) {
             stage('checkout') {
                 sh 'if [ ! -d "$TEMP" ]; then mkdir $TEMP; fi'
-                checkout([$class: 'GitSCM', branches: [[name: '*/jf_dev']], doGenerateSubmoduleConfigurations: false, extensions: [], gitTool: 'Default', submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/bcgov/bcdc-test']]])                           
+                checkout([$class: 'GitSCM', branches: [[name: '*/$GIT_BRANCH']], doGenerateSubmoduleConfigurations: false, extensions: [], gitTool: 'Default', submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/bcgov/bcdc-test']]])                           
             }
             stage('parse webhook') {
                 // get jq
@@ -57,8 +58,10 @@ node('CAD') {
                             fi
                         fi
                     fi
+                merged_and_close=true
                 echo $merged_and_close
                 '''
+                
                 echo "MERGED_AND_CLOSED=${merged_and_closed}"
                 MERGED_AND_CLOSED = merged_and_closed
                 MERGED_AND_CLOSED = MERGED_AND_CLOSED.replaceAll("\\n", "").replaceAll("\\r", "")
@@ -73,6 +76,7 @@ node('CAD') {
                     echo "merge close is false proceeding:" + MERGED_AND_CLOSED                                                   
                 }              
             }
+            /*
             stage('prep Virtualenv') {
                 if (MERGED_AND_CLOSED == 'true') {
                
@@ -93,10 +97,11 @@ node('CAD') {
                         '''
                 }
             }
+            */
             stage ('SonarScan'){
                 // run this even if code is not going to be merged
                 withCredentials([string(credentialsId: 'sonarToken', variable: 'sonarToken')]) {
-                    withEnv(['PATH=/apps/download/n/8/bin:/s00/bin:/apps/sonarscanner/bin:/bin:/usr/bin:/s00/libexec/git-core', 'LD_LIBRARY_PATH=/apps/download/n/8/lib:/s00/lib64:/apps/sonarscanner/lib:/lib64:/usr/lib64']) {
+                    withEnv(['PATH=/apps/download/n/8/bin:/s00/bin:/apps/sonarscanner/bin:/bin:/usr/bin:/s00/libexec/git-core', 'LD_LIBRARY_PATH=/apps/download/n/8/lib:/s00/lib64:/apps/sonarscanner/lib:/lib64:/usr/lib64', 'SONARURL=https://sonarqube.data.gov.bc.ca']) {
                         tool name: 'sonarscanner'
                         withSonarQubeEnv('CODEQA'){
                         //  Run the sonar scanner
@@ -106,8 +111,6 @@ node('CAD') {
                                 sonar-scanner -Dsonar.sources=. -Dsonar.projectKey=$JOB_NAME -Dsonar.host.url=$SONARURL -Dsonar.python.pylint=$PYLINTPATH -Dsonar.login=${sonarToken}  -Dsonar.exclusions=ve/**,build/**
                                 echo "tokenlength: ${#sonarToken}"
                                 curl $projectIdUrl --output projectId.json
-                                pwd
-                                ls -l
                             '''                            
                       
                             // Get the project id
@@ -128,6 +131,14 @@ node('CAD') {
                     }
                 }
             }
+            stage ('OC Build') {
+                withCredentials([string(credentialsId: 'Openshift_build_webhook', variable: 'oc_build_url')]) {
+                	httpRequest httpMode: 'POST', responseHandle: 'NONE', url: oc_build_url 
+                }
+            }
+
+            /*
+            // junk
             stage('Build') {
                 if (MERGED_AND_CLOSED == 'true') {
                     sh '''
@@ -137,6 +148,7 @@ node('CAD') {
                     '''
                 }
             }
+            */
         }
     } catch (e) {
         currentBuild.result = "FAILED"

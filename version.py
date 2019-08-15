@@ -21,7 +21,6 @@ LOGGER = logging.getLogger(__name__)
 # formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(lineno)d - %(message)s')
 # hndlr.setFormatter(formatter)
 # LOGGER.addHandler(hndlr)
-# LOGGER.debug("test")
 
 
 def get_package_version():
@@ -134,5 +133,5 @@ if not next_version:
 if next_version == version or is_less_than(next_version, version):
     next_version = increment_version(version)
 
-print 'current version is', version
-print 'next version is', next_version
+print('current version is: {version}')
+print('next version is: {next_version}')
