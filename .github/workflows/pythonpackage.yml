@@ -1,10 +1,10 @@
 name: Python package
 
 on: 
-  pull_request:
+  push:
     branches:
-      - master
-      - dev
+    - master
+    - dev
 jobs:
   sonar_scan:
     runs-on: ubuntu-18.04
