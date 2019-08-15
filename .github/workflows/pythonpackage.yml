@@ -53,6 +53,8 @@ jobs:
       env: 
         GITHUB_CONTEXT: ${{ toJson(github) }}
       run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements_build.txt
         echo $GITHUB_CONTEXT > gha_context.json 
         is_closed_merged_pr=$(python is_pull_request.py gha_context.json)
         echo "is_closed_merged_pr: $is_closed_merged_pr"
