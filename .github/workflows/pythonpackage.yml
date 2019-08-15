@@ -18,18 +18,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@master
+    
+    
     - name: Set up Python ${{ matrix.python-version }}
       if: success()
       uses: actions/setup-python@v1
       with:
         version: ${{ matrix.python-version }}
-    - name: testing something
-      env: 
-        JOB: ${{ toJson(job) }}
-      run:
-        echo JOB IS...
-        echo $JOB
-        exit 1
         
         
     - name: Install and run Sonar
@@ -53,6 +48,15 @@ jobs:
         else
             exit 0
         fi
+        
+    - name: testing something
+      env: 
+        JOB: ${{ toJson(job) }}
+      run:
+        echo JOB IS...
+        echo $JOB
+        exit 1
+        
     - name: evaluate pr type
       if: success()
       env: 
