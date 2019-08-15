@@ -55,12 +55,13 @@ jobs:
       run:
         echo $GITHUB_CONTEXT > gha_context.json 
         is_closed_merged_pr=$(python is_pull_request.py gha_context.json)
+        echo "is_closed_merged_pr: $is_closed_merged_pr"
         if [[ $is_closed_merged_pr == 'True' ]]; 
             then
-                echo 'is a pr'
+                echo is a pr
                 exit 0
             else
-                echo 'is not a pr'
+                echo is not a pr
                 exit 1
         fi     
     - name: Build and Upload
