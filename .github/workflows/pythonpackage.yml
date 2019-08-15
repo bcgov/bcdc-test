@@ -1,9 +1,6 @@
 name: Python package
 
 on: 
-  push:
-    branches:
-      - DDM-676-py35
   pull_request:
     branches:
       - master
