@@ -3,7 +3,7 @@ name: Python package
 on: 
   push:
     branches:
-      - no-branch
+      - DDM-676-py3
   pull_request:
     branches:
       - master
@@ -17,6 +17,13 @@ jobs:
         python-version: [3.6]
 
     steps:
+    -name: test id
+     env: 
+       JOB: ${{ toJson(jobs) }}
+     run:
+       echo JOB IS...
+       echo $JOB
+       exit 1
     - uses: actions/checkout@master
     - name: Set up Python ${{ matrix.python-version }}
       if: success()
