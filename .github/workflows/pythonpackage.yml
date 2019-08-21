@@ -4,7 +4,6 @@ on:
   push:
     branches:
     - master
-    - dev
 jobs:
   sonar_scan:
     runs-on: ubuntu-18.04

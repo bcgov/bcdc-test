@@ -25,6 +25,10 @@ class GitHubAPIWrapper(object):
         #self.pp.pprint(self.github_context)
         
     def get_after_sha(self):
+        '''
+        :return: The sha of the commit that is associated with the after event 
+                 in github.
+        '''
         return self.github_context['event']['after']
     
     def get_sha(self):
