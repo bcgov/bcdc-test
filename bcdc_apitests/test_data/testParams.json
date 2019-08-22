@@ -127,5 +127,13 @@
         "test_data": ["pkgData.json"],
         "comment": "test_data isn't really used here, however all the different user types should be able to view the data",        
         "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.packages.test_packages",
+        "test_function": "test_edc_package_update_bcgw",
+        "test_users": ["admin"],
+        "test_data": ["pkgData.json"],
+        "comment": "test_data isn't really used here, however all the different user types should be able to view the data",        
+        "test_result": true
     }
 ]

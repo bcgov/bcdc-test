@@ -84,28 +84,32 @@ def test_package_show(conf_fixture, remote_api_auth, test_package_name,
     LOGGER.debug("expected outcome: %s", conf_fixture.test_result)
     assert (pkg_show_data['name'] == test_package_name) == conf_fixture.test_result
 
-def test_package_state(remote_api_admin_auth, update_pkg_state, test_package_name):
+def test_package_state(remote_api_admin_auth, update_pkg_state,
+                       test_package_name):
     '''
     verify package data can be retrieved using package_show.
 
     :param param: remote_api_admin_auth
     '''
 
-    pkg_show_data = remote_api_admin_auth.action.package_show(id=test_package_name)
-    logger.debug("pkg_show_data: %s", pkg_show_data)
+    pkg_show_data = remote_api_admin_auth.action.package_show(
+        id=test_package_name)
+    LOGGER.debug("pkg_show_data: %s", pkg_show_data)
 
     assert pkg_show_data['name'] == test_package_name
 
 
-def test_package_visibility(remote_api_admin_auth, update_pkg_visibility, test_package_name):
+def test_package_visibility(remote_api_admin_auth, update_pkg_visibility,
+                            test_package_name):
     '''
     verify package data can be retrieved using package_show.
 
     :param param: remote_api_admin_auth
     '''
 
-    pkg_show_data = remote_api_admin_auth.action.package_show(id=test_package_name)
-    logger.debug("pkg_show_data: %s", pkg_show_data)
+    pkg_show_data = remote_api_admin_auth.action.package_show(
+        id=test_package_name)
+    LOGGER.debug("pkg_show_data: %s", pkg_show_data)
 
     assert pkg_show_data['name'] == test_package_name
 
@@ -246,9 +250,9 @@ def test_package_delete(conf_fixture, ckan_url,  # pylint: disable=invalid-name
     assert resp_json['success'] == conf_fixture.test_result
 
 
+@pytest.mark.xfail
 # its known that this test will currently fail.  remove this decorator once this
 # issue is patched
-@pytest.mark.xfail
 def test_create_package_coredataonly(conf_fixture, ckan_url,  # pylint: disable=invalid-name
                                      ckan_auth_header, ckan_rest_dir,
                                      test_pkg_data_core_only,
@@ -313,5 +317,34 @@ def test_create_package_coredataonly(conf_fixture, ckan_url,  # pylint: disable=
     assert (resp_show.status_code == 200) == resp_create.status_code, \
         non_200_msg
 
-    LOGGER.debug("resp text: %s", resp_show.text)
+    LOGGER.debug(f"resp text: {resp_show.text}")
     LOGGER.debug("tear down has been called")
+    
+def test_edc_package_update_bcgw(conf_fixture, ckan_url, ckan_rest_dir,
+                                 ckan_auth_header,
+                                 package_create_if_not_exists,
+                                 test_pkg_data):
+    '''
+    Testing the edc_package_update_bcgw end point.  This test will do the 
+    following:
+     - requires the fixture package_create_if_not_exists which ensure that the 
+       test package exists.
+    - retrieves the test package data
+    - make the call the edc_package_update_bcgw
+    - ensure status code 200
+    - verify that the data change was successful.
+    '''
+    LOGGER.debug("GETTING HERE ----------------------------------")
+    api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir,
+                                   'edc_package_update_bcgw')
+    LOGGER.debug('api_call: %s', api_call)
+    body = {'short_name': 'EDC_UPDATE_BCGW_TEST',
+              'table_comments':
+                "testing update using end point edc_package_update_bcgw "}
+    params = {'id': test_pkg_data['name']}
+    resp = requests.post(api_call, headers=ckan_auth_header,
+                            json=body, params=params)
+    
+    LOGGER.debug(f"resp status code: {resp.status_code}")
+    LOGGER.debug(f"resp text: {resp.text}")
+    

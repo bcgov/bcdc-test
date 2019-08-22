@@ -94,6 +94,13 @@ def some_great_test(conf_fixture, other_fixtures)"
     assert (var == 'expected_var') == conf_fixture.test_result
 ```
 
+## Add your test to the parameterization configuration file
+
+Parameterization uses the file `./bcdc_apitests/test_data/testParams.json`.
+When pytest is run it looks to that file. The file format should be 
+self explanatory.  If the test is not described in that file the set up and 
+shutdown will run but the test itself will not.
+
 ## Existing Fixtures Affected by Parameterization
 
 ### Dependency Chains
