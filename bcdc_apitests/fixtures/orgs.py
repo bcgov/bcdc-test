@@ -233,6 +233,7 @@ def org_setup_fixture(remote_api_super_admin_auth, test_session_organization,
             id=session_test_org_data['name'])
         LOGGER.debug("org_data from show: %s", org_data)
     yield org_data
+    
     LOGGER.debug("Cleanup Org: %s", test_session_organization)
     org_delete(remote_api_super_admin_auth, test_session_organization)
     LOGGER.debug("Org is purged: %s", test_session_organization)

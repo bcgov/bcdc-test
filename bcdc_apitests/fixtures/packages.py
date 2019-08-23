@@ -191,7 +191,7 @@ def update_pkg_visibility(remote_api_super_admin_auth, test_pkg_data, test_packa
     '''
     logging.debug("metadata_visibility Change :: %s", test_package_name)
     test_pkg_data['metadata_visibility'] = test_package_visibility
-    pkg_data = remote_api_admin_auth.action.package_update(**test_pkg_data)
+    pkg_data = remote_api_super_admin_auth.action.package_update(**test_pkg_data)
     LOGGER.debug("pkg_return: %s", pkg_data)
     return test_pkg_data
 
