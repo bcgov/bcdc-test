@@ -381,6 +381,3 @@ def test_edc_package_update_bcgw(conf_fixture, ckan_url, ckan_rest_dir,
         LOGGER.debug(f"updt_data: {pkg_after_updt[updt_key]}")
         assert (body[updt_key] == pkg_after_updt[updt_key]) == conf_fixture.test_results
     
-    
-    
-
