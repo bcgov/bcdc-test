@@ -94,15 +94,34 @@ def some_great_test(conf_fixture, other_fixtures)"
     assert (var == 'expected_var') == conf_fixture.test_result
 ```
 
-## Existing Fixtures Affected by Parameterization
+The `conf_fixture` has all the properties defined in the `testParams.json` file.
+so... 
 
-### Dependency Chains
+* test_module:bcdc_apitests.tests.resources.test_resources,
+* test_function: test_resource_delete,
+* test_users: [viewer],
+* test_data: [pkgData.json],
+* test_result: false
+
+Test assertion statements should all resolve against `conf_test.test_result`
+as is shown in the code example above.
+
+## Add your test to the parameterization configuration file
+
+Parameterization uses the file `./bcdc_apitests/test_data/testParams.json`.
+When pytest is run it looks to that file. The file format should be 
+self explanatory.  If the test is not described in that file the set up and 
+shutdown will run but the test itself will not.
+
+# Existing Fixtures Affected by Parameterization
+
+## Dependency Chains
 
 The following tries to document top level fixtures impacted by parameterization
 and then below that identify the dependency chain that takes you back to the 
 `setup_fixtures.conf_fixtures`
 
-#### ckan.remote_api_auth
+### ckan.remote_api_auth
 
 Returns a [ckanapi.RemoteCKAN](https://github.com/ckan/ckanapi#remoteckan) object
 that has been created with the api key that corresponds with the parameterized
@@ -117,7 +136,7 @@ ckan.remote_api_auth
                 <-- setup_fixtures.conf_fixture
 ```
 
-#### load_config.ckan_auth_header
+### load_config.ckan_auth_header
 
 If your test is a lower level test that constructs the rest call using requests
 or some other library, then this is likely the fixture you will want to to use.
@@ -133,7 +152,7 @@ load_config.ckan_auth_header
 
 ```
 
-#### load_data.test_pkg_data
+### load_data.test_pkg_data
 
 Some tests need access to parameterized source data.  This fixture provides 
 access to test configuration property `test_data`.
