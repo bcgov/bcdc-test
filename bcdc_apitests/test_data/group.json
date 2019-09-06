@@ -1,17 +1,8 @@
 {
             "approval_status": "approved",
-            "sector": "Testing and Testing",
             "state": "active",
-            "image_display_url": "",
-            "title": "Automated Testing",
-            "name": "automated-testing",
-            "is_organization": true,
-            "extras": [],
-           	"image_url": "",
-            "type": "organization",
-            "description": "",
-            "groups": [
-            	{ 	"capacity": "public",
-              		"name": "databc"
-               }]
+            "title": "Automated Testing Group",
+            "name": "automated-testing-group",
+            "type": "group",
+            "description": "test group description"
 }
