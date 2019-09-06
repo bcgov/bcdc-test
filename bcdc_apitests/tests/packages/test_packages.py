@@ -361,7 +361,7 @@ def test_create_package_coredataonly(conf_fixture, ckan_url,  # pylint: disable=
 def test_edc_package_update_bcgw(conf_fixture, ckan_url, ckan_rest_dir,
                                  ckan_auth_header,
                                  package_create_if_not_exists,
-                                 test_pkg_data, 
+                                 test_pkg_data,
                                  remote_api_super_admin_auth):
     '''
     Testing the edc_package_update_bcgw end point.  This test will do the
@@ -372,11 +372,11 @@ def test_edc_package_update_bcgw(conf_fixture, ckan_url, ckan_rest_dir,
     - make the call the edc_package_update_bcgw
     - ensure status code 200
     - verify that the data change was successful.
-    
+
     edc_update MUST include object_name as the key.  Falure to include that does
-    result in a 500 error.  Is that expected behaviour?  Thinking it should 
+    result in a 500 error.  Is that expected behaviour?  Thinking it should
     have better error messaging.
-    
+
     TODO: consult with team to evaluate how to address 500 error code when passed
           a struct without object_name
     '''
@@ -384,32 +384,32 @@ def test_edc_package_update_bcgw(conf_fixture, ckan_url, ckan_rest_dir,
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir,
                                    'edc_package_update_bcgw')
     LOGGER.debug('api_call: %s', api_call)
-    
-    # could consider bundling this into a json file and then including 
+
+    # could consider bundling this into a json file and then including
     # in parameterization
     body = {"object_name": "WHSE_IMAGERY_AND_BASE_MAPS.AIMG_PHOTO_CENTROIDS_SP",
-            'my_name': 'bob'}
-
-
+            'short_name': 'EDC_UPDATE_BCGW_TEST',
+            'table_comments':
+                "testing update using end point edc_package_update_bcgw"}
     LOGGER.debug(f"package name: {test_pkg_data['name']}")
-
-    pkg_before_updt = remote_api_super_admin_auth.action.package_show(id=package_create_if_not_exists['name'])
 
     params = {'id': package_create_if_not_exists['name']}
     resp = requests.post(api_call, headers=ckan_auth_header,
                          json=body, params=params)
-
+    resp_json = resp.json()
     LOGGER.debug(f"resp status code: {resp.status_code}")
     LOGGER.debug(f"resp json: {resp.json()}")
+    LOGGER.debug(f"resp json: {resp_json['result']['success']}")
+
     LOGGER.debug(f"package name: {package_create_if_not_exists['name']}")
 
     assert (resp.status_code == 200) == conf_fixture.test_result
-    assert (resp_json['result']['success']) == conf_fixture.test_result
-    
+    assert resp_json['result']['success'] == conf_fixture.test_result
+
     pkg_after_updt = remote_api_super_admin_auth.action.package_show(id=package_create_if_not_exists['name'])
-    LOGGER.debug(f"results-------------------: {pkg_after_updt}")
-    
-    # # make sure changes were made
+    LOGGER.debug(f"results: {pkg_after_updt}")
+
+    # make sure changes were made
     # for updt_key in body:
     #     # this is not passing... like the data isn't getting updated?
     #     # the status is true but the count is 0 from the edc_package_update_bcgw
@@ -418,4 +418,5 @@ def test_edc_package_update_bcgw(conf_fixture, ckan_url, ckan_rest_dir,
     #     LOGGER.debug(f"body data: {body[updt_key]}")
     #     LOGGER.debug(f"updt_data: {pkg_after_updt[updt_key]}")
     #     assert (body[updt_key] == pkg_after_updt[updt_key]) == conf_fixture.test_result
-    #
+
+
