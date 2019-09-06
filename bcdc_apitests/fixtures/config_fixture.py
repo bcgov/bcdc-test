@@ -37,6 +37,12 @@ def test_organization():
     '''
     return TEST_ORGANIZATION
 
+@pytest.fixture(scope='session')
+def test_group():
+    '''
+    :return: the name of the organization that should be owned by tests
+    '''
+    return TEST_GROUP
 
 @pytest.fixture(scope='session')
 def test_package_name():
@@ -124,3 +130,10 @@ def test_session_organization():
     :return: the name of the organization that should be owned by tests
     '''
     return TEST_ORGANIZATION
+
+@pytest.fixture(scope="session")
+def test_session_group():
+    '''
+    :return: the name of the organization that should be owned by tests
+    '''
+    return TEST_GROUP

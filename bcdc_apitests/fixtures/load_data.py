@@ -141,6 +141,19 @@ def test_org_data(test_data_dir, test_organization):
         org_data['name'] = test_organization
     return org_data
 
+@pytest.fixture
+def test_group_data(test_data_dir, test_group):
+    '''
+    :param test_data_dir: directory where test data is expected
+    :param test_group:  The name to be substituted in for the test organization name
+    :return:  an group data structure that can be used for testing
+    '''
+    json_file = os.path.join(test_data_dir, 'group.json')
+    with open(json_file, 'r') as json_file_hand:
+        group_data = json.load(json_file_hand)
+        group_data['name'] = test_group
+    return group_data
+
 
 @pytest.fixture(scope='session')
 def session_test_org_data(test_data_dir, test_session_organization):
@@ -153,3 +166,15 @@ def session_test_org_data(test_data_dir, test_session_organization):
         org_data = json.load(json_file_hand)
         org_data['name'] = test_session_organization
     return org_data
+
+@pytest.fixture(scope='session')
+def session_test_group_data(test_data_dir, test_session_group):
+    '''
+    :return:  an group data structure that can be used for testing
+    '''
+    json_file = os.path.join(test_data_dir, 'ownerOrg.json')
+    LOGGER.debug("json file path: %s", json_file)
+    with open(json_file, 'r') as json_file_hand:
+        group_data = json.load(json_file_hand)
+        group_data['name'] = test_session_group
+    return group_data
