@@ -167,5 +167,12 @@
         "test_users": ["admin"],
         "test_data": ["group.json"],
         "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.users.test_users",
+        "test_function": "test_user_show",
+        "test_users": ["viewer", "editor", "admin"],
+        "test_data": ["group.json"],
+        "test_result": true
     }
 ]
