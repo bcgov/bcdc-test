@@ -12,10 +12,12 @@ import pytest  # @UnusedImport
 
 LOGGER = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
+
 def test_user_show(conf_fixture, user_label_fixture, remote_api_auth, ckan_url, ckan_auth_header,
                    ckan_rest_dir, test_package_name, package_create_if_not_exists):
     '''
-    verify user_show can be retrieved for user that is calling including datasets attr
+    verify user_show can be retrieved for user that is calling including datasets attr and verify pkg
+    is returned in results
 
     :param param: remote_api_admin_auth
     '''
