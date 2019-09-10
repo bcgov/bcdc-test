@@ -15,7 +15,6 @@ import pytest  # @UnusedImport
 LOGGER = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
 
-
 def test_dashboard_activity_list(conf_fixture, user_label_fixture, remote_api_auth, test_pkg_data, test_package_name,
                                  ckan_url, ckan_rest_dir, ckan_auth_header, package_delete_if_exists, test_pkg_teardown):
     '''
@@ -27,7 +26,6 @@ def test_dashboard_activity_list(conf_fixture, user_label_fixture, remote_api_au
 
     Create pkg and then check if pkg_id is recorded in the activity_list as an object_id
     '''
-
 
     # create new pkg as user
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'package_create')
@@ -65,30 +63,34 @@ def test_tag_list(conf_fixture, remote_api_auth):
     :param remote_api: a ckan remote api object
 
     '''
-
+    #TODO: WIP
     tag_list_data = remote_api_auth.action.tag_list()
     LOGGER.debug("tag_list_data: %s", tag_list_data)
 
-def test_vocabulary_list(conf_fixture, remote_api_auth):
+
+def test_vocabulary_list(conf_fixture, remote_api_super_admin_auth):
     '''
     :param remote_api: a ckan remote api object
 
     sysAdmin Only
     '''
-
-    vocabulary_list_data = remote_api_auth.action.vocabulary_list()
+    #TODO: WIP
+    vocabulary_list_data = remote_api_super_admin_auth.action.vocabulary_list()
     LOGGER.debug("vocabulary_list_data: %s", vocabulary_list_data)
+
 
 def test_license_list(conf_fixture, remote_api_auth):
     '''
     :param remote_api: a ckan remote api object
 
     '''
-
+    #TODO: WIP
     license_list_data = remote_api_auth.action.license_list()
     LOGGER.debug("license_list_data: %s", license_list_data)
 
-def test_config_option_show(conf_fixture, remote_api_super_admin_auth, ckan_url, ckan_rest_dir, ckan_superadmin_auth_header):
+
+def test_config_option_show(conf_fixture, remote_api_super_admin_auth,
+                            ckan_url, ckan_rest_dir, ckan_superadmin_auth_header):
     '''
     :param remote_api: a ckan remote api object
 
