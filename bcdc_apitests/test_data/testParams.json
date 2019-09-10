@@ -172,7 +172,14 @@
         "test_module":"bcdc_apitests.tests.users.test_users",
         "test_function": "test_user_show",
         "test_users": ["viewer", "editor", "admin"],
-        "test_data": ["group.json"],
+        "test_data": ["pkgData.json"],
+        "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.other.test_other",
+        "test_function": "test_dashboard_activity_list",
+        "test_users": ["editor", "admin"],
+        "test_data": ["pkgData.json"],
         "test_result": true
     }
 ]
