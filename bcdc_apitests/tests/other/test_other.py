@@ -60,34 +60,62 @@ def test_dashboard_activity_list(conf_fixture, user_label_fixture, remote_api_au
     assert activity_found == conf_fixture.test_result, fail_msg
 
 
-
-
-
-def test_tag_list(conf_fixture):
+def test_tag_list(conf_fixture, remote_api_auth):
     '''
     :param remote_api: a ckan remote api object
-    :param pkg_name:  the package name that is to be deleted if it
-                      exists.
+
     '''
 
-def test_vocabulary_list(conf_fixture):
+    tag_list_data = remote_api_auth.action.tag_list()
+    LOGGER.debug("tag_list_data: %s", tag_list_data)
+
+def test_vocabulary_list(conf_fixture, remote_api_auth):
     '''
     :param remote_api: a ckan remote api object
-    :param pkg_name:  the package name that is to be deleted if it
-                      exists.
+
+    sysAdmin Only
     '''
 
-def test_license_list(conf_fixture):
+    vocabulary_list_data = remote_api_auth.action.vocabulary_list()
+    LOGGER.debug("vocabulary_list_data: %s", vocabulary_list_data)
+
+def test_license_list(conf_fixture, remote_api_auth):
     '''
     :param remote_api: a ckan remote api object
-    :param pkg_name:  the package name that is to be deleted if it
-                      exists.
+
     '''
 
-def test_config_option_show(conf_fixture):
+    license_list_data = remote_api_auth.action.license_list()
+    LOGGER.debug("license_list_data: %s", license_list_data)
+
+def test_config_option_show(conf_fixture, remote_api_super_admin_auth, ckan_url, ckan_rest_dir, ckan_superadmin_auth_header):
     '''
     :param remote_api: a ckan remote api object
-    :param pkg_name:  the package name that is to be deleted if it
-                      exists.
+
+
+    check if config options can be retrieved with success
+    sysAdmin Only
     '''
+
+    # get list of all available config options
+    config_option_list_data = remote_api_super_admin_auth.action.config_option_list()
+    LOGGER.debug("config_option_list_data: %s", config_option_list_data)
+
+    # get config option for all options and check each if success
+    for config in config_option_list_data:
+        api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'config_option_show')
+        LOGGER.debug('api_call: %s', api_call)
+        resp = requests.post(api_call, headers=ckan_superadmin_auth_header, params=
+                        {'key': config})
+        fail_msg = "failed to get config data option for {0}  with status {1}"
+        fail_msg = fail_msg.format(config, resp.status_code)
+        assert (resp.status_code == 200) == conf_fixture.test_result, fail_msg
+
+        config_option_show_data = resp.json()
+        LOGGER.debug("config_option_show_data: %s", config_option_show_data)
+        fail_msg = "failed to get config data option for {0} "
+        fail_msg = fail_msg.format(config)
+        assert config_option_show_data['success'] == conf_fixture.test_result, fail_msg
+
+
 

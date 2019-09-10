@@ -181,5 +181,12 @@
         "test_users": ["editor", "admin"],
         "test_data": ["pkgData.json"],
         "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.other.test_other",
+        "test_function": "test_config_option_show",
+        "test_users": [""],
+        "test_data": ["pkgData.json"],
+        "test_result": true
     }
 ]
