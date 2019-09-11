@@ -137,6 +137,7 @@ def package_create_if_not_exists(remote_api_super_admin_auth,
     if test_invalid_package_exists:
         LOGGER.debug("invalid package exists, deleting")
         package_delete(remote_api_super_admin_auth, test_package_name)
+        package_purge(remote_api_super_admin_auth, test_package_name['name'])
 
     if test_valid_package_exists:
         LOGGER.debug("creating package")
@@ -146,8 +147,17 @@ def package_create_if_not_exists(remote_api_super_admin_auth,
         pkg_data = remote_api_super_admin_auth.action.package_create(
             **test_pkg_data)
         LOGGER.debug("pkg_return: %s", pkg_data)
-
     yield pkg_data
+
+@pytest.fixture
+def set_package_state_active(remote_api_super_admin_auth, test_pkg_data):
+    pckg_shw_data = remote_api_super_admin_auth.action.package_show(id=test_pkg_data['name'])
+    if pckg_shw_data['state'] != 'active':
+        LOGGER.debug(f"package: {test_pkg_data['name']} state is  {test_pkg_data['state']}")
+
+        pckg_shw_data['state'] = 'active'
+        pkg_updt_data = remote_api_super_admin_auth.action.package_update(**pckg_shw_data)
+        LOGGER.debug(f'pkg_updt_data: {pkg_updt_data}')
 
 
 @pytest.fixture
@@ -271,4 +281,9 @@ def module_package_cleaner(remote_api_super_admin_auth, test_package_name):
     if package_exists(remote_api_super_admin_auth, test_package_name):
         delete_pkg(remote_api_super_admin_auth, test_package_name)
 
-
+# @pytest.fixture
+# def package_recreate(remote_api_super_admin_auth, test_package_name, test_valid_package_exists, test_invalid_package_exists):
+#     if test_valid_package_exists or test_invalid_package_exists:
+#         delete_pkg(remote_api_super_admin_auth, test_package_name)
+#         package_purge(remote_api_super_admin_auth, test_package_name)
+        
