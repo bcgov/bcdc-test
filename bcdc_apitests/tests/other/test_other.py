@@ -24,7 +24,7 @@ def test_dashboard_activity_list(conf_fixture, user_label_fixture, remote_api_au
                       exists.
     :param user_label_fixture: get user name
 
-    Create pkg and then check if pkg_id is recorded in the activity_list as an object_id
+    Create pkg and then check if pkg_id is recorded in the activity_list as an object_id for that user
     '''
 
     # create new pkg as user
@@ -79,21 +79,31 @@ def test_vocabulary_list(conf_fixture, remote_api_super_admin_auth):
     LOGGER.debug("vocabulary_list_data: %s", vocabulary_list_data)
 
 
-def test_license_list(conf_fixture, remote_api_auth):
+def test_license_list(conf_fixture, user_label_fixture, remote_api_auth):
     '''
     :param remote_api: a ckan remote api object
+    :param user_label_fixture: user name
+    :param remote_api_auth: a ckan remote api auth token
 
+    get list of libraries and check count if >= 1
     '''
-    #TODO: WIP
+
+    # get list of license
     license_list_data = remote_api_auth.action.license_list()
-    LOGGER.debug("license_list_data: %s", license_list_data)
+    license_count = len(license_list_data)
+    LOGGER.debug("license_count: %s", license_count)
+    fail_msg = "failed to get licence list option for {0}  with count {1}"
+    fail_msg = fail_msg.format(user_label_fixture, license_count)
+
+    # check count
+    returned_count = license_count >= 1
+    assert returned_count == conf_fixture.test_result, fail_msg
 
 
 def test_config_option_show(conf_fixture, remote_api_super_admin_auth,
                             ckan_url, ckan_rest_dir, ckan_superadmin_auth_header):
     '''
     :param remote_api: a ckan remote api object
-
 
     check if config options can be retrieved with success
     sysAdmin Only
@@ -103,16 +113,18 @@ def test_config_option_show(conf_fixture, remote_api_super_admin_auth,
     config_option_list_data = remote_api_super_admin_auth.action.config_option_list()
     LOGGER.debug("config_option_list_data: %s", config_option_list_data)
 
-    # get config option for all options and check each if success
+    # get config option for all options in list and check each for success
     for config in config_option_list_data:
         api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'config_option_show')
         LOGGER.debug('api_call: %s', api_call)
         resp = requests.post(api_call, headers=ckan_superadmin_auth_header, params=
                         {'key': config})
+        # check for 200
         fail_msg = "failed to get config data option for {0}  with status {1}"
         fail_msg = fail_msg.format(config, resp.status_code)
         assert (resp.status_code == 200) == conf_fixture.test_result, fail_msg
 
+        # check if success = True
         config_option_show_data = resp.json()
         LOGGER.debug("config_option_show_data: %s", config_option_show_data)
         fail_msg = "failed to get config data option for {0} "

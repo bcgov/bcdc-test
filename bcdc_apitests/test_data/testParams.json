@@ -192,7 +192,7 @@
     {
         "test_module":"bcdc_apitests.tests.other.test_other",
         "test_function": "test_license_list",
-        "test_users": ["admin"],
+        "test_users": ["viewer", "editor", "admin"],
         "test_data": ["pkgData.json"],
         "test_result": true
     },
@@ -206,7 +206,7 @@
     {
         "test_module":"bcdc_apitests.tests.other.test_other",
         "test_function": "test_tag_list",
-        "test_users": ["admin"],
+        "test_users": ["viewer", "editor", "admin"],
         "test_data": ["pkgData.json"],
         "test_result": true
     }
