@@ -71,12 +71,22 @@ def test_tag_list(conf_fixture, remote_api_auth):
 def test_vocabulary_list(conf_fixture, remote_api_super_admin_auth):
     '''
     :param remote_api: a ckan remote api object
+    :param remote_api_super_admin_auth: a ckan remote api auth token for sysAdmin
 
-    sysAdmin Only
+    must run as sysAdmin
+    get list of vocabularies and check count if >= 1
     '''
-    #TODO: WIP
+
+    # get list of license
     vocabulary_list_data = remote_api_super_admin_auth.action.vocabulary_list()
-    LOGGER.debug("vocabulary_list_data: %s", vocabulary_list_data)
+    vocab_count = len(vocabulary_list_data)
+    LOGGER.debug("vocab_count: %s", vocab_count)
+    fail_msg = "failed to get vocabulary list option with count {0}"
+    fail_msg = fail_msg.format(vocab_count)
+
+    # check count
+    returned_count = vocab_count >= 1
+    assert returned_count == conf_fixture.test_result, fail_msg
 
 
 def test_license_list(conf_fixture, user_label_fixture, remote_api_auth):
