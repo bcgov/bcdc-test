@@ -44,6 +44,13 @@ def test_group():
     '''
     return TEST_GROUP
 
+@pytest.fixture
+def test_tag():
+    '''
+    :return: the name of the tag used for testing.
+    '''
+    return TEST_TAG
+
 @pytest.fixture(scope='session')
 def test_package_name():
     '''

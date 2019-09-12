@@ -27,6 +27,9 @@ TEST_ORGANIZATION = '{0}_{1}_testorg'.format(TEST_PREFIX, TEST_USER)
 # test group name
 TEST_GROUP = '{0}_{1}_testgroup'.format(TEST_PREFIX, TEST_USER)
 
+# test group name
+TEST_TAG = '{0}_{1}_testtag'.format(TEST_PREFIX, TEST_USER)
+
 # test package name
 TEST_PACKAGE = '{0}_{1}_testpkg'.format(TEST_PREFIX, TEST_USER)
 

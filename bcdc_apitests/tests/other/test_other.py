@@ -58,14 +58,52 @@ def test_dashboard_activity_list(conf_fixture, user_label_fixture, remote_api_au
     assert activity_found == conf_fixture.test_result, fail_msg
 
 
-def test_tag_list(conf_fixture, remote_api_auth):
+def test_tag_list(conf_fixture, remote_api_auth, package_create_if_not_exists,
+                  test_tag, user_label_fixture, test_package_name, ckan_url, ckan_rest_dir, ckan_auth_header,
+                  ckan_superadmin_auth_header):
     '''
     :param remote_api: a ckan remote api object
 
+    ckan idiosyncrasy #101: tag_list returns non vocab tags,
+    as tag_create creates vocab tags, so makes since to use
+    package_update to create new non vocab tags. concluding..
+    to delete non vocab tag use tag_delete,
+    and use vocabulary_delete to delete your tag vocabulary.
+
+
+    test will get a tag from test pkg and check if it is return by list that is returned by user.
+    future test could create tag then check if returned by list api.
     '''
-    #TODO: WIP
-    tag_list_data = remote_api_auth.action.tag_list()
-    LOGGER.debug("tag_list_data: %s", tag_list_data)
+
+    # get pkg tags from test pkg
+    api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'package_show')
+    LOGGER.debug('api_call: %s', api_call)
+    resp = requests.get(api_call, headers=ckan_superadmin_auth_header, params={'id': test_package_name})
+    assert (resp.status_code == 200) == conf_fixture.test_result
+    pkg_data = resp.json()
+
+    pkg_tag = pkg_data['result']['tags'][0]
+    LOGGER.debug("pkg_tag: %s", pkg_tag)
+
+    # get tag list
+    api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'tag_list')
+    LOGGER.debug('api_call: %s', api_call)
+    resp = requests.post(api_call, headers=ckan_superadmin_auth_header)
+    assert (resp.status_code == 200) == conf_fixture.test_result
+    tag_list_data = resp.json()
+
+    # check if tag is in tag list
+    tag_found = False
+    for tag in tag_list_data['result']:
+        LOGGER.debug('tag_list: %s', tag)
+        if pkg_tag['name'] == tag:
+            LOGGER.debug('tag_found: %s', pkg_tag['name'])
+            tag_found = True
+
+    fail_msg = "did not find the tag in tag_list when " + \
+        "retrieved as {0}"
+    fail_msg = fail_msg.format(user_label_fixture)
+    assert tag_found == conf_fixture.test_result, fail_msg
 
 
 def test_vocabulary_list(conf_fixture, remote_api_super_admin_auth):
@@ -75,6 +113,7 @@ def test_vocabulary_list(conf_fixture, remote_api_super_admin_auth):
 
     must run as sysAdmin
     get list of vocabularies and check count if >= 1
+    Future update could use tag_create to creates vocab tags and then check if exist in list.
     '''
 
     # get list of license
@@ -95,7 +134,7 @@ def test_license_list(conf_fixture, user_label_fixture, remote_api_auth):
     :param user_label_fixture: user name
     :param remote_api_auth: a ckan remote api auth token
 
-    get list of libraries and check count if >= 1
+    get list of license and check count if >= 1
     '''
 
     # get list of license
@@ -115,8 +154,8 @@ def test_config_option_show(conf_fixture, remote_api_super_admin_auth,
     '''
     :param remote_api: a ckan remote api object
 
-    check if config options can be retrieved with success
     sysAdmin Only
+    get list of all config options and check if each option can be retrieved with success
     '''
 
     # get list of all available config options
