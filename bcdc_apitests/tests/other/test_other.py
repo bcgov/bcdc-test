@@ -59,8 +59,8 @@ def test_dashboard_activity_list(conf_fixture, user_label_fixture, remote_api_au
 
 
 def test_tag_list(conf_fixture, remote_api_auth, package_create_if_not_exists,
-                  test_tag, user_label_fixture, test_package_name, ckan_url, ckan_rest_dir, ckan_auth_header,
-                  ckan_superadmin_auth_header):
+                user_label_fixture, test_package_name, ckan_url, ckan_rest_dir, ckan_auth_header,
+                ckan_superadmin_auth_header):
     '''
     :param remote_api: a ckan remote api object
 
