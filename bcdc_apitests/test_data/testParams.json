@@ -152,7 +152,7 @@
         "test_function": "test_edc_package_update",
         "test_users": ["admin"],
         "test_data": ["pkgData.json"],
-        "comment": "test_data isn't really used here, however all the different user types should be able to view the data",        
+        "comment": "test_data isn't really used here, however all the different user types should be able to view the data",
         "test_result": true
     },
     {
@@ -200,7 +200,7 @@
     {
         "test_module":"bcdc_apitests.tests.other.test_other",
         "test_function": "test_license_list",
-        "test_users": ["admin"],
+        "test_users": ["viewer", "editor", "admin"],
         "test_data": ["pkgData.json"],
         "test_result": true
     },
@@ -214,7 +214,7 @@
     {
         "test_module":"bcdc_apitests.tests.other.test_other",
         "test_function": "test_tag_list",
-        "test_users": ["admin"],
+        "test_users": ["viewer", "editor", "admin"],
         "test_data": ["pkgData.json"],
         "test_result": true
     }

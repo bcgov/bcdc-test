@@ -154,7 +154,6 @@ def test_group_data(test_data_dir, test_group):
         group_data['name'] = test_group
     return group_data
 
-
 @pytest.fixture(scope='session')
 def session_test_org_data(test_data_dir, test_session_organization):
     '''
