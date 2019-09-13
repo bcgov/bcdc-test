@@ -544,5 +544,5 @@ def test_edc_package_update(conf_fixture, ckan_url, ckan_rest_dir,
             LOGGER.debug(f"body data: -{body[updt_key]}-")
             LOGGER.debug(f"updt_data: -{pkg_after_updt[updt_key]}-")
             LOGGER.debug(f"conf_fixture.test_results: -{conf_fixture.test_result}-")
-    #         assert (body[updt_key] == pkg_after_updt[updt_key]) \
+#            assert (body[updt_key] == pkg_after_updt[updt_key]) \
 #            == conf_fixture.test_result

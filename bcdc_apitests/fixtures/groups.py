@@ -203,10 +203,11 @@ def group_teardown_fixture(remote_api_super_admin_auth, test_group):
         and purged
     '''
     yield
-    group_delete(remote_api_super_admin_auth, test_group)
-    LOGGER.debug("initial delete of group : %s", test_group)
-    group_purge(remote_api_super_admin_auth, test_group)
-    LOGGER.debug("initial purge of group : %s", test_group)
+    if not cancel_group_teardown:
+        group_delete(remote_api_super_admin_auth, test_group)
+        LOGGER.debug("initial delete of group : %s", test_group)
+        group_purge(remote_api_super_admin_auth, test_group)
+        LOGGER.debug("initial purge of group : %s", test_group)
 
 
 @pytest.fixture(scope="session")
@@ -239,7 +240,8 @@ def group_setup_fixture(remote_api_super_admin_auth, test_session_group,
             id=session_test_group_data['name'])
         LOGGER.debug("group_data from show: %s", group_data)
     yield group_data
-
-    LOGGER.debug("Cleanup group: %s", test_session_group)
-    group_delete(remote_api_super_admin_auth, test_session_group)
-    LOGGER.debug("group is purged: %s", test_session_group)
+    
+    if not cancel_group_teardown:
+        LOGGER.debug("Cleanup group: %s", test_session_group)
+        group_delete(remote_api_super_admin_auth, test_session_group)
+        LOGGER.debug("group is purged: %s", test_session_group)

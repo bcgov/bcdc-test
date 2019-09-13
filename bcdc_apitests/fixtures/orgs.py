@@ -194,7 +194,8 @@ def org_id_fixture(remote_api_super_admin_auth, test_organization):
 
 
 @pytest.fixture
-def org_teardown_fixture(remote_api_super_admin_auth, test_organization):
+def org_teardown_fixture(remote_api_super_admin_auth, test_organization,
+                         cancel_org_teardown):
     '''
     removes the test organization at the conclusion of a test run.
     :param remote_api_super_admin_auth: remote ckanapi object with auth header
@@ -202,10 +203,11 @@ def org_teardown_fixture(remote_api_super_admin_auth, test_organization):
         and purged
     '''
     yield
-    org_delete(remote_api_super_admin_auth, test_organization)
-    LOGGER.debug("initial delete of org : %s", test_organization)
-    org_purge(remote_api_super_admin_auth, test_organization)
-    LOGGER.debug("initial purge of org : %s", test_organization)
+    if not cancel_org_teardown:
+        org_delete(remote_api_super_admin_auth, test_organization)
+        LOGGER.debug("initial delete of org : %s", test_organization)
+        org_purge(remote_api_super_admin_auth, test_organization)
+        LOGGER.debug("initial purge of org : %s", test_organization)
 
 
 @pytest.fixture(scope="session")
@@ -234,6 +236,9 @@ def org_setup_fixture(remote_api_super_admin_auth, test_session_organization,
         LOGGER.debug("org_data from show: %s", org_data)
     yield org_data
     
-    LOGGER.debug("Cleanup Org: %s", test_session_organization)
-    org_delete(remote_api_super_admin_auth, test_session_organization)
-    LOGGER.debug("Org is purged: %s", test_session_organization)
+    if not cancel_org_teardown:
+        LOGGER.debug("Cleanup Org: %s", test_session_organization)
+        org_delete(remote_api_super_admin_auth, test_session_organization)
+        LOGGER.debug("Org is deleted: %s", test_session_organization)
+        org_purge(remote_api_super_admin_auth, test_session_organization)
+        LOGGER.debug("Org is purged: %s", test_session_organization)

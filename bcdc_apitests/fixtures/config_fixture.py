@@ -30,6 +30,15 @@ def test_prefix():
     return TEST_PREFIX
 
 
+@pytest.fixture
+def test_disable_teardown_opts():
+    '''
+    :return: the test object naming prefix
+    '''
+    return DF_OPTS
+
+
+
 @pytest.fixture(scope='session')
 def test_organization():
     '''
@@ -137,3 +146,4 @@ def test_session_group():
     :return: the name of the organization that should be owned by tests
     '''
     return TEST_GROUP
+

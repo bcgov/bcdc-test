@@ -102,7 +102,7 @@ def ckan_host(secret_file, env, import_dbcsecrets):
               'from the secrets file %s'
         msg = msg.format('BCDC_URL', secret_file)
         raise SecretsNotFound(msg)
-    return host
+    yield host
 
 
 @pytest.fixture(scope="session")
@@ -116,7 +116,7 @@ def ckan_url(ckan_host):
         url = os.environ['BCDC_URL']
     else:
         url = 'https://{0}'.format(ckan_host)
-    return url
+    yield url
 
 
 @pytest.fixture(scope="session")
@@ -140,7 +140,7 @@ def ckan_superadmin_apitoken(secret_file, env, import_dbcsecrets):
               'from the secrets file %s'
         msg = msg.format('BCDC_API_KEY', secret_file)
         raise SecretsNotFound(msg)
-    return token
+    yield token
 
 
 @pytest.fixture(scope="session")
@@ -168,7 +168,7 @@ def temp_user_password(import_dbcsecrets, secret_file):
               'either the environment %s or  the secrets file %s'
         msg = msg.format('BCDC_TMP_USER_PASSWORD', secret_file)
         raise SecretsNotFound(msg)
-    return password
+    yield password
 
 
 @pytest.fixture(scope="session")
@@ -181,7 +181,7 @@ def ckan_superadmin_auth_header(ckan_superadmin_apitoken):
     '''
     api_headers = {'X-CKAN-API-KEY': ckan_superadmin_apitoken,
                    'content-type': 'application/json;charset=utf-8'}
-    return api_headers
+    yield api_headers
 
 
 @pytest.fixture(scope="session")
@@ -196,7 +196,7 @@ def ckan_apitoken_session(user_data_fixture_session):
     apitoken = user_data_fixture_session['apikey']
     # for now to make work just continue to use super admin
     # api tokens
-    return apitoken
+    yield apitoken
 
 @pytest.fixture()
 def ckan_apitoken(user_data_fixture):
@@ -210,21 +210,21 @@ def ckan_apitoken(user_data_fixture):
     apitoken = user_data_fixture['apikey']
     # for now to make work just continue to use super admin
     # api tokens
-    return apitoken
+    yield apitoken
 
 
 @pytest.fixture(scope="session")
 def ckan_auth_header_session(ckan_apitoken):
     api_headers = {'X-CKAN-API-KEY': ckan_apitoken,
                    'content-type': 'application/json;charset=utf-8'}
-    return api_headers
+    yield api_headers
 
 
 @pytest.fixture()
 def ckan_auth_header(ckan_apitoken):
     api_headers = {'X-CKAN-API-KEY': ckan_apitoken,
                    'content-type': 'application/json;charset=utf-8'}
-    return api_headers
+    yield api_headers
 
 
 class SecretsNotFound(Exception):

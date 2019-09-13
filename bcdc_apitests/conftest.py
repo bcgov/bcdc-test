@@ -19,13 +19,22 @@ from bcdc_apitests.fixtures.groups import *
 from bcdc_apitests.fixtures.users import *
 from bcdc_apitests.fixtures.ckan import *
 from bcdc_apitests.fixtures.setup_fixtures import *
+from bcdc_apitests.fixtures.arguements import *
 import bcdc_apitests.helpers.read_test_config as helper
+import bcdc_apitests.config.testConfig as DF_OPTS
 
 LOGGER = logging.getLogger(__name__)
 
 # ToDo: get this working at the session level without defining here.
 # token = os.environ['BCDC_API_KEY']
 # url = os.environ['BCDC_URL']
+
+def pytest_addoption(parser):
+    LOGGER.debug(f"df opts are: {DF_OPTS}")
+    helpstr = f'Optional disabling of teardown code, options include: {DF_OPTS}'
+    parser.addoption(
+        "--df", action="store", default=None, help=helpstr
+    )
 
 
 def pytest_generate_tests(metafunc):

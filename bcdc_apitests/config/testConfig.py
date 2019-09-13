@@ -63,3 +63,8 @@ TEST_VISIBILITY = 'IDIR'  # PUBLIC, IDIR
 
 TEST_PACKAGE_STATE = TEST_STATE
 TEST_PACKAGE_VISIBILITY = TEST_VISIBILITY
+
+# these are the options that can be sent to the --df flag. The --df flag
+# allows you to disable the teardown associated with certain object types
+DF_OPTS = ['orgs', 'groups', 'packages', 'resources', 'users', 'other', 'ALL']
+

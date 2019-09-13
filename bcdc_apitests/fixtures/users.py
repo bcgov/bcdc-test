@@ -105,7 +105,7 @@ def assign_user_role(remote_api_admin_auth, user, org_id, role):
 
 @pytest.fixture(scope="session")
 def user_setup_fixture(org_setup_fixture, group_setup_fixture, remote_api_super_admin_auth,
-                       test_roles, temp_user_password):
+                       test_roles, temp_user_password, cancel_user_teardown):
     '''
     Used in session setup and tear down.  Creates the 3 test users that are
     used by tests, then calls org setup that will create the test org.
@@ -137,8 +137,10 @@ def user_setup_fixture(org_setup_fixture, group_setup_fixture, remote_api_super_
         assign_user_role(remote_api_super_admin_auth, user, org_id, role)
         LOGGER.debug('user %s setup complete', user)
     yield
-    for user in users:
-        user_delete(remote_api_super_admin_auth, user)
+    if not cancel_user_teardown:
+        for user in users:
+            LOGGER.debug(f"user {user} deleted") 
+            user_delete(remote_api_super_admin_auth, user)
 
 
 @pytest.fixture()
@@ -148,7 +150,7 @@ def user_data_fixture(remote_api_super_admin_auth, user_label_fixture):
     '''
     LOGGER.debug("user_label_fixture: %s", user_label_fixture)
     usr_data = get_user_data(remote_api_super_admin_auth, user_label_fixture[0])
-    return usr_data
+    yield usr_data
 
 
 @pytest.fixture(scope='session')
@@ -167,7 +169,7 @@ def user_data_fixture_session(remote_api_super_admin_auth, user_label_fixture):
             raise TooManyUsersException(msg)
         user_label_fixture = user_label_fixture[0]
     usr_data = get_user_data(remote_api_super_admin_auth, user_label_fixture)
-    return usr_data
+    yield usr_data
 
 
 class TooManyUsersException(Exception):

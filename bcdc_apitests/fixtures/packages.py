@@ -100,8 +100,6 @@ def package_exists(remote_api, package_name, pkgtype='ANY'):
     return pkg_exists
 
 # --------------------- Fixtures ----------------------
-
-
 @pytest.fixture
 def package_create_fixture(remote_api_super_admin_auth, test_pkg_data):
     '''
@@ -191,7 +189,7 @@ def update_pkg_state(remote_api_super_admin_auth, test_pkg_data, test_package_st
     test_pkg_data['edc_state'] = test_package_state
     pkg_data = remote_api_super_admin_auth.action.package_update(**test_pkg_data)
     LOGGER.debug("pkg_return: %s", pkg_data)
-    return test_pkg_data
+    yield test_pkg_data
 
 @pytest.fixture
 def update_pkg_visibility(remote_api_super_admin_auth, test_pkg_data, test_package_visibility):
@@ -203,7 +201,7 @@ def update_pkg_visibility(remote_api_super_admin_auth, test_pkg_data, test_packa
     test_pkg_data['metadata_visibility'] = test_package_visibility
     pkg_data = remote_api_super_admin_auth.action.package_update(**test_pkg_data)
     LOGGER.debug("pkg_return: %s", pkg_data)
-    return test_pkg_data
+    yield test_pkg_data
 
 
 @pytest.fixture
@@ -218,7 +216,7 @@ def get_test_package(remote_api_super_admin_auth, test_package_name):
         pkg_data = remote_api_super_admin_auth.action.package_show(id=test_package_name)
     except ckanapi.errors.CKANAPIError as err:
         LOGGER.debug("err: %s %s", type(err), err)
-    return pkg_data
+    yield pkg_data
 
 @pytest.fixture
 def package_get_id_fixture(get_test_package):
@@ -258,19 +256,23 @@ def test_valid_package_exists(remote_api_super_admin_auth, test_package_name):
 
 
 @pytest.fixture
-def test_pkg_teardown(remote_api_super_admin_auth, test_package_name):
+def test_pkg_teardown(remote_api_super_admin_auth, test_package_name, 
+                      cancel_package_teardown):
     '''
     :param remote_api_super_admin_auth: a ckanapi remote object with authenticated
     :type param:
     tests to see if the test package exists and removes if it does
     '''
     yield
-    delete_pkg(remote_api_super_admin_auth, test_package_name)
-    LOGGER.debug('initial clean up complete')
+    if not cancel_package_teardown:
+        delete_pkg(remote_api_super_admin_auth, test_package_name)
+        package_purge(remote_api_super_admin_auth,test_package_name )
+        LOGGER.debug('initial clean up complete')
 
 
 @pytest.fixture(scope="module")
-def module_package_cleaner(remote_api_super_admin_auth, test_package_name):
+def module_package_cleaner(remote_api_super_admin_auth, test_package_name, 
+                           cancel_package_teardown):
     '''
     Run in the conftest, cleans up an test packages before and after the package
     tests are run.
@@ -278,8 +280,10 @@ def module_package_cleaner(remote_api_super_admin_auth, test_package_name):
     if package_exists(remote_api_super_admin_auth, test_package_name):
         delete_pkg(remote_api_super_admin_auth, test_package_name)
     yield
-    if package_exists(remote_api_super_admin_auth, test_package_name):
-        delete_pkg(remote_api_super_admin_auth, test_package_name)
+    # teardown
+    if not cancel_package_teardown:
+        if package_exists(remote_api_super_admin_auth, test_package_name):
+            delete_pkg(remote_api_super_admin_auth, test_package_name)
 
 # @pytest.fixture
 # def package_recreate(remote_api_super_admin_auth, test_package_name, test_valid_package_exists, test_invalid_package_exists):
