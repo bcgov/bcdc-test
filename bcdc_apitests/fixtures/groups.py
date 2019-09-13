@@ -223,7 +223,12 @@ def group_setup_fixture(remote_api_super_admin_auth, test_session_group,
     :param group_exists_fixture: does the group used for testing exist
     :param session_test_group_data: data to use when creating the group
     '''
+    # was getting errors if this was not explicity set.
+    session_test_group_data['is_organization'] = False
+    session_test_group_data['type'] = "group"
+
     LOGGER.debug("Setup group: %s", test_session_group)
+    LOGGER.debug(f"group session data: {session_test_group_data}")
     group_data = None
     if not group_exists_fixture:
         group_data = remote_api_super_admin_auth.action.group_create(

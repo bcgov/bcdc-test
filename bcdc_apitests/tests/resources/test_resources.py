@@ -28,6 +28,8 @@ def test_resource_create(conf_fixture, ckan_url, ckan_rest_dir, ckan_auth_header
     # define api call
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'resource_create')
     LOGGER.debug('api_call: %s', api_call)
+    LOGGER.debug('resource_data: %s', resource_data)
+
 
     # create resource
     res_data = requests.post(api_call, headers=ckan_auth_header, json=resource_data)
