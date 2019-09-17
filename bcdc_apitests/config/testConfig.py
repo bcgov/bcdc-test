@@ -10,7 +10,12 @@ import getpass
 # first three initials of the current test user, using this to keep
 # test objects unique allowing multiple dev's to work on test developemnt
 # without encountering object naming conflicts
-TEST_USER = getpass.getuser()[0:3].lower()
+
+try:
+    TEST_USER = getpass.getuser()[0:3].lower()
+except KeyError:
+    # if error lets assume you are running in container. so lets set your name.
+    TEST_USER = "oc"
 
 # all test objects created in ckan should have this prefix appended to them
 TEST_PREFIX = "zzztest"
