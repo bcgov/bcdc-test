@@ -17,7 +17,7 @@ with open('requirements.txt') as f:
     print(f'requirements: {requires}')
 
 setuptools.setup(
-    name="bcdc_apitests",
+    name="bcdc_apitests_dev",
     # version=datetime.datetime.now().strftime('%Y.%m.%d'),
     version=version.next_version,
     author="Kevin Netherton",
