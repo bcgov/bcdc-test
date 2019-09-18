@@ -1,7 +1,9 @@
 name: Python dev package
-on: 
+on:
   push:
-    branches: DDM-927-OC-Pipline
+    branches:
+      - DDM-927-OC-Pipline
+
 jobs:
   build:
     runs-on: ubuntu-18.04
@@ -11,9 +13,7 @@ jobs:
         python-version: [3.6]
 
     steps:
-    - uses: actions/checkout@master
-        with:
-          ref: DDM-927-OC-Pipline
+    - uses: actions/checkout@DDM-927-OC-Pipline
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
