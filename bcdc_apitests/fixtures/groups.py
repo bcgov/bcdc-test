@@ -209,7 +209,7 @@ def group_teardown_fixture(remote_api_super_admin_auth, test_group):
     LOGGER.debug("initial purge of group : %s", test_group)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture
 def group_setup_fixture(remote_api_super_admin_auth, test_session_group,
                       group_exists_fixture, session_test_group_data):
     '''
