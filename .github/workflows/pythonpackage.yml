@@ -1,9 +1,8 @@
-name: Python package
+name: Python dev package
 
 on: 
   push:
-    branches:
-    - DDM-927-OC-Pipline
+    branches: DDM-927-OC-Pipline
 jobs:
   build:
     runs-on: ubuntu-18.04
