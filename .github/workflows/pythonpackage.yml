@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - DDM-927-OC-Pipline
+      
 
 jobs:
   build:
@@ -13,7 +14,9 @@ jobs:
         python-version: [3.6]
 
     steps:
-    - uses: actions/checkout@DDM-927-OC-Pipline
+   - uses: actions/checkout@master
+     with:
+            ref: DDM-927-OC-Pipline
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
