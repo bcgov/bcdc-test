@@ -14,7 +14,7 @@ import getpass
 try:
     TEST_USER = getpass.getuser()[0:3].lower()
 except KeyError:
-    # if error lets assume you are running in container. so lets set your name.
+    # if error lets assume you are running in container.
     TEST_USER = "oc"
 
 # all test objects created in ckan should have this prefix appended to them
