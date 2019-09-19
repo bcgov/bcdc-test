@@ -10,6 +10,8 @@ import logging
 import json
 import os
 import random
+from builtins import None
+from pylint.test.functional.unpacking_non_sequence import IterClass
 
 
 
@@ -33,6 +35,7 @@ class Fields(object):
         # filtered_list if populated will be used for iterators.  If its set to
         # none then iterators will use all_flds
         self.filtered_list = None
+        self.itercnt = 0
         self.__parse_flds()
         
     def set_field_type_filter(self, property_name=None, property_value=None):
@@ -62,9 +65,6 @@ class Fields(object):
                 val = fld.get_value(property_name)
                 if (val is not None) and val == property_value:
                     self.current_list.append()
-                    
-                    
-            
         
     def __parse_flds(self):
         '''
@@ -129,7 +129,7 @@ class Fields(object):
                 output_dataset[fld.field_name] = []
                 subflds = fld.subfields
 
-    def get_presets(self, startList=None, ):
+    def get_presets(self, startList=None):
         '''
         Used to validate the expected values in the presets with what the tests
         are configured to consume.  
@@ -144,24 +144,37 @@ class Fields(object):
         preset = [] 
         if startList is None:
             startList = self.struct
-        for fld in startList:
-            if 'preset' in fld:
-                preset.append(fld['preset'])
+        for fld in self:
+            if fld.preset:
+                preset.append(fld.preset)
             elif 'subfields' in fld:
                 preset.extend(self.get_presets(fld['subfields']))         
         return list(set(preset))
     
     def __iter__(self):
+        self.itercnt = 0
         return self
     
     def __next__(self):
-        
+        '''
+        If a filter is defined then iterate over the filtered list, 
+        otherwise iterate over all_flds
+        '''
+        iterList = self.all_flds
+        if filtered_list is None:
+            iterList = all_flds
+        if self.itercnt >= len(iterList):
+            raise StopIteration
+        else:
+            return_value = iterList[self.itercnt]
+            self.itercnt += 1
+            return return_value
         
     def reset(self):
         '''
         resets the iterator
         '''
-        pass
+        
         
                 
 class Field(object):
@@ -228,6 +241,10 @@ class Field(object):
         Iterates over each of the subfields and returns as Fields object
         '''
         return Fields(self.fld['subfields'])
+    
+    @property
+    def preset(self):
+        return self.get_value('preset')
         
     @property
     def test_value(self):
