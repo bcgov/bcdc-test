@@ -9,8 +9,15 @@ import getpass
 
 # first three initials of the current test user, using this to keep
 # test objects unique allowing multiple dev's to work on test developemnt
-# without encountering object naming conflicts
-TEST_USER = getpass.getuser()[0:3].lower()
+# without encountering object naming conflicts. 
+
+#When run in openshift getuser will fail.  Put the exception in here to use
+# ocp as default when this fails.
+try:
+    TEST_USER = getpass.getuser()[0:3].lower()
+except:
+    TEST_USER = 'ocp'
+    
 
 # all test objects created in ckan should have this prefix appended to them
 TEST_PREFIX = "zzztest"
@@ -68,3 +75,7 @@ TEST_PACKAGE_VISIBILITY = TEST_VISIBILITY
 # allows you to disable the teardown associated with certain object types
 DF_OPTS = ['orgs', 'groups', 'packages', 'resources', 'users', 'other', 'ALL']
 
+# The name of the environment variable that the tests are expecting to retrieve
+# api keys from
+BCDC_API_KEY = 'BCDC_API_KEY'
+BCDC_URL = 'BCDC_URL'

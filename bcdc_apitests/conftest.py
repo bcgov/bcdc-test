@@ -25,17 +25,12 @@ import bcdc_apitests.config.testConfig as DF_OPTS
 
 LOGGER = logging.getLogger(__name__)
 
-# ToDo: get this working at the session level without defining here.
-# token = os.environ['BCDC_API_KEY']
-# url = os.environ['BCDC_URL']
-
 def pytest_addoption(parser):
     LOGGER.debug(f"df opts are: {DF_OPTS}")
     helpstr = f'Optional disabling of teardown code, options include: {DF_OPTS}'
     parser.addoption(
         "--df", action="store", default=None, help=helpstr
     )
-
 
 def pytest_generate_tests(metafunc):
 
@@ -79,7 +74,6 @@ def pytest_generate_tests(metafunc):
                                  indirect=True)
     LOGGER.info("completed test parameterization")
 
-
 @pytest.fixture(scope="session", autouse=True)
 def session_setup_teardown_mod(user_setup_fixture):
     '''
@@ -93,4 +87,3 @@ def session_setup_teardown_mod(user_setup_fixture):
     '''
     LOGGER.debug("called the session start up")
     pass
-

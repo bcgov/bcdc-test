@@ -7,6 +7,7 @@ fixtures used to handle command line arguements
 '''
 import logging
 import pytest
+from bcdc_apitests.config.testConfig import DF_OPTS
 
 LOGGER = logging.getLogger(__name__)
 
@@ -34,7 +35,7 @@ def df(request, test_disable_teardown_opts):
 def cancel_package_teardown(df):
     cancel_teardown_opts = ['packages', 'ALL', None]
     cancel_teardown = False
-    if df in proceed_opts:
+    if df in DF_OPTS:
         cancel_teardown = True
     return cancel_teardown
 
@@ -43,7 +44,7 @@ def cancel_package_teardown(df):
 def cancel_org_teardown(df):
     cancel_teardown_opts = ['orgs', 'ALL', None]
     cancel_teardown = False
-    if df in proceed_opts:
+    if df in DF_OPTS:
         cancel_teardown = True
     return cancel_teardown
 
@@ -51,7 +52,7 @@ def cancel_org_teardown(df):
 def cancel_user_teardown(df):
     cancel_teardown_opts = ['users', 'ALL', None]
     cancel_teardown = False
-    if df in proceed_opts:
+    if df in DF_OPTS:
         cancel_teardown = True
     return cancel_teardown
 
@@ -59,7 +60,7 @@ def cancel_user_teardown(df):
 def cancel_group_teardown(df):
     cancel_teardown_opts = ['groups', 'ALL', None]
     cancel_teardown = False
-    if df in proceed_opts:
+    if df in DF_OPTS:
         cancel_teardown = True
     return cancel_teardown
 
@@ -67,6 +68,6 @@ def cancel_group_teardown(df):
 def cancel_resource_teardown(df):
     cancel_teardown_opts = ['resources', 'ALL', None]
     cancel_teardown = False
-    if df in proceed_opts:
+    if df in DF_OPTS:
         cancel_teardown = True
     return cancel_teardown

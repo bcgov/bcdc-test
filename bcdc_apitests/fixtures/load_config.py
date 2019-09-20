@@ -10,6 +10,7 @@ could get retrieved from env vars.
 import logging
 import os.path
 import pkgutil
+import testConfig
 
 import pytest
 
@@ -47,7 +48,7 @@ def secret_file():
     :return: full path to the secret file that arms the tests
     '''
     scrt_file = None
-    if 'BCDC_URL' not in os.environ:
+    if testConfig.BCDC_URL not in os.environ:
 
         scrt_file = os.path.join(os.path.dirname(__file__), '..', '..', 'secrets',
                                  'secrets.json')
@@ -85,9 +86,9 @@ def ckan_host(secret_file, env, import_dbcsecrets):
                  (('DBCSecrets' in dir()) and
                   'GetSecrets' in dir(DBCSecrets)))
     LOGGER.debug('import_dbcsecrets: %s', import_dbcsecrets)
-    if 'BCDC_URL' in os.environ:
+    if testConfig.BCDC_URL in os.environ:
         host = None
-        LOGGER.info("Env Var BCDC_URL is set: %s", os.environ['BCDC_URL'])
+        LOGGER.info(f"Env Var BCDC_URL is set: {os.environ[testConfig.BCDC_URL]}", )
     elif 'GetSecrets' in dir(DBCSecrets):
         # if the DBCSecrets module was imported
         LOGGER.debug("using secrets file: %s", secret_file)
@@ -98,9 +99,8 @@ def ckan_host(secret_file, env, import_dbcsecrets):
         logging.debug("host_key: %s", host_key)
         host = misc_params.getParam(host_key)
     else:
-        msg = 'unable to retrieve secrets either using the environment %s or ' + \
-              'from the secrets file %s'
-        msg = msg.format('BCDC_URL', secret_file)
+        msg = 'unable to retrieve secrets either using the environment ' + \
+              f'{testConfig.BCDC_URL} or from the secrets file {secret_file}'
         raise SecretsNotFound(msg)
     yield host
 
@@ -112,8 +112,8 @@ def ckan_url(ckan_host):
     '''
     # for now hard coding the env to DLV, could be TST, PRD
     # env = 'DLV'
-    if 'BCDC_URL' in os.environ:
-        url = os.environ['BCDC_URL']
+    if testConfig.BCDC_URL in os.environ:
+        url = os.environ[testConfig.BCDC_URL]
     else:
         url = 'https://{0}'.format(ckan_host)
     yield url
@@ -125,8 +125,8 @@ def ckan_superadmin_apitoken(secret_file, env, import_dbcsecrets):
     Gets the ckan superadmin api token.  Will use this token to generate other
     users.
     '''
-    if 'BCDC_API_KEY' in os.environ:
-        token = os.environ['BCDC_API_KEY']
+    if testConfig.BCDC_API_KEY in os.environ:
+        token = os.environ[testConfig.BCDC_API_KEY]
     elif 'GetSecrets' in dir(DBCSecrets):
         LOGGER.debug("GetSecrets module exists, secrets file: %s", secret_file)
         creds = DBCSecrets.GetSecrets.CredentialRetriever(secretFileName=secret_file)
@@ -136,39 +136,38 @@ def ckan_superadmin_apitoken(secret_file, env, import_dbcsecrets):
         token = misc_params.getParam(token_key)
     else:
         LOGGER.debug("secret file: %s", secret_file)
-        msg = 'unable to retrieve secrets either using the environment %s or ' + \
-              'from the secrets file %s'
-        msg = msg.format('BCDC_API_KEY', secret_file)
+        msg = 'unable to retrieve secrets either using the environment variable ' + \
+              f'{testConfig.BCDC_API_KEY} or from the secrets file {secret_file}'
         raise SecretsNotFound(msg)
     yield token
 
-
-@pytest.fixture(scope="session")
-def temp_user_password(import_dbcsecrets, secret_file):
-    '''
-    First searches for the environment variable:
-    BCDC_TMP_USER_PASSWORD,
-
-    If that env var is not found will try to retrieve the password from the
-    secrets file.  If it cannot be found there then raises the SecretsNotFound
-    error message
-    '''
-    if 'BCDC_TMP_USER_PASSWORD' in os.environ:
-        password = os.environ['BCDC_TMP_USER_PASSWORD']
-    elif 'GetSecrets' in dir(DBCSecrets):
-        LOGGER.debug("GetSecrets module exists, secrets file: %s", secret_file)
-        creds = DBCSecrets.GetSecrets.CredentialRetriever(secretFileName=secret_file)
-        misc_params = creds.getMiscParams()
-        passwordkey = 'BCDC_TMP_USER_PASSWORD'
-        LOGGER.debug("token_key: %s", '*' * len(passwordkey))
-        password = misc_params.getParam(passwordkey)
-    else:
-        LOGGER.debug("secret file: %s", secret_file)
-        msg = 'unable to retrieve the secret for the temp user password in ' + \
-              'either the environment %s or  the secrets file %s'
-        msg = msg.format('BCDC_TMP_USER_PASSWORD', secret_file)
-        raise SecretsNotFound(msg)
-    yield password
+# TODO: Leaving this commented out... Can't find references... Think this is no longer required.  Delete after DDM-910 has been completed and tests are functional again. Test should verify that they work without secrets files used in dev, and instead get secrets from env vars
+# @pytest.fixture(scope="session")
+# def temp_user_api_key(import_dbcsecrets, secret_file):
+#     '''
+#     First searches for the environment variable:
+#     testConfig.BCDC_API_KEY,
+# 
+#     If that env var is not found will try to retrieve the password from the
+#     secrets file.  If it cannot be found there then raises the SecretsNotFound
+#     error message
+#     '''
+#     if testConfig.BCDC_API_KEY in os.environ:
+#         password = os.environ[testConfig.BCDC_API_KEY]
+#     elif 'GetSecrets' in dir(DBCSecrets):
+#         LOGGER.debug("GetSecrets module exists, secrets file: %s", secret_file)
+#         creds = DBCSecrets.GetSecrets.CredentialRetriever(secretFileName=secret_file)
+#         misc_params = creds.getMiscParams()
+#         passwordkey = 'BCDC_TMP_USER_PASSWORD'
+#         LOGGER.debug("token_key: %s", '*' * len(passwordkey))
+#         password = misc_params.getParam(passwordkey)
+#     else:
+#         LOGGER.debug("secret file: %s", secret_file)
+#         msg = 'unable to retrieve the secret for the temp user password in ' + \
+#               'either the environment %s or  the secrets file %s'
+#         msg = msg.format('BCDC_TMP_USER_PASSWORD', secret_file)
+#         raise SecretsNotFound(msg)
+#     yield password
 
 
 @pytest.fixture(scope="session")
