@@ -1,5 +1,7 @@
+# requirements to run the tests
 ckanapi==4.3
 pytest==4.6.2
 requests==2.22.0
 pytest-check==0.3.5
 distlib==0.2.9
+random-word==1.0.4

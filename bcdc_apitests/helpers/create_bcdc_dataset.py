@@ -7,22 +7,27 @@ uses the data from scheming end point to construct datasets
 
 Things to think about:
  - orgs used to construct the data set should be passed as args
- - Type of data ['DRAFT', 'PUBLISHED', 'PENDING ARCHIVE', 'REJECTED', 'PENDING PUBLISHED']
+ - publish_state: Type of data ['DRAFT', 'PUBLISHED', 'PENDING ARCHIVE', 'REJECTED', 'PENDING PUBLISHED']
      are likely suppose to exhibit different behavior, need to code that in
- - 
+ - 'metadata_visibility': test visibility of data
+
+ # example end point for scheming data:
+ https://cadi.data.gov.bc.ca/api/3/action/scheming_dataset_schema_show?type=bcdc_dataset
 
 '''
 import logging
 import json
 import os
-import random_word
-
+import randomwordgenerator.randomwordgenerator
 import random
 
 import bcdc_apitests.helpers.data_config as data_config
 import bcdc_apitests.config.testConfig as testConfig
-
+import datetime
 LOGGER = logging.getLogger(__name__)
+
+# module wide access to random words.
+WORDS = []
 
 
 class Fields():
@@ -307,6 +312,10 @@ class DatasetField(Field):
 #         elif self.has_subfields:
 #             pass
 
+    @property
+    def choices_helper(self):
+        return self.get_value('choices_helper')
+
 
 class DataPopulation():
     '''
@@ -317,7 +326,11 @@ class DataPopulation():
     def __init__(self, fields):
         # TODO: may want to pass in the organization to put the data under
         self.fields = fields
+        LOGGER.debug(f"type of fields: {type(fields)}")
+        # TODO: use isinstance to enforce type here maybe... should be Fields or
+        # subclass of.
         self.datastruct = {}
+        self.rand = RandomWords()
 
     def populate_all(self):
         '''
@@ -344,6 +357,7 @@ class DataPopulation():
         datastruct = {}
         # set the scope for this variable for this method
         fld = None
+
         def undefined_prefix(fld):
             msg = f'prefix is set to: {fld.preset}.  There is no code to ' + \
                   'to accomodate this type.  Need to add a method definition for ' + \
@@ -366,58 +380,150 @@ class DataPopulation():
         return datastruct
 
     def select(self, fld):
-        
-        LOGGER.debug(f" Calling SEELCTfld: {fld}")
-        
-        LOGGER.debug(f" number of choices: {len(fld.choices)}")
-        values = fld.choices.values
-        LOGGER.debug(f" values: {values}")
-        value = values[random.randint(0, len(values) - 1)]
+
+        LOGGER.debug(f" Calling Select on fld: {fld}")
+        if fld.choices:
+            LOGGER.debug(f" number of choices: {len(fld.choices)}")
+            values = fld.choices.values
+            LOGGER.debug(f" values: {values}")
+            value = values[random.randint(0, len(values) - 1)]
+        elif (fld.choices_helper) and fld.choices_helper == 'edc_orgs_form':
+            # TODO, example of this is the subfield for contacts...
+            #   field_name = org
+            # add a edc_org used for the package
+            value = self.dataset_organization(fld)
+        else:
+            msg = f'malformed select prefix for the field: {fld}'
+            raise ValueError(msg)
         return value
-    
+
     def title(self, fld):
         '''
-        sets the title for the data set, going to hard code this as 
+        sets the title for the data set, going to hard code this as
         test_data
         '''
         return data_config.DataSetValues.title
-    
+
     def dataset_slug(self, fld):
         '''
         This is currently configured for the name of the dataset to just returning
         the name of the dataset.
         '''
         return testConfig.TEST_PACKAGE
-    
+
     def dataset_organization(self, fld):
         '''
-        :returns: retrieves the name of the organization that is going to be 
+        :returns: retrieves the name of the organization that is going to be
                  used by the testing and returns it
         '''
         return testConfig.TEST_ORGANIZATION
-    
-    def string(self, fld):
-        rand = random_word.RandomWords()
 
-        word = rand.get_random_word()
+    def string(self, fld):
+        # rand = random_word.RandomWords()
+        # word = rand.get_random_word()
+        # word = randomwordgenerator.randomwordgenerator.generate_random_words(1)
+        word = self.rand.getword()
+        LOGGER.debug(f"random word: {word}")
         return word
-    
+
     def tag_string_autocomplete(self, fld):
         '''
         Not sure if this should be referencing existing tags... for now
         just making it random text.
         '''
         return self.string(fld)
-        
-    def composite_repeating(self, fld):
+
+    def composite_repeating(self, fld, flds2gen=None):
         '''
-        This type of field is a list made up of a bunch of subfields, this 
+        This type of field is a list made up of a bunch of subfields, this
         call will make a couple calls to this Datapopulation class to generate
         new subfields
         '''
-        for subfield in fld.subfields():
-            pass
-        
+        subfields_values = []
+        if flds2gen is None:
+            flds2gen = random.randint(1, 3)
+
+        # configured to generate randomly between 1 and 3 subfields
+        for iterval in range(0, flds2gen):
+            LOGGER.debug(f"flds2gen type: {type(fld.subfields)}")
+            population = DataPopulation(fld.subfields)
+            subfield_data = population.populate_all()
+            subfields_values.append(subfield_data)
+        return subfields_values
+
+    def multiple_checkbox(self, fld):
+        return self.select(fld)
+
+    def date(self, fld):
+        '''
+        :return: a random date.  will be some time between now and 10 years
+                 ago.
+        '''
+        d1 = datetime.datetime.now()
+        delta = datetime.timedelta(days=365 * 10)
+        d2 = d1 - delta
+        rand_date = self.random_date(d2, d1)
+        return rand_date.strftime('%Y-%m-%d')
+
+    def random_date(self, start, end):
+        delta = end - start
+        LOGGER.debug(f"delta: {delta}")
+        int_delta = (delta.days * 24 * 60 * 60) + delta.seconds
+        LOGGER.debug(f"int_delta: {int_delta}")
+        random_second = random.randrange(int_delta)
+        LOGGER.debug(f"random_second: {random_second}")
+        return start + datetime.timedelta(seconds=random_second)
+
+    def resource_url_upload(self, fld):
+        '''
+        :return: gets a random string and then assembles into a url by appending
+            https:// and .com
+        '''
+        randomString = self.string(fld)
+        url = f'https://{randomString}.com'
+        return url
+
+    def json_object(self, fld):
+        '''
+        right now returning a static json text
+        '''
+        dummyjson = '{"schema": { "fields":[ { "mode": "nullable", "name": "placeName", "type": "string"  },  { "mode": "nullable", "name": "kind", "type": "string"  }  ] }'
+        return dummyjson
+
+    def composite(self, fld):
+        '''
+        :return: right now just treating the same as composite_repeating but specify
+        to only return a single subfield
+        '''
+        return self.composite_repeating(fld, 1)
+    
+    def autocomplete(self, fld):
+        pass
+
+
+class RandomWords():
+    '''
+    The module I was using for random words makes a network call, which is slow
+    so wrapping it with this module so that it makes one network call and caches
+    100 random words, once the 100 are used up it will grab another 100, hopeuflly
+    speeding things up.
+
+    '''
+
+    def __init__(self, cache_size=500):
+        self.cache_size = cache_size
+        # self.words = []
+
+    def getword(self):
+        global WORDS
+        if not WORDS:
+            self.get_words_from_network()
+        return WORDS.pop()
+
+    def get_words_from_network(self):
+        LOGGER.info(f"getting another {self.cache_size} random words from generator..")
+        global WORDS
+        WORDS = randomwordgenerator.randomwordgenerator.generate_random_words(self.cache_size)
 
 
 class DataSet():
@@ -459,7 +565,7 @@ class Choices():
         LOGGER.debug("values called")
         value_list = []
         for choice in self.choices:
-            
+
             value_list.append(choice.value)
         return value_list
 
@@ -531,6 +637,12 @@ if __name__ == '__main__':
         fld_nm = fld.get_value('field_name')
         LOGGER.debug(f"field_name: {fld_nm}, {fld.preset}")
 
-    populator = DataPopulation(bcdc_dataset)
-    populator.populate_all()
+    dataset_populator = DataPopulation(bcdc_dataset)
+    bcdc_dataet = dataset_populator.populate_all()
 
+    resource_populator = DataPopulation(resources)
+    resources_data = resource_populator.populate_all()
+
+    import pprint
+    pp = pprint.PrettyPrinter(indent=4)
+    pp.pprint(resources_data)

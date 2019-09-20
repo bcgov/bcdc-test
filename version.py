@@ -43,7 +43,7 @@ def get_current_pypy_version():
     LOGGER.debug('getting pypi package version')
     LOGGER.debug("package name: %s", pkgName)
     pkg_indx = distlib.index.PackageIndex()
-    srch = pkg_indx.search('bcdc-apitests')
+    srch = pkg_indx.search(pkgName)
     version = None
 
     pkg_info = None
