@@ -7,9 +7,14 @@ uses the data from scheming end point to construct datasets
 
 Things to think about:
  - orgs used to construct the data set should be passed as args
+        visibility is NOT impacted by org.
  - publish_state: Type of data ['DRAFT', 'PUBLISHED', 'PENDING ARCHIVE', 'REJECTED', 'PENDING PUBLISHED']
      are likely suppose to exhibit different behavior, need to code that in
- - 'metadata_visibility': test visibility of data
+ - 'metadata_visibility': test visibility of data this will impact visibility
+
+ admin - only admin can see published.
+ logged in become 'gov' not logged in 'not gov'
+
 
  # example end point for scheming data:
  https://cadi.data.gov.bc.ca/api/3/action/scheming_dataset_schema_show?type=bcdc_dataset
@@ -316,6 +321,10 @@ class DatasetField(Field):
     def choices_helper(self):
         return self.get_value('choices_helper')
 
+    @property
+    def conditional_field(self):
+        return self.get_value('conditional_field')
+
 
 class DataPopulation():
     '''
@@ -331,6 +340,7 @@ class DataPopulation():
         # subclass of.
         self.datastruct = {}
         self.rand = RandomWords()
+        self.deferred = []
 
     def populate_all(self):
         '''
@@ -354,7 +364,7 @@ class DataPopulation():
         This method will populate all the fields defined in the schema, except
         types noted above
         '''
-        datastruct = {}
+        #datastruct = {}
         # set the scope for this variable for this method
         fld = None
 
@@ -376,9 +386,35 @@ class DataPopulation():
                 # turning the value of preset into a method call
                 func = getattr(self, fld.preset, undefined_prefix)
                 field_value = func(fld)
-            datastruct[fld.field_name] = field_value
-        return datastruct
+            self.datastruct[fld.field_name] = field_value
+        if self.deferred:
+            self.process_deferred_fields()
+            # shortcut for now... should really continuously iterate through deferred
+            # fields until they are all removed
+        return self.datastruct
 
+    def process_deferred_fields(self):
+        if self.deferred:
+            toRemove = []
+            for defer_cnt in range(0, len(self.deferred)):
+                defer_fld = self.deferred[defer_cnt]
+                if fld.preset is None:
+                    field_value = self.string(fld)
+                else:
+                    # the name of the method to call is contained in the property: preset,
+                    # turning the value of preset into a method call
+                    func = getattr(self, fld.preset)
+                    field_value = func(fld)
+                    
+                # update the datastruct
+                self.datastruct[fld.field_name] = field_value
+                if field_value is not None:
+                    toRemove.append(defer_fld)
+            
+            for remove_rec in toRemove:
+                self.deferred.remove(remove_rec)
+            self.process_deferred_fields()
+    
     def select(self, fld):
 
         LOGGER.debug(f" Calling Select on fld: {fld}")
@@ -496,9 +532,52 @@ class DataPopulation():
         to only return a single subfield
         '''
         return self.composite_repeating(fld, 1)
-    
+
     def autocomplete(self, fld):
-        pass
+        '''
+        example of what an autocomplete json snippet looks like:
+        {
+          "field_name": "iso_topic_string",
+          "label": "ISO Topic Category",
+          "preset": "autocomplete",
+          "conditional_field": "bcdc_type",
+          "conditional_values": ["geographic"],
+          "validators": "conditional_required scheming_multiple_choice",
+          "choices": [
+            {
+              "value": "farming",
+              "label": "Farming"
+            },
+            {
+              "value": "biota",
+              "label": "Biota"
+            },
+            {
+              "value": "boundaries",
+              "label": "Boundaries"
+              ...
+
+        Interpretation: if bcdc_type = 'geographic' then fill out this field otherwise
+                        don't populate.  verfied with John.
+                        
+        Method will see if bcdc_type has already been populated, if it has then it 
+        will process otherwise the processing of this record gets deferred, and is 
+        tried again after all other records have been processed.
+
+        :return:
+        '''
+        if (fld.conditional_field):
+            if fld.conditional_field in self.datastruct:
+                # TODO: For MONDAY!  
+                # verify the conditional value 
+                # populate with a value from choices
+            else:
+                # has a conditional field but it hasn't been populated yet, put 
+                # onto deferred list
+                self.deferred.append(fld)
+            
+            
+            
 
 
 class RandomWords():
