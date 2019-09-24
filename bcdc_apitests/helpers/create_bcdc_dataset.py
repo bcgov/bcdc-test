@@ -20,15 +20,19 @@ Things to think about:
  https://cadi.data.gov.bc.ca/api/3/action/scheming_dataset_schema_show?type=bcdc_dataset
 
 '''
-import logging
+import datetime
 import json
+import logging
 import os
-import randomwordgenerator.randomwordgenerator
 import random
 
-import bcdc_apitests.helpers.data_config as data_config
+import randomwordgenerator.randomwordgenerator
+
 import bcdc_apitests.config.testConfig as testConfig
-import datetime
+import bcdc_apitests.helpers.data_config as data_config
+
+# pylint: disable=logging-fstring-interpolation
+
 LOGGER = logging.getLogger(__name__)
 
 # module wide access to random words.
@@ -82,52 +86,25 @@ class Fields():
 
     def __parse_flds(self):
         '''
-        dumps fields into two lists one for required the other optional
+        Reads the json struct and uses it to create a list of individual
+        Field objects stored in the property all_flds
         '''
-        self.required_flds = []
-        self.optional_flds = []
         self.all_flds = []
         for fld_data in self.struct:
             fld = Field(fld_data)
             self.all_flds.append(fld)
         self.current_list = None
 
-    # DELETE this method, should be move to the population class
-#     def get_fields(self, field_list=None):
-#         '''
-#         :param field_list: the list of field objects to be processed.
-#
-#         For each field object we need:
-#          - a field name
-#          - a field value (dummy value)
-#
-#         if the field type is choice, the the value needs to come from
-#         the list of choices.
-#
-#         if the field type is a subfield and the preset is "composite_repeating"
-#         then the field value will be a list, and the component fields will be
-#         a list of "field name", field value pairs
-#
-#
-#         '''
-#         if field_list is None:
-#             field_list = self.all_flds
-#
-#         output_dataset = {}
-#         for fld in field_list:
-#             if fld.has_choices:
-#                 value = fld.choices.get_random_value()
-#                 output_dataset[fld.field_name] = value
-#             elif fld.has_subfields:
-#                 output_dataset[fld.field_name] = []
-#                 self.get_fields(fld.subfields)
-
     def __iter__(self):
+        '''
+        implement iterator
+        '''
         self.itercnt = 0
         return self
 
     def __next__(self):
         '''
+        Iterator:
         If a filter is defined then iterate over the filtered list,
         otherwise iterate over all_flds
         '''
@@ -147,24 +124,37 @@ class Fields():
         '''
         self.itercnt = 0
 
-
-class DatasetFields(Fields):
+class CKANCorePackage(Fields):
     '''
-    extends generic Fields with specific code to Dataset Fields
+    The CKAN Scheming extension defines a json schema that can be used to 
+    describe custom data models used by CKAN extensions.  A file has been created
+    that uses the scheming extension to describe the core fields for packages.
+    
+    This class is configured to read that file.  The BCDCDataset class will 
+    then subclass / extend this class.
     '''
-
     def __init__(self, struct):
         Fields.__init__(self, struct)
-        self.required_flds = []
-        self.optional_flds = []
+        self.all_flds = []
         self.__parse_flds()
-
-    def get_presets(self, startList=None):
+        
+    def __parse_flds(self):
+        '''
+        dumps fields into two lists one for required the other optional
+        '''
+        self.all_flds = []
+        for fld_data in self.struct:
+            fld = CKANCoreField(fld_data)
+            # if fld.is_required():
+            self.all_flds.append(fld)
+        self.current_list = None
+        
+    def get_presets(self, start_list=None):
         '''
         Used to validate the expected values in the presets with what the tests
         are configured to consume.
 
-        :param startList: Used to allow for recursion, by default iterates over
+        :param start_list: Used to allow for recursion, by default iterates over
                          the fields in the root portion of the json struct, if
                          a subfield is encountered, calls itself with the subfield
                          data.
@@ -172,8 +162,8 @@ class DatasetFields(Fields):
         :returns: a unique list of preset values found in the schema
         '''
         preset = []
-        if startList is None:
-            startList = self.struct
+        if start_list is None:
+            start_list = self.struct
         for fld in self:
             if fld.preset:
                 preset.append(fld.preset)
@@ -181,20 +171,24 @@ class DatasetFields(Fields):
                 preset.extend(self.get_presets(fld['subfields']))
         return list(set(preset))
 
+class BCDCDataset(CKANCorePackage):
+    '''
+    extends generic Fields with specific code to Dataset Fields
+    '''
+
+    def __init__(self, struct):
+        CKANCorePackage.__init__(self, struct)
+        self.__parse_flds()
+
+
     def __parse_flds(self):
         '''
         dumps fields into two lists one for required the other optional
         '''
-        self.required_flds = []
-        self.optional_flds = []
         self.all_flds = []
         for fld_data in self.struct:
-            fld = DatasetField(fld_data)
+            fld = BCDCDatasetField(fld_data)
             # if fld.is_required():
-            if fld.required:
-                self.required_flds.append(fld)
-            else:
-                self.optional_flds.append(fld)
             self.all_flds.append(fld)
         self.current_list = None
 
@@ -210,7 +204,7 @@ class Field():
 
     def has_fld(self, fldname):
         has_fld = False
-        if (fldname in self.fld):
+        if fldname in self.fld:
             has_fld = True
         return has_fld
 
@@ -222,15 +216,16 @@ class Field():
         fld_true = False
         if (self.has_fld(fld_name)) and  self.fld[fld_name] == True:
             fld_true = True
+        return fld_true
 
-    def get_value(self, property):
+    def get_value(self, property_name):
         '''
-        :param property:  retrieves the value for corresponding property.  If the property is
+        :param property_name:  retrieves the value for corresponding property_name.  If the property_name is
         not defined for this field then returns None.
         '''
         val = None
-        if self.has_fld(property):
-            val = self.fld[property]
+        if self.has_fld(property_name):
+            val = self.fld[property_name]
         return val
 
     def __str__(self):
@@ -243,15 +238,10 @@ class Field():
         return outstr
 
 
-class DatasetField(Field):
-    '''
-    a wrapper for individual field objects.  Provides quick access to properties
-    of the field
-    '''
-
+class CKANCoreField(Field):
+    
     def __init__(self, fld):
         Field.__init__(self, fld)
-
     @property
     def required(self):
         '''
@@ -293,7 +283,7 @@ class DatasetField(Field):
         '''
         :return: a 'Fields' object with the contents of the subfields
         '''
-        return DatasetFields(self.fld['subfields'])
+        return BCDCDataset(self.fld['subfields'])
 
     @property
     def preset(self):
@@ -301,21 +291,6 @@ class DatasetField(Field):
         :return: the value for the property preset, or None if its not defined
         '''
         return self.get_value('preset')
-
-#     @property
-#     def test_value(self):
-#         '''
-#         returns a random test value for the field that matches the type that
-#         is defined in the schema for the field.
-#
-#         type is based on the 'preset' value.  If no preset is provided then
-#         assume the type is string
-#         '''
-#         # TODO: Delete method, once logic has been moved to a populate class
-#         if self.choices:
-#             test_value = choices.get_random_value()
-#         elif self.has_subfields:
-#             pass
 
     @property
     def choices_helper(self):
@@ -325,6 +300,15 @@ class DatasetField(Field):
     def conditional_field(self):
         return self.get_value('conditional_field')
 
+
+class BCDCDatasetField(CKANCoreField):
+    '''
+    a wrapper for individual field objects.  Provides quick access to properties
+    of the field
+    '''
+
+    def __init__(self, fld):
+        CKANCoreField.__init__(self, fld)
 
 class DataPopulation():
     '''
@@ -364,7 +348,7 @@ class DataPopulation():
         This method will populate all the fields defined in the schema, except
         types noted above
         '''
-        #datastruct = {}
+        # datastruct = {}
         # set the scope for this variable for this method
         fld = None
 
@@ -394,27 +378,30 @@ class DataPopulation():
         return self.datastruct
 
     def process_deferred_fields(self):
+        '''
+        Some fields like
+        '''
         if self.deferred:
             toRemove = []
             for defer_cnt in range(0, len(self.deferred)):
                 defer_fld = self.deferred[defer_cnt]
-                if fld.preset is None:
-                    field_value = self.string(fld)
+                if defer_fld.preset is None:
+                    field_value = self.string(defer_fld)
                 else:
                     # the name of the method to call is contained in the property: preset,
                     # turning the value of preset into a method call
-                    func = getattr(self, fld.preset)
-                    field_value = func(fld)
-                    
+                    func = getattr(self, defer_fld.preset)
+                    field_value = func(defer_fld)
+
                 # update the datastruct
-                self.datastruct[fld.field_name] = field_value
+                self.datastruct[defer_fld.field_name] = field_value
                 if field_value is not None:
                     toRemove.append(defer_fld)
-            
+
             for remove_rec in toRemove:
                 self.deferred.remove(remove_rec)
             self.process_deferred_fields()
-    
+
     def select(self, fld):
 
         LOGGER.debug(f" Calling Select on fld: {fld}")
@@ -438,6 +425,7 @@ class DataPopulation():
         sets the title for the data set, going to hard code this as
         test_data
         '''
+        LOGGER.debug(f"{fld.field_name}: {data_config.DataSetValues.title}")
         return data_config.DataSetValues.title
 
     def dataset_slug(self, fld):
@@ -445,6 +433,7 @@ class DataPopulation():
         This is currently configured for the name of the dataset to just returning
         the name of the dataset.
         '''
+        LOGGER.debug(f"{fld.field_name}: {testConfig.TEST_PACKAGE}")
         return testConfig.TEST_PACKAGE
 
     def dataset_organization(self, fld):
@@ -452,14 +441,15 @@ class DataPopulation():
         :returns: retrieves the name of the organization that is going to be
                  used by the testing and returns it
         '''
+        LOGGER.debug(f"{fld.field_name}: {testConfig.TEST_ORGANIZATION}")
         return testConfig.TEST_ORGANIZATION
 
     def string(self, fld):
-        # rand = random_word.RandomWords()
-        # word = rand.get_random_word()
-        # word = randomwordgenerator.randomwordgenerator.generate_random_words(1)
+        '''
+        :return: a random string for the field
+        '''
         word = self.rand.getword()
-        LOGGER.debug(f"random word: {word}")
+        LOGGER.debug(f"random word assigned to the field {fld.field_name}: {word}")
         return word
 
     def tag_string_autocomplete(self, fld):
@@ -559,25 +549,23 @@ class DataPopulation():
 
         Interpretation: if bcdc_type = 'geographic' then fill out this field otherwise
                         don't populate.  verfied with John.
-                        
-        Method will see if bcdc_type has already been populated, if it has then it 
-        will process otherwise the processing of this record gets deferred, and is 
+
+        Method will see if bcdc_type has already been populated, if it has then it
+        will process otherwise the processing of this record gets deferred, and is
         tried again after all other records have been processed.
 
         :return:
         '''
         if (fld.conditional_field):
             if fld.conditional_field in self.datastruct:
-                # TODO: For MONDAY!  
-                # verify the conditional value 
+                # TODO: For MONDAY!
+                # verify the conditional value
                 # populate with a value from choices
+                pass
             else:
-                # has a conditional field but it hasn't been populated yet, put 
+                # has a conditional field but it hasn't been populated yet, put
                 # onto deferred list
                 self.deferred.append(fld)
-            
-            
-            
 
 
 class RandomWords():
@@ -586,7 +574,6 @@ class RandomWords():
     so wrapping it with this module so that it makes one network call and caches
     100 random words, once the 100 are used up it will grab another 100, hopeuflly
     speeding things up.
-
     '''
 
     def __init__(self, cache_size=500):
@@ -594,40 +581,32 @@ class RandomWords():
         # self.words = []
 
     def getword(self):
-        global WORDS
+        '''
+        :return: a random word that can be used for various fields.
+        '''
+        global WORDS  # pylint: disable=global-statement
         if not WORDS:
             self.get_words_from_network()
         return WORDS.pop()
 
     def get_words_from_network(self):
-        LOGGER.info(f"getting another {self.cache_size} random words from generator..")
-        global WORDS
-        WORDS = randomwordgenerator.randomwordgenerator.generate_random_words(self.cache_size)
-
-
-class DataSet():
-    '''
-    A container where simple fields with name and value pairs can be added.
-    '''
-
-    def __init__(self):
-        fields = []
-        subfields = {}
-
-    def addfield(self, name, value):
-        fld_dict = {'field_name': name,
-                    'field_value': value}
-
-#     def addsubfield(self, name, value):
-#         '''
-#         :param name: the name of the subfield to be added
-#         :param value: a list of values that comply with the schema, not validated
-#                       here, this is only a simple method that allows you to add
-#                       new
-#         '''
+        '''
+        Goes to the network, and reloads the cache with the number of words
+        defined in the cache_size.
+        '''
+        LOGGER.info(f"getting another {self.cache_size} random words" + \
+                    "from generator..")
+        # can't think of a way around this, want to make the WORDS available to
+        # all instances of the module
+        global WORDS  # pylint: disable=global-statement
+        WORDS = randomwordgenerator.randomwordgenerator.generate_random_words(
+            self.cache_size)
 
 
 class Choices():
+    '''
+    a wrapper for "Choices" associated with various fields.
+    '''
 
     def __init__(self, choice_struct):
         self.choice_struct = choice_struct
@@ -636,11 +615,19 @@ class Choices():
         LOGGER.debug(f"choices data: {choice_struct}")
 
     def __parse(self):
+        '''
+        reads the json struct and makes pieces of it available through this
+        class.
+        '''
         for choice_data in self.choice_struct:
             self.choices.append(Choice(choice_data))
 
     @property
     def values(self):
+        '''
+        :return: a list of the possible values for this choice field, other
+            words the domain.
+        '''
         LOGGER.debug("values called")
         value_list = []
         for choice in self.choices:
@@ -649,6 +636,9 @@ class Choices():
         return value_list
 
     def __len__(self):
+        '''
+        override python built-in for length
+        '''
         return len(self.choice_struct)
 
 
@@ -665,7 +655,7 @@ class Choice(Field):
     @property
     def value(self):
         '''
-
+        :return: the value for this choice
         '''
         return self.get_value('value')
 
@@ -699,10 +689,10 @@ if __name__ == '__main__':
 
     # get the possible preset values
     # # presets for datasets
-    bcdc_dataset = DatasetFields(data_struct['dataset_fields'])
+    bcdc_dataset = BCDCDataset(data_struct['dataset_fields'])
     presets = bcdc_dataset.get_presets()
     # # presets for resources
-    resources = DatasetFields(data_struct['resource_fields'])
+    resources = BCDCDataset(data_struct['resource_fields'])
     resource_preset = resources.get_presets()
     presets.extend(resource_preset)  # combine presets
     presets = list(set(presets))
@@ -712,9 +702,9 @@ if __name__ == '__main__':
 
     # retrieve the required fields
     bcdc_dataset.set_field_type_filter('required', True)
-    for fld in bcdc_dataset:
-        fld_nm = fld.get_value('field_name')
-        LOGGER.debug(f"field_name: {fld_nm}, {fld.preset}")
+    for bcdc_dataset_fld in bcdc_dataset:
+        fld_nm = bcdc_dataset_fld.get_value('field_name')
+        LOGGER.debug(f"field_name: {fld_nm}, {bcdc_dataset_fld.preset}")
 
     dataset_populator = DataPopulation(bcdc_dataset)
     bcdc_dataet = dataset_populator.populate_all()
