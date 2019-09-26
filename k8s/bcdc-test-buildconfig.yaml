@@ -1,0 +1,31 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    app:
+  name: bcdc-test
+spec:
+  failedBuildsHistoryLimit: 5
+  output:
+    to:
+      kind: ImageStreamTag
+      name: bcdc-test:latest
+  source:
+    dockerfile: |-
+      FROM python:3-slim
+      ADD . /app
+      WORKDIR /app
+      RUN pip install bcdc-apitests-dev
+      RUN pip install matterhook
+      ADD https://raw.githubusercontent.com/crigdongov/test/master/pytest-run.py ./pytest-run.py
+      RUN ["chmod", "755", "/app/pytest-run.py"]
+      RUN ["ls","-la"]
+      ENTRYPOINT [ "python", "/app/pytest-run.py" ]
+    type: Dockerfile
+  strategy:
+    dockerStrategy:
+      from:
+        kind: DockerImage
+        name: python:3-slim
+    type: Docker
+  successfulBuildsHistoryLimit: 5
