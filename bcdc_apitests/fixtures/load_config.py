@@ -10,9 +10,11 @@ could get retrieved from env vars.
 import logging
 import os.path
 import pkgutil
-import testConfig
+import bcdc_apitests.config.testConfig as testConfig
 
 import pytest
+import secrets
+import string
 
 LOGGER = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
@@ -141,33 +143,46 @@ def ckan_superadmin_apitoken(secret_file, env, import_dbcsecrets):
         raise SecretsNotFound(msg)
     yield token
 
-# TODO: Leaving this commented out... Can't find references... Think this is no longer required.  Delete after DDM-910 has been completed and tests are functional again. Test should verify that they work without secrets files used in dev, and instead get secrets from env vars
-# @pytest.fixture(scope="session")
-# def temp_user_api_key(import_dbcsecrets, secret_file):
-#     '''
-#     First searches for the environment variable:
-#     testConfig.BCDC_API_KEY,
-# 
-#     If that env var is not found will try to retrieve the password from the
-#     secrets file.  If it cannot be found there then raises the SecretsNotFound
-#     error message
-#     '''
-#     if testConfig.BCDC_API_KEY in os.environ:
-#         password = os.environ[testConfig.BCDC_API_KEY]
-#     elif 'GetSecrets' in dir(DBCSecrets):
-#         LOGGER.debug("GetSecrets module exists, secrets file: %s", secret_file)
-#         creds = DBCSecrets.GetSecrets.CredentialRetriever(secretFileName=secret_file)
-#         misc_params = creds.getMiscParams()
-#         passwordkey = 'BCDC_TMP_USER_PASSWORD'
-#         LOGGER.debug("token_key: %s", '*' * len(passwordkey))
-#         password = misc_params.getParam(passwordkey)
-#     else:
-#         LOGGER.debug("secret file: %s", secret_file)
-#         msg = 'unable to retrieve the secret for the temp user password in ' + \
-#               'either the environment %s or  the secrets file %s'
-#         msg = msg.format('BCDC_TMP_USER_PASSWORD', secret_file)
-#         raise SecretsNotFound(msg)
-#     yield password
+@pytest.fixture(scope="session")
+def temp_user_password(import_dbcsecrets, secret_file):
+    '''
+    The tests generate temp users of various types.  The tests then confirm that
+    the security model for these different users types works as expected.  In 
+    order to generate new users they must be assigned passwords.  This fixture
+    generates those passwords.
+    
+    How:
+      a: looks for the env var BCDC_TMP_USER_PASSWORD if found then just uses 
+         that as the temporary password
+      b: if that doesn't exist then the process will look for secrets.json 
+         and retrieve from the key for BCDC_TMP_USER_PASSWORD.
+      c: if the secret file fails or doesn't exist then the password is 
+         generated from random numbers.
+    
+    If that env var is not found will try to retrieve the password from the
+    secrets file.  If it cannot be found there then raises the SecretsNotFound
+    error message
+    '''
+    password = None
+    if testConfig.BCDC_TMP_USER_PASSWORD in os.environ:
+        password = os.environ[testConfig.BCDC_TMP_USER_PASSWORD]
+    elif 'GetSecrets' in dir(DBCSecrets):
+        try:
+            LOGGER.debug("GetSecrets module exists, secrets file: %s", secret_file)
+            creds = DBCSecrets.GetSecrets.CredentialRetriever(secretFileName=secret_file)
+            misc_params = creds.getMiscParams()
+            passwordkey = 'BCDC_TMP_USER_PASSWORD'
+            LOGGER.debug("token_key: %s", '*' * len(passwordkey))
+            password = misc_params.getParam(passwordkey)
+        except:
+            LOGGER.error("unable to get BCDC_TMP_USER_PASSWORD from secret config")
+            
+    if password is None:
+        # none of the above methods worked to retrieve a password so just 
+        # going to generate one.
+        alphabet = string.ascii_letters + string.digits
+        password = ''.join(secrets.choice(alphabet) for i in range(10))
+    yield password
 
 
 @pytest.fixture(scope="session")

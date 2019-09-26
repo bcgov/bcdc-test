@@ -35,9 +35,9 @@ class DataPopulation():
         self.pop_resource = DataPopulationResource(fields_schema)
         self.fields_schema = fields_schema
         
-    def populate(self):
+    def populate_random(self):
         '''
-        Returns a single dataset 
+        Returns a single dataset, fields are all randomly populated
         '''
         return self.pop_resource.populate_all()
 
@@ -89,7 +89,7 @@ class DataPopulationResource():
 
         * otherwise...
 
-        * if conditional_field exists, then determine the value and populate
+        * if conditional_field exists, then determine the value and populate_random
           field of value matches conditional value.
             * if condition is met then True
             * otherwise False
@@ -272,7 +272,7 @@ class DataPopulationResource():
               ...
 
         Interpretation: if bcdc_type = 'geographic' then fill out this field otherwise
-                        don't populate.  verfied with John.
+                        don't populate_random.  verfied with John.
 
         Method will see if bcdc_type has already been populated, if it has then it
         will process otherwise the processing of this record gets deferred, and is
@@ -303,7 +303,7 @@ class DataPopulationResource():
             * tag_string_autocomplete - might come from tags?
             * title - just text
 
-        This method will populate all the fields defined in the schema, except
+        This method will populate_random all the fields defined in the schema, except
         types noted above
         '''
         # datastruct = {}
@@ -316,7 +316,7 @@ class DataPopulationResource():
                   'that type to this class'
             raise UndefinedPreset(msg)
 
-        LOGGER.debug('populate all called')
+        LOGGER.debug('populate_random all called')
         for fld in self.fields:
             # population is based on the preset, if no preset available then
             # assume str
@@ -369,7 +369,7 @@ class DataPopulationResource():
                         to_remove.append(defer_fld)
                     else:
                         # conditional field exists, but the condition is not
-                        # satisfied, don't populate, and remove from deferred list
+                        # satisfied, don't populate_random, and remove from deferred list
                         if defer_fld.field_name in self.datastruct:
                             del self.datastruct[defer_fld.field_name]
                         to_remove.append(defer_fld)
@@ -470,10 +470,10 @@ if __name__ == '__main__':
     #    LOGGER.debug(f"field_name: {fld_nm}, {bcdc_dataset_fld.preset}")
 
     dataset_populator = DataPopulation(bcdc_dataset)
-    bcdc_dataet = dataset_populator.populate()
+    bcdc_dataet = dataset_populator.populate_random()
 
     resource_populator = DataPopulation(resources)
-    resources_data = resource_populator.populate()
+    resources_data = resource_populator.populate_random()
 
     import pprint
     pp = pprint.PrettyPrinter(indent=4)

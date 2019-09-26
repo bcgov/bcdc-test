@@ -12,7 +12,7 @@ from bcdc_apitests.config.testConfig import DF_OPTS
 LOGGER = logging.getLogger(__name__)
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def df(request, test_disable_teardown_opts):
     '''
     -df: command line switch allows test to run with the option for
@@ -31,7 +31,7 @@ def df(request, test_disable_teardown_opts):
     return opt
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def cancel_package_teardown(df):
     cancel_teardown_opts = ['packages', 'ALL', None]
     cancel_teardown = False
@@ -40,7 +40,7 @@ def cancel_package_teardown(df):
     return cancel_teardown
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def cancel_org_teardown(df):
     cancel_teardown_opts = ['orgs', 'ALL', None]
     cancel_teardown = False
@@ -48,7 +48,7 @@ def cancel_org_teardown(df):
         cancel_teardown = True
     return cancel_teardown
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def cancel_user_teardown(df):
     cancel_teardown_opts = ['users', 'ALL', None]
     cancel_teardown = False
@@ -56,7 +56,7 @@ def cancel_user_teardown(df):
         cancel_teardown = True
     return cancel_teardown
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def cancel_group_teardown(df):
     cancel_teardown_opts = ['groups', 'ALL', None]
     cancel_teardown = False
@@ -64,7 +64,7 @@ def cancel_group_teardown(df):
         cancel_teardown = True
     return cancel_teardown
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def cancel_resource_teardown(df):
     cancel_teardown_opts = ['resources', 'ALL', None]
     cancel_teardown = False

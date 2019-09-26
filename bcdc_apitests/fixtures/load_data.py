@@ -41,6 +41,13 @@ def test_pkg_data(org_create_if_not_exists_fixture, test_data_dir,
     :param test_data_dir: the data directory fixture, provides the directory
                           where data is located
     :param test_package_name: the name of the test package
+    
+    assumption is that the 'data_label_fixture' is the name of a method in 
+    .helpers.bcdc_dynamic_data_population.DataPopulation. That method 
+    is going to get called and the returning data is what will get returned
+    
+    #TODO: 9-26-2019 in the middle of implementing what is described above.
+    
     '''
     org_id = org_create_if_not_exists_fixture['id']
     LOGGER.debug("test_package_name: %s", test_package_name)

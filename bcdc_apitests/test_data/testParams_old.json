@@ -1,0 +1,221 @@
+[
+	{
+        "test_module":"bcdc_apitests.tests.packages.test_packages",
+        "test_function": "test_package_create",
+        "test_users": ["admin", "editor"],
+        "test_data": ["pkgData_min.json"],
+        "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.packages.test_packages",
+        "test_function": "test_package_create",
+        "test_users": ["viewer"],
+        "test_data": ["pkgData_min.json", "pkgData.json"],
+        "test_result": false
+    },
+	{
+		"test_module":"bcdc_apitests.tests.packages.test_packages",
+		"test_function": "test_package_show",
+		"test_users": ["admin", "editor", "viewer"],
+		"test_data": ["pkgData.json"],
+		"test_result": true
+	},
+	{
+        "test_module":"bcdc_apitests.tests.packages.test_packages",
+        "test_function": "test_package_update",
+        "test_users": ["admin", "editor"],
+        "test_data": ["pkgData.json"],
+        "test_result": true
+    }, 
+	   {
+        "test_module":"bcdc_apitests.tests.packages.test_packages",
+        "test_function": "test_package_update",
+        "test_users": ["viewer"],
+        "test_data": ["pkgData.json"],
+        "test_result": false
+    },
+    {
+        "test_module":"bcdc_apitests.tests.packages.test_packages",
+        "test_function": "test_package_search",
+        "test_users": ["admin", "editor", "viewer"],
+        "test_data": ["pkgData.json"],
+        "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.packages.test_packages",
+        "test_function": "test_package_list_vs_package_show",
+        "test_users": ["admin", "editor", "viewer"],
+        "test_data": ["pkgData.json"],
+        "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.packages.test_packages",
+        "test_function": "test_package_delete",
+        "test_users": ["admin", "editor"],
+        "test_data": ["pkgData.json"],
+        "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.packages.test_packages",
+        "test_function": "test_package_delete",
+        "test_users": ["viewer"],
+        "test_data": ["pkgData.json"],
+        "test_result": false
+    },
+    {
+        "test_module":"bcdc_apitests.tests.packages.test_packages",
+        "test_function": "test_create_package_coredataonly",
+        "test_users": ["admin", "editor"],
+        "test_data": ["pkgData.json"],
+        "test_result": true, 
+        "comment": "only configure this test for admin/editor as only they can create data.  This test determines if it is possible to create a package with only the fields identified in the ckan docs.  Expected result should be false."
+    }, 
+    {
+        "test_module":"bcdc_apitests.tests.resources.test_resources",
+        "test_function": "test_resource_create",
+        "test_users": ["admin", "editor"],
+        "test_data": ["pkgData.json"],
+        "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.resources.test_resources",
+        "test_function": "test_resource_create",
+        "test_users": ["viewer"],
+        "test_data": ["pkgData.json"],
+        "test_result": false
+    },
+    {
+        "test_module":"bcdc_apitests.tests.resources.test_resources",
+        "test_function": "test_resource_update",
+        "test_users": ["admin", "editor"],
+        "test_data": ["pkgData.json"],
+        "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.resources.test_resources",
+        "test_function": "test_resource_update",
+        "test_users": ["viewer"],
+        "test_data": ["pkgData.json"],
+        "test_result": false
+    }, 
+    {
+        "test_module":"bcdc_apitests.tests.resources.test_resources",
+        "test_function": "test_resource_search",
+        "test_users": ["admin", "editor", "viewer"],
+        "test_data": ["pkgData.json"],
+        "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.resources.test_resources",
+        "test_function": "test_resource_delete",
+        "test_users": ["admin", "editor"],
+        "test_data": ["pkgData.json"],
+        "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.resources.test_resources",
+        "test_function": "test_resource_delete",
+        "test_users": ["viewer"],
+        "test_data": ["pkgData.json"],
+        "test_result": false
+    }, 
+    {
+        "test_module":"bcdc_apitests.tests.organizations.test_orgs",
+        "test_function": "test_organization_show",
+        "test_users": ["viewer", "editor", "admin"],
+        "test_data": ["pkgData.json"],
+        "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.organizations.test_orgs",
+        "test_function": "test_organization_list",
+        "test_users": ["viewer", "editor", "admin"],
+        "test_data": ["pkgData.json"],
+        "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.organizations.test_orgs",
+        "test_function": "test_organization_list_related",
+        "test_users": ["viewer", "editor", "admin"],
+        "test_data": ["pkgData.json"],
+        "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.packages.test_packages",
+        "test_function": "test_edc_package_update_bcgw",
+        "test_users": ["admin"],
+        "test_data": ["pkgData.json"],
+        "test_result": true
+    },
+	{
+        "test_module":"bcdc_apitests.tests.packages.test_packages",
+        "test_function": "test_edc_package_update",
+        "test_users": ["admin"],
+        "test_data": ["pkgData.json"],
+        "comment": "test_data isn't really used here, however all the different user types should be able to view the data",        
+        "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.packages.test_packages",
+        "test_function": "test_package_autocomplete",
+        "test_users": ["admin"],
+        "test_data": ["pkgData.json"],
+        "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.groups.test_groups",
+        "test_function": "test_group_list",
+        "test_users": ["admin"],
+        "test_data": ["group.json"],
+        "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.groups.test_groups",
+        "test_function": "test_group_show",
+        "test_users": ["admin"],
+        "test_data": ["group.json"],
+        "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.users.test_users",
+        "test_function": "test_user_show",
+        "test_users": ["viewer", "editor", "admin"],
+        "test_data": ["pkgData.json"],
+        "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.other.test_other",
+        "test_function": "test_dashboard_activity_list",
+        "test_users": ["editor", "admin"],
+        "test_data": ["pkgData.json"],
+        "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.other.test_other",
+        "test_function": "test_config_option_show",
+        "test_users": ["admin"],
+        "test_data": ["pkgData.json"],
+        "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.other.test_other",
+        "test_function": "test_license_list",
+        "test_users": ["admin"],
+        "test_data": ["pkgData.json"],
+        "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.other.test_other",
+        "test_function": "test_vocabulary_list",
+        "test_users": ["admin"],
+        "test_data": ["pkgData.json"],
+        "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.other.test_other",
+        "test_function": "test_tag_list",
+        "test_users": ["admin"],
+        "test_data": ["pkgData.json"],
+        "test_result": true
+    }
+]

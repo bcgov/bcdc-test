@@ -18,6 +18,8 @@ try:
 except:
     TEST_USER = 'ocp'
     
+BCDC_TMP_USER_PASSWORD = 'BCDC_TMP_USER_PASSWORD'
+    
 
 # all test objects created in ckan should have this prefix appended to them
 TEST_PREFIX = "zzztest"

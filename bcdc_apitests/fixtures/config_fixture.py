@@ -21,7 +21,6 @@ def test_user():
     '''
     return TEST_USER
 
-
 @pytest.fixture
 def test_prefix():
     '''
@@ -29,15 +28,12 @@ def test_prefix():
     '''
     return TEST_PREFIX
 
-
-@pytest.fixture
+@pytest.fixture(scope='session')
 def test_disable_teardown_opts():
     '''
     :return: the test object naming prefix
     '''
     return DF_OPTS
-
-
 
 @pytest.fixture(scope='session')
 def test_organization():
