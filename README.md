@@ -9,7 +9,7 @@ Current tests include:
 # OC Build
 
 how to create new build without starting
-
+  
 ```
 oc create -f https://raw.githubusercontent.com/bcgov/bcdc-test/dev/k8s/bcdc-test-buildconfig.yaml
 ```
