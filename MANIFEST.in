@@ -1,4 +1,2 @@
 include README.md
-include bcdc_apitests/test_data/pkgData.json
-include bcdc_apitests/test_data/pkgData_min.json
-include bcdc_apitests/test_data/ownerOrg.json
+include bcdc_apitests/test_data/*

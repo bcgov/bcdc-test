@@ -1,72 +1,28 @@
-name: Python package
-
-on: 
+name: Python dev package
+on:
   push:
     branches:
-    - master
-jobs:
-  sonar_scan:
-    runs-on: ubuntu-18.04
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: [3.6]
-    steps:
-    - uses: actions/checkout@master
-    - name: Install and run Sonar
-      env: 
-        SONAR_URL: ${{ secrets.SONAR_URL }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        JOB_NAME: BCDC_tests_build
-      run: |
-        curl -o sonar.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.2.0.1227-linux.zip
-        unzip sonar.zip
-        ./sonar-scanner-3.2.0.1227-linux/bin/sonar-scanner -Dsonar.sources=. -Dsonar.projectKey=$JOB_NAME -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_TOKEN -Dsonar.exclusions=ve/**,build/**,sonar-scanner-3.2.0.1227-linux/**
-        pid_url=$SONAR_URL/api/ce/component?component=$JOB_NAME
-        sonar_pid=$(curl $pid_url | jq '.current.id' | tr -d '"')
-        aid_url=$SONAR_URL/api/ce/task?id=$sonar_pid
-        sonar_aid=$(curl $aid_url | jq '.task.analysisId' | tr -d '"')
-        sonar_qg_url=$SONAR_URL/api/qualitygates/project_status?analysisId=$sonar_aid
-        sonar_status=$(curl $sonar_qg_url | jq '.projectStatus.status' | tr -d '"')
-        if [ "$sonar_status" == "ERROR" ]
-            then
-                exit 1
-        else
-            exit 0
-        fi
-  build:
-    needs: sonar_scan
-    runs-on: ubuntu-18.04
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: [3.6]
+      - DDM-927-OC-Pipline
+      
 
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.6]
+        
     steps:
     - uses: actions/checkout@master
+      with:
+        ref: DDM-927-OC-Pipline
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
         version: ${{ matrix.python-version }}
-    - name: is pull closed merged master python
-      env: 
-        GITHUB_CONTEXT: ${{ toJson(github) }}
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements_build.txt
-        echo $GITHUB_CONTEXT > gha_context.json 
-        is_closed_merged_pr=$(python is_pull_request.py gha_context.json)
-        echo "is_closed_merged_pr: $is_closed_merged_pr"
-        if [[ $is_closed_merged_pr == 'True' ]]; 
-            then
-                echo is a pr
-                exit 0
-            else
-                echo is not a pr
-                exit 1
-        fi     
+
     - name: Build and Upload
-      if: success()
       env:
           TWINE_USERNAME:  ${{ secrets.TWINE_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}

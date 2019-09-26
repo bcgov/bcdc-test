@@ -104,7 +104,7 @@ def assign_user_role(remote_api_admin_auth, user, org_id, role):
 
 
 @pytest.fixture(scope="session")
-def user_setup_fixture(org_setup_fixture, group_setup_fixture, remote_api_super_admin_auth,
+def user_setup_fixture(org_setup_fixture, remote_api_super_admin_auth,
                        test_roles, temp_user_password):
     '''
     Used in session setup and tear down.  Creates the 3 test users that are
