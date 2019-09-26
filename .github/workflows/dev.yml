@@ -1,4 +1,4 @@
-name: Python dev package
+name: Pypi dev package
 on:
   push:
     branches:
