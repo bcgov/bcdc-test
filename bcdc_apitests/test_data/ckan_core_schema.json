@@ -97,113 +97,106 @@
       "preset": "string",
       "form_placeholder":"the type of the dataset (optional), IDatasetForm plugins associate themselves with different dataset types and provide custom dataset handling behaviour for these types",
       "required": false
+    }
+  ],
+  "resource_fields": [
+    {
+      "field_name": "package_id",
+      "label": "package_id",
+      "form_placeholder": "id of package that the resource should be added to.",
+      "required": true
+    },    
+    {
+      "field_name": "url",
+      "label": "url",
+      "preset": "string",
+      "form_placeholder":"url of resource",
+      "required": false
     },
     {
-      "field_name": "resources",
-      "label": "resources",
-      "preset": "composite_repeating",
-      "form_placeholder":"a URL for the dataset’s source (optional)",
-      "required": false,
-      "subfields": [
-        {
-          "field_name": "package_id",
-          "label": "package_id",
-          "form_placeholder": "id of package that the resource should be added to.",
-          "required": true
-        },    
-	    {
-	      "field_name": "url",
-	      "label": "url",
-	      "preset": "string",
-	      "form_placeholder":"url of resource",
-	      "required": false
-	    },
-	    {
-	      "field_name": "revision_id",
-	      "label": "revision_id",
-	      "preset": "string",
-	      "form_placeholder":"",
-	      "required": false
-	    },
-	    {
-	      "field_name": "description",
-	      "label": "description",
-	      "preset": "string",
-	      "form_placeholder":"",
-	      "required": false
-	    },
-	    {
-	      "field_name": "format",
-	      "label": "format",
-	      "preset": "string",
-	      "form_placeholder":"",
-	      "required": false
-	    },
-	    {
-	      "field_name": "hash",
-	      "label": "hash",
-	      "preset": "string",
-	      "form_placeholder":"",
-	      "required": false
-	    },
-	    {
-	      "field_name": "name",
-	      "label": "name",
-	      "preset": "string",
-	      "form_placeholder":"",
-	      "required": false
-	    },
-	    {
-	      "field_name": "resource_type",
-	      "label": "resource_type",
-	      "preset": "string",
-	      "form_placeholder":"",
-	      "required": false
-	    },
-	    {
-	      "field_name": "mimetype",
-	      "label": "mimetype",
-	      "preset": "string",
-	      "form_placeholder":"",
-	      "required": false
-	    },
-	    {
-	      "field_name": "mimetype_inner",
-	      "label": "mimetype_inner",
-	      "preset": "string",
-	      "form_placeholder":"",
-	      "required": false
-	    },
-	    {
-	      "field_name": "cache_url",
-	      "label": "cache_url",
-	      "preset": "string",
-	      "form_placeholder":"",
-	      "required": false
-	    },
-	    {
-	      "field_name": "created",
-	      "label": "created",
-	      "preset": "date",
-	      "form_placeholder":"",
-	      "required": false
-	    },
-	    {
-	      "field_name": "last_modified",
-	      "label": "last_modified",
-	      "preset": "date",
-	      "form_placeholder":"",
-	      "required": false
-	    },
-	    {
-	      "field_name": "cache_last_updated",
-	      "label": "cache_last_updated",
-	      "preset": "date",
-	      "form_placeholder":"",
-	      "required": false
-	    }
-	  ]
-	}
+      "field_name": "revision_id",
+      "label": "revision_id",
+      "preset": "string",
+      "form_placeholder":"",
+      "required": false
+    },
+    {
+      "field_name": "description",
+      "label": "description",
+      "preset": "string",
+      "form_placeholder":"",
+      "required": false
+    },
+    {
+      "field_name": "format",
+      "label": "format",
+      "preset": "string",
+      "form_placeholder":"",
+      "required": false
+    },
+    {
+      "field_name": "hash",
+      "label": "hash",
+      "preset": "string",
+      "form_placeholder":"",
+      "required": false
+    },
+    {
+      "field_name": "name",
+      "label": "name",
+      "preset": "string",
+      "form_placeholder":"",
+      "required": false
+    },
+    {
+      "field_name": "resource_type",
+      "label": "resource_type",
+      "preset": "string",
+      "form_placeholder":"",
+      "required": false
+    },
+    {
+      "field_name": "mimetype",
+      "label": "mimetype",
+      "preset": "string",
+      "form_placeholder":"",
+      "required": false
+    },
+    {
+      "field_name": "mimetype_inner",
+      "label": "mimetype_inner",
+      "preset": "string",
+      "form_placeholder":"",
+      "required": false
+    },
+    {
+      "field_name": "cache_url",
+      "label": "cache_url",
+      "preset": "string",
+      "form_placeholder":"",
+      "required": false
+    },
+    {
+      "field_name": "created",
+      "label": "created",
+      "preset": "date",
+      "form_placeholder":"",
+      "required": false
+    },
+    {
+      "field_name": "last_modified",
+      "label": "last_modified",
+      "preset": "date",
+      "form_placeholder":"",
+      "required": false
+    },
+    {
+      "field_name": "cache_last_updated",
+      "label": "cache_last_updated",
+      "preset": "date",
+      "form_placeholder":"",
+      "required": false
+    }
   ]
 }
   

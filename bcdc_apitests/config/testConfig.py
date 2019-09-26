@@ -27,6 +27,7 @@ TEST_PREFIX = "zzztest"
 TEST_DATA_DIRECTORY = "test_data"
 TEST_PARAMETERS_FILE = 'testParams.json'
 TEST_USER_CONFIG = "userConfig.json"
+TEST_CKAN_CORE_SCHEMA_DEF = 'ckan_core_schema.json'
 
 # test org name
 TEST_ORGANIZATION = '{0}_{1}_testorg'.format(TEST_PREFIX, TEST_USER)

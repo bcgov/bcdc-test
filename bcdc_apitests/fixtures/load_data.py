@@ -34,7 +34,6 @@ def test_data_dir():
     pkg_json_dir = file_utils.get_test_data_dir()
     yield pkg_json_dir
 
-
 @pytest.fixture
 def test_pkg_data(org_create_if_not_exists_fixture, test_data_dir,
                   test_package_name, test_user, data_label_fixture):
@@ -61,7 +60,6 @@ def test_pkg_data(org_create_if_not_exists_fixture, test_data_dir,
             del datastore['groups']
     return datastore
 
-
 @pytest.fixture
 def resource_data(package_create_if_not_exists, test_data_dir,
                   test_resource_name):
@@ -79,7 +77,6 @@ def resource_data(package_create_if_not_exists, test_data_dir,
         resource['name'] = test_resource_name
         resource['package_id'] = package_create_if_not_exists['id']
     return resource
-
 
 @pytest.fixture
 def test_pkg_data_core_only(test_pkg_data):
@@ -153,7 +150,6 @@ def test_group_data(test_data_dir, test_group):
         group_data = json.load(json_file_hand)
         group_data['name'] = test_group
     return group_data
-
 
 @pytest.fixture(scope='session')
 def session_test_org_data(test_data_dir, test_session_organization):
