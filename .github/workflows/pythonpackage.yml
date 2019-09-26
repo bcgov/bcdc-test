@@ -2,7 +2,7 @@ name: Python dev package
 on:
   push:
     branches:
-      - DDM-927-OC-Pipline
+      - dev
       
 
 jobs:
@@ -16,7 +16,7 @@ jobs:
     steps:
     - uses: actions/checkout@master
       with:
-        ref: DDM-927-OC-Pipline
+        ref: dev
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
