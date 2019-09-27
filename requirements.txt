@@ -3,5 +3,5 @@ pytest==4.6.2
 requests==2.22.0
 pytest-check==0.3.5
 distlib==0.2.9
-pytest-html==2.0.0
 pytest-md==0.2.0
+pytest-json==0.4.0
