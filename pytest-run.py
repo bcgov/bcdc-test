@@ -18,7 +18,7 @@ mat_username = 'BCDC-Test'
 
 try:
     # run pytest cmd
-    pytest.main(['-v', '--tb=line', '--pyargs', 'bcdc_apitests', '--md', md_report_path,
+    pytest.main(['--tb=line', '--pyargs', 'bcdc_apitests', '--md', md_report_path,
                  ('--junitxml={0}'.format(xml_report_path)), ('--json={0}'.format(json_report_path))])
     print("Running pytest")
     # ---------- Check XML Output ----------
@@ -36,9 +36,11 @@ try:
     # testing other outputs
     # playing around with creating custom outputs. testing for now.
     tests = json_report['report']['tests']
+    custom_results = []
     print(tests)
     for test in tests:
         result = test['name'] + test['outcome']
+        custom_results.append(result)
         print(result)
 
     # check summary for errors or failed, then set if pass/fail to use later.
@@ -66,6 +68,10 @@ try:
 
         for line in lines:
             modified_output.append(line.replace(find_str, bcdc_url))
+
+    # add custom_results to end of md output
+    for result in custom_results:
+        modified_output.extend(result + '\n')
 
     print("write to markdown file")
     # re-write file.
@@ -103,3 +109,7 @@ try:
 except Exception as e:
     print(e)
     sys.exit(1)
+
+
+
+
