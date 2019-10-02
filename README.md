@@ -28,9 +28,14 @@ each environment will have its own defined .yaml file within the k8s dir.
 * test-toyger-job-template.yaml
 * test-puma-job-template.yaml
 
-how to run job from yaml as template, so we can change the name using a Generated value appended to name
+how to run job from yaml as template, so we can change the name using a generated value appended to name
+* CADI
 ```
 oc process -f https://raw.githubusercontent.com/bcgov/bcdc-test/dev/k8s/test-dwelf-job-template.yaml | oc create -f -
+```
+* CATI
+```
+oc process -f https://raw.githubusercontent.com/bcgov/bcdc-test/dev/k8s/test-toyger-job-template.yaml | oc create -f -
 ```
 
 
