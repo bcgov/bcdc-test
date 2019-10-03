@@ -17,7 +17,7 @@ oc create -f https://raw.githubusercontent.com/bcgov/bcdc-test/dev/k8s/bcdc-test
 start build after created or start future incremental builds.
 
 ```
-oc start-build bcdc-test
+oc start-build bcdc-test -n databcdc
 ```
 
 # OC Job 
