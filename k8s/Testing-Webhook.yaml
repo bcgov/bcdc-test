@@ -9,7 +9,7 @@ spec:
     - type: Generic
       generic:
         secretReference:
-          name: gen_secret
+          name: gen-web-sec-bcdc
   failedBuildsHistoryLimit: 5
   output:
     to:
