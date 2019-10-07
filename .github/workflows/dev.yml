@@ -35,5 +35,5 @@ jobs:
     - name: Build OC
       run: |
         sleep 60
-        curl -X POST https://console.pathfinder.gov.bc.ca:8443/apis/build.openshift.io/v1/namespaces/databcdc/buildconfigs/bcdc-test-2/webhooks/c484ef7d7cdc3edc/generic
+        curl -X POST https://console.pathfinder.gov.bc.ca:8443/apis/build.openshift.io/v1/namespaces/databcdc/buildconfigs/bcdc-test-dev/webhooks/c484ef7d7cdc3edc/generic
 
