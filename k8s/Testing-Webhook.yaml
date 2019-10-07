@@ -6,10 +6,10 @@ metadata:
   name: bcdc-test-2
 spec:
   triggers:
-    type: Generic
-    generic:
-      secretReference:
-        name: gen_secret
+    - type: Generic
+      generic:
+        secretReference:
+          name: gen_secret
   failedBuildsHistoryLimit: 5
   output:
     to:
