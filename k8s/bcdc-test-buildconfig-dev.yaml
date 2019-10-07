@@ -3,7 +3,7 @@ kind: BuildConfig
 metadata:
   labels:
     app:
-  name: bcdc-test-2
+  name: bcdc-test-dev
 spec:
   triggers:
     - type: Generic
