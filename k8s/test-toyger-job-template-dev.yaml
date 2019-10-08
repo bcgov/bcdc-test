@@ -1,0 +1,39 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: test-toyger-dev
+objects:
+- apiVersion: batch/v1
+  kind: Job
+  metadata:
+    generateName: test-toyger-dev
+  spec:
+    template:
+      metadata:
+        name: test-toyger-dev
+      spec:
+        containers:
+        - name: test-toyger-dev
+          image: docker-registry.default.svc:5000/databcdc/bcdc-test-dev
+          env:
+            - name: BCDC_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: BCDC_URL
+                  name: cati-bcdc-url
+            - name: BCDC_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: BCDC_API_KEY
+                  name: cati-bcdc-api-key
+            - name: BCDC_TMP_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: BCDC_TMP_USER_PASSWORD
+                  name: bcdc-tmp-user-pass
+            - name: MATT_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: MATT_API_KEY
+                  name: mattermost-bot-api-key
+        restartPolicy: Never
