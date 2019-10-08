@@ -21,6 +21,7 @@ spec:
       ADD . /app
       WORKDIR /app
       RUN pip install bcdc-apitests-dev
+      RUN pip install bcdc-apitests-dev -U
       RUN pip install matterhook
       ADD https://raw.githubusercontent.com/bcgov/bcdc-test/dev/pytest-run.py ./pytest-run.py
       RUN ["chmod", "755", "/app/pytest-run.py"]
