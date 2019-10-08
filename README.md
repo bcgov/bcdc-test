@@ -55,6 +55,10 @@ oc create -f https://raw.githubusercontent.com/bcgov/bcdc-test/dev/k8s/bcdc-test
 ```
 oc process -f https://raw.githubusercontent.com/bcgov/bcdc-test/dev/k8s/test-dwelf-job-template-dev.yaml | oc create -f -
 ```
+* CATI
+```
+oc process -f https://raw.githubusercontent.com/bcgov/bcdc-test/dev/k8s/test-toyger-job-template-dev.yaml | oc create -f -
+```
 
 # Run Tests locally
 
