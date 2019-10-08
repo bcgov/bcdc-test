@@ -29,8 +29,8 @@ objects:
             - name: BCDC_TMP_USER_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  key: BCDC_API_KEY
-                  name: cadi-bcdc-api-key
+                  key: BCDC_TMP_USER_PASSWORD
+                  name: bcdc-tmp-user-pass
             - name: MATT_API_KEY
               valueFrom:
                 secretKeyRef:
