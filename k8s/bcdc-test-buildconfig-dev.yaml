@@ -14,7 +14,7 @@ spec:
   output:
     to:
       kind: ImageStreamTag
-      name: bcdc-test-dev:latest
+      name: bcdc-test-dev
   source:
     dockerfile: |-
       FROM python:3-slim
