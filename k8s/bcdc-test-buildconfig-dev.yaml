@@ -9,7 +9,7 @@ spec:
     - type: Generic
       generic:
         secretReference:
-          name: gen-web-sec-bcdc
+          name: bcdc-test-dev-webhook-secret
   failedBuildsHistoryLimit: 5
   output:
     to:
