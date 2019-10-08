@@ -24,7 +24,7 @@ LOGGER = logging.getLogger(__name__)  # pylint: disable=invalid-name
 # pylint: disable=redefined-outer-name, unused-argument, logging-fstring-interpolation
 
 
-def test_package_create(conf_fixture, ckan_auth_header, test_pkg_data,
+def test_package_create(conf_fixture, ckan_auth_header, populate_random,
                         test_pkg_teardown, package_delete_if_exists, ckan_url,
                         ckan_rest_dir):
     '''
@@ -34,6 +34,8 @@ def test_package_create(conf_fixture, ckan_auth_header, test_pkg_data,
     Using requests to form this call to get status code and for increased level
     of granularity over
     '''
+    test_pkg_data = populate_random
+
     # debugging the parameterization, makes sure this test is getting the correct
     # parameters
     func_name = inspect.stack()[0][3]

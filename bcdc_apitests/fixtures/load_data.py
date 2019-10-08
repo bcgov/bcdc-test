@@ -34,6 +34,7 @@ def test_data_dir():
     pkg_json_dir = file_utils.get_test_data_dir()
     yield pkg_json_dir
 
+
 @pytest.fixture
 def test_pkg_data(org_create_if_not_exists_fixture, test_data_dir,
                   test_package_name, test_user, data_label_fixture):
@@ -41,13 +42,13 @@ def test_pkg_data(org_create_if_not_exists_fixture, test_data_dir,
     :param test_data_dir: the data directory fixture, provides the directory
                           where data is located
     :param test_package_name: the name of the test package
-    
-    assumption is that the 'data_label_fixture' is the name of a method in 
-    .helpers.bcdc_dynamic_data_population.DataPopulation. That method 
+
+    assumption is that the 'data_label_fixture' is the name of a method in
+    .helpers.bcdc_dynamic_data_population.DataPopulation. That method
     is going to get called and the returning data is what will get returned
-    
+
     #TODO: 9-26-2019 in the middle of implementing what is described above.
-    
+
     '''
     org_id = org_create_if_not_exists_fixture['id']
     LOGGER.debug("test_package_name: %s", test_package_name)
@@ -67,6 +68,7 @@ def test_pkg_data(org_create_if_not_exists_fixture, test_data_dir,
             del datastore['groups']
     return datastore
 
+
 @pytest.fixture
 def resource_data(package_create_if_not_exists, test_data_dir,
                   test_resource_name):
@@ -84,6 +86,7 @@ def resource_data(package_create_if_not_exists, test_data_dir,
         resource['name'] = test_resource_name
         resource['package_id'] = package_create_if_not_exists['id']
     return resource
+
 
 @pytest.fixture
 def test_pkg_data_core_only(test_pkg_data):
@@ -121,6 +124,7 @@ def test_pkg_data_updated(test_pkg_data):
     test_pkg_data['title'] = 'test package update'
     return test_pkg_data
 
+
 @pytest.fixture
 def test_pkg_data_prep(test_pkg_data, test_package_state, test_package_visibility):
     '''
@@ -131,6 +135,7 @@ def test_pkg_data_prep(test_pkg_data, test_package_state, test_package_visibilit
     test_pkg_data['edc_state'] = test_package_state
     test_pkg_data['metadata_visibility'] = test_package_visibility
     return test_pkg_data
+
 
 @pytest.fixture
 def test_org_data(test_data_dir, test_organization):
@@ -145,6 +150,7 @@ def test_org_data(test_data_dir, test_organization):
         org_data['name'] = test_organization
     return org_data
 
+
 @pytest.fixture
 def test_group_data(test_data_dir, test_group):
     '''
@@ -158,6 +164,7 @@ def test_group_data(test_data_dir, test_group):
         group_data['name'] = test_group
     return group_data
 
+
 @pytest.fixture(scope='session')
 def session_test_org_data(test_data_dir, test_session_organization):
     '''
@@ -169,6 +176,7 @@ def session_test_org_data(test_data_dir, test_session_organization):
         org_data = json.load(json_file_hand)
         org_data['name'] = test_session_organization
     return org_data
+
 
 @pytest.fixture(scope='session')
 def session_test_group_data(test_data_dir, test_session_group):

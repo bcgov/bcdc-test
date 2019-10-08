@@ -195,7 +195,7 @@ def group_id_fixture(remote_api_super_admin_auth, test_group):
 
 
 @pytest.fixture
-def group_teardown_fixture(remote_api_super_admin_auth, test_group):
+def group_teardown_fixture(remote_api_super_admin_auth, test_group, cancel_group_teardown):
     '''
     removes the test group at the conclusion of a test run.
     :param remote_api_super_admin_auth: remote ckanapi object with auth header
@@ -212,7 +212,8 @@ def group_teardown_fixture(remote_api_super_admin_auth, test_group):
 
 @pytest.fixture(scope="session")
 def group_setup_fixture(remote_api_super_admin_auth, test_session_group,
-                      group_exists_fixture, session_test_group_data):
+                      group_exists_fixture, session_test_group_data,
+                      cancel_group_teardown):
     '''
     at start of tests will test to see if the required test group
     exists.  if it does not it gets created.  At conclusion of testing

@@ -12,6 +12,8 @@ in the testing.
 import datetime
 import logging
 import random
+import re
+import json
 
 import randomwordgenerator.randomwordgenerator
 
@@ -34,6 +36,13 @@ class DataPopulation():
     def __init__(self, fields_schema):
         self.pop_resource = DataPopulationResource(fields_schema)
         self.fields_schema = fields_schema
+        
+    def randomized_bcdc_package(self):
+        '''
+        returns totally randomized data in a bcdc_dataset
+        '''
+        pass
+        
         
     def populate_random(self):
         '''
@@ -161,6 +170,14 @@ class DataPopulationResource():
         :return: a random string for the field
         '''
         word = self.rand.getword()
+        # does the field name end with _email?
+        if re.match('^\w+_+email$',  fld.field_name):
+            domain = self.rand.getword()
+            email = f'{word}@{domain}.com'
+            word = email
+        # type
+        elif  fld.field_name == 'type':
+            word = 'bcdc_dataset'
         LOGGER.debug(f"random word assigned to the field {fld.field_name}: {word}")
         return word
 
@@ -188,7 +205,10 @@ class DataPopulationResource():
             population = DataPopulationResource(fld.subfields)
             subfield_data = population.populate_all()
             subfields_values.append(subfield_data)
-        return subfields_values
+        LOGGER.debug(f"subfields_values: {subfields_values}")
+        subfield_json_str = json.dumps(subfields_values)
+        LOGGER.debug(f"subfields_values as stringify json: {subfield_json_str}")
+        return subfield_json_str
 
     def multiple_checkbox(self, fld):
         '''

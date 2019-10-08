@@ -176,7 +176,6 @@ def temp_user_password(import_dbcsecrets, secret_file):
             password = misc_params.getParam(passwordkey)
         except:
             LOGGER.error("unable to get BCDC_TMP_USER_PASSWORD from secret config")
-            
     if password is None:
         # none of the above methods worked to retrieve a password so just 
         # going to generate one.

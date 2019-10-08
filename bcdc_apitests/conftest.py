@@ -20,8 +20,11 @@ from bcdc_apitests.fixtures.users import *
 from bcdc_apitests.fixtures.ckan import *
 from bcdc_apitests.fixtures.setup_fixtures import *
 from bcdc_apitests.fixtures.arguements import *
+from bcdc_apitests.fixtures.dynamic_data import *
+from bcdc_apitests.fixtures.scheming import *
 import bcdc_apitests.helpers.read_test_config as helper
 import bcdc_apitests.config.testConfig as DF_OPTS
+ 
 
 LOGGER = logging.getLogger(__name__)
 

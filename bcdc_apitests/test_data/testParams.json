@@ -2,7 +2,7 @@
 	{
         "test_module":"bcdc_apitests.tests.packages.test_packages",
         "test_function": "test_package_create",
-        "test_users": ["admin", "editor"],
+        "test_users": ["admin"],
         "test_data": ["populate_random"],
         "test_result": true
     }

@@ -212,7 +212,8 @@ def org_teardown_fixture(remote_api_super_admin_auth, test_organization,
 
 @pytest.fixture(scope="session")
 def org_setup_fixture(remote_api_super_admin_auth, test_session_organization,
-                      org_exists_fixture, session_test_org_data):
+                      org_exists_fixture, session_test_org_data, 
+                      cancel_org_teardown):
     '''
     at start of tests will test to see if the required test org
     exists.  if it does not it gets created.  At conclusion of testing
