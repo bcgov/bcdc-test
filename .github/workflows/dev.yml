@@ -34,6 +34,6 @@ jobs:
         python -m twine upload dist/*
     - name: Build OC
       run: |
-        sleep 30
+        sleep 32
         curl -X POST https://console.pathfinder.gov.bc.ca:8443/apis/build.openshift.io/v1/namespaces/databcdc/buildconfigs/bcdc-test-dev/webhooks/${{ secrets.OC_BUILD_DEV }}/generic
 
