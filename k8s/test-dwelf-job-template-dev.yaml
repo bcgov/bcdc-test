@@ -1,19 +1,19 @@
 apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
-  name: test-dwelf
+  name: test-dwelf-dev
 objects:
 - apiVersion: batch/v1
   kind: Job
   metadata:
-    generateName: test-dwelf
+    generateName: test-dwelf-dev
   spec:
     template:
       metadata:
-        name: test-dwelf
+        name: test-dwelf-dev
       spec:
         containers:
-        - name: test-dwelf
+        - name: test-dwelf-dev
           image: docker-registry.default.svc:5000/databcdc/bcdc-test-dev
           env:
             - name: BCDC_URL
