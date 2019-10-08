@@ -38,17 +38,17 @@ objects:
                   name: mattermost-bot-api-key
             - name: MATT_CHANNEL
               valueFrom:
-                secretKeyRef:
+                configMapKeyRef:
                   key: MATT_CHANNEL
                   name: bcdc-test-mat-channel
             - name: MATT_USERNAME
               valueFrom:
-                secretKeyRef:
+                configMapKeyRef:
                   key: MATT_USERNAME
                   name: bcdc-test-mat-username
             - name: MATT_URL
               valueFrom:
-                secretKeyRef:
+                configMapKeyRef:
                   key: MATT_URL
                   name: bcdc-test-mat-url
         restartPolicy: Never
