@@ -10,9 +10,9 @@ json_report_path = "/tmp/json-report.json"
 find_str = "[pytest-md]: https://github.com/hackebrot/pytest-md"
 bcdc_url = str(os.getenv('BCDC_URL'))
 mat_api_key = str(os.getenv('MATT_API_KEY'))
-mat_url = 'https://chat-m.pathfinder.gov.bc.ca'
-mat_channel = 'build-and-deploy'
-mat_username = 'BCDC-Test'
+mat_channel = str(os.getenv('MATT_CHANNEL'))
+mat_username = str(os.getenv('MATT_USERNAME'))
+mat_url = str(os.getenv('MATT_URL'))
 
 # ---------- Start Process ------------
 
