@@ -5,6 +5,11 @@ metadata:
     app:
   name: bcdc-test
 spec:
+  triggers:
+    - type: Generic
+      generic:
+        secretReference:
+          name: bcdc-test-webhook-secret
   failedBuildsHistoryLimit: 5
   output:
     to:
