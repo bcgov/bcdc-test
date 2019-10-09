@@ -28,27 +28,111 @@ class DataPopulation():
     '''
     This class will subclass the resources population with specific methods
     that return different kinds of test data.
-    
-    Some examples of what might be returned include iterable classes, 
-    like for testing required fi
+
+    All public methods will return a DataSetIterator,
+
+    When new data is generated it gets cached in json files.  Various startup
+    and teardown methods are used to create / delete this data.
+
     '''
-    
+
     def __init__(self, fields_schema):
+        self.schema = fields_schema
         self.pop_resource = DataPopulationResource(fields_schema)
         self.fields_schema = fields_schema
+
+    def bcdc_dataset_random(self):
+        '''
+        Returns a single dataset, fields are all randomly populated, fields will
+        obey domains, and dependencies, however their actual values are completely
+        randomized.
+        '''
+        dataset = self.pop_resource.populate_all()
+        iter = DataSetIterator(dataset)
         
-    def randomized_bcdc_package(self):
-        '''
-        returns totally randomized data in a bcdc_dataset
-        '''
-        pass
+        # should override the following data values:
+        # - name
+        # - title
+        # - org
+        # - owner_org
+        # - sub_org
         
-        
-    def populate_random(self):
+        return iter
+
+    def required_fields_verification(self):
         '''
-        Returns a single dataset, fields are all randomly populated
+        returns an iterable object that can be used to verify that the fields
+        that are documented as 'required' are actually required.  Each iteration
+        will return the same dataset however with a different 'required' field
+        removed.
         '''
-        return self.pop_resource.populate_all()
+        coreData = self.pop_resource.populate_all()
+
+        datalist = []
+
+        # get list of required field names
+        required = []
+        for fld in self.schema:
+            if fld.required:
+                required.append(fld.field_name)
+
+        iter = DataSetIterator(coreData)
+        iter.flds_to_remove(required)
+        return iter
+
+
+class DataSetIterator():
+    '''
+    class used to provide an iterable that returns different data for each
+    iteration.
+
+    A generic /configurable iteration class that is going to get re-used.
+
+    :ivar core_data: the base dataset that each iteration will be built off of
+
+    '''
+
+    def __init__(self, coredata):
+        self.core_data = coredata
+        self.remove_flds = []
+        self.iter_cnt = 0
+
+    def flds_to_remove(self, fldname_list):
+        '''
+        :param fldname_list: a list of fields for each iteration one of these
+                             fields will be removed from the resulting data
+                             set
+        '''
+        self.remove_flds = fldname_list
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        '''
+        Iterator set up to look for:
+         - fields to remove, returns new dataset with one of the remove fields
+           removed with each iteration.
+         - more later!
+        '''
+        dataset = self.core_data.copy()
+        if self.remove_flds:
+            if self.iter_cnt >= len(self.remove_flds):
+                raise StopIteration
+            else:
+                fld_to_drop = self.remove_flds[self.iter_cnt]
+                if fld_to_drop in dataset:
+                    del dataset[fld_to_drop]
+                else:
+                    LOGGER.warning(f'The required field {fld_to_drop} does not ' +
+                                   'exist in the current dataset')
+        else:
+            # assume only one dataset, thus one iteration
+            if self.iter_cnt >= 1:
+                raise StopIteration
+
+        self.iter_cnt += 1
+        return dataset
 
 
 class DataPopulationResource():
@@ -171,7 +255,7 @@ class DataPopulationResource():
         '''
         word = self.rand.getword()
         # does the field name end with _email?
-        if re.match('^\w+_+email$',  fld.field_name):
+        if re.match('^\w+_+email$', fld.field_name):
             domain = self.rand.getword()
             email = f'{word}@{domain}.com'
             word = email

@@ -2,8 +2,25 @@
 	{
         "test_module":"bcdc_apitests.tests.packages.test_packages",
         "test_function": "test_package_create",
-        "test_users": ["admin"],
-        "test_data": ["populate_random"],
-        "test_result": true
-    }
+        "test_users": ["admin", "editor"],
+        "test_data": ["bcdc_dataset_random"],
+        "test_result": true, 
+        "comments": "tests creation of a completely random set of values in a bcdc_dataset as admin and editor"
+    },
+    {
+        "test_module":"bcdc_apitests.tests.packages.test_packages",
+        "test_function": "test_package_create",
+        "test_users": ["viewer"],
+        "test_data": ["bcdc_dataset_random"],
+        "test_result": false, 
+        "comments": "tests package_create as viewer, should fail"
+    }, 
+	{
+		"test_module":"bcdc_apitests.tests.packages.test_packages",
+		"test_function": "test_package_show",
+		"test_users": ["admin", "editor", "viewer"],
+		"test_data": ["bcdc_dataset_random"],
+		"test_result": true, 
+		"comment": "package should exist and be viewable by all"
+	}
 ]

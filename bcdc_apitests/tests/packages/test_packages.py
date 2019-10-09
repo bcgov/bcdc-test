@@ -19,12 +19,14 @@ import ckanapi
 import pytest  # @UnusedImport
 import requests
 
+#import bcdc_apitests.helpers.bcdc_dynamic_data_population
+
 LOGGER = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
 # pylint: disable=redefined-outer-name, unused-argument, logging-fstring-interpolation
 
 
-def test_package_create(conf_fixture, ckan_auth_header, populate_random,
+def test_package_create(conf_fixture, ckan_auth_header, data_population,
                         test_pkg_teardown, package_delete_if_exists, ckan_url,
                         ckan_rest_dir):
     '''
@@ -34,7 +36,15 @@ def test_package_create(conf_fixture, ckan_auth_header, populate_random,
     Using requests to form this call to get status code and for increased level
     of granularity over
     '''
-    test_pkg_data = populate_random
+    # conf_fixture contains the name of the 'data_population' method that we 
+    # want to call to retrieve the required data,  These lines convert the name
+    # of the method (in string) to an actual function reference (func)
+    LOGGER.debug(f'conf_fixture dataname: {conf_fixture.test_data }')
+    LOGGER.debug(f'type(data_population): {type(data_population) }')
+    func = getattr(data_population, conf_fixture.test_data[0])
+    test_pkg_data = func()
+    # test_pkg_data is DataSetIterator object.  Needs to be iterated to get the
+    # actual data.
 
     # debugging the parameterization, makes sure this test is getting the correct
     # parameters
@@ -43,21 +53,29 @@ def test_package_create(conf_fixture, ckan_auth_header, populate_random,
     if func_name != conf_fixture.test_function:
         raise ValueError("incorrect conf_fixtures was sent")
 
+    # setting up and making the api call to create various packages with the
+    # data provided
     LOGGER.debug("conf_fixture: expected %s", conf_fixture.test_result)
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'package_create')
     LOGGER.debug('api_call: %s', api_call)
     LOGGER.debug('ckan_auth_header: %s', ckan_auth_header)
-    LOGGER.debug('test_pkg_data: %s', test_pkg_data)
-    resp = requests.post(api_call, headers=ckan_auth_header, json=test_pkg_data)
-    if resp.status_code == 502:
-        # try again
-        time.sleep(3)
-        LOGGER.debug('api_call: %s', ckan_auth_header)
-        LOGGER.debug('api_call: %s', test_pkg_data)
-        resp = requests.post(api_call, headers=ckan_auth_header, json=test_pkg_data)
-    LOGGER.debug("resp: %s", resp.text)
-    LOGGER.info("status code: %s", resp.status_code)
-    assert (resp.status_code == 200) == conf_fixture.test_result
+
+    # loop to iterate over all the datasets returned by the data method.
+    for dataset in test_pkg_data:
+
+        LOGGER.debug('bcdc_dataset data: %s', dataset)
+        resp = requests.post(api_call, headers=ckan_auth_header, json=dataset)
+        if resp.status_code == 502:
+            # try again
+            LOGGER.warning(f'create package call failed with 502 status code,' + 
+                           'trying again in 3 seconds...')
+            time.sleep(3)
+            LOGGER.debug('api_call: %s', ckan_auth_header)
+            LOGGER.debug('api_call: %s', dataset)
+            resp = requests.post(api_call, headers=ckan_auth_header, json=dataset)
+        LOGGER.debug("resp: %s", resp.text)
+        LOGGER.info("status code: %s", resp.status_code)
+        assert (resp.status_code == 200) == conf_fixture.test_result
 
 
 def test_package_show(conf_fixture, remote_api_auth, test_package_name,
@@ -122,8 +140,8 @@ def test_package_autocomplete(conf_fixture, test_prefix, remote_api_auth, test_p
     assert (pkg_search_result_title == pkg_auto_data_title) == conf_fixture.test_result
 
 
-def test_package_search(conf_fixture, test_prefix, remote_api_auth, test_package_name,
-                      package_create_if_not_exists):
+def test_package_search(conf_fixture, test_prefix, remote_api_auth, 
+                        test_package_name, package_create_if_not_exists):
     '''
     verify package data can be retrieved using package_search.
 

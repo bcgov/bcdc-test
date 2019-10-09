@@ -217,7 +217,7 @@ class CKANCorePackage(Fields):
             elif fld.has_fld('subfields'):
                 preset.extend(self.get_presets(fld['subfields']))
         return list(set(preset))
-    
+        
     def field_exists(self, field):
         exists = False
         for fld in self:
@@ -428,9 +428,6 @@ class BCDCDatasetField(CKANCoreField):
     def __init__(self, fld):
         CKANCoreField.__init__(self, fld)
 
-
-
-
 class Choices():
     '''
     a wrapper for "Choices" associated with various fields.
@@ -488,33 +485,7 @@ class Choice(Field):
         return self.get_value('value')
 
 
-class DataPopulation():
-    '''
-    Each of these methods can be used to generate either:
-      - an iterable object where each iteration returns a single dataset
-      - a single dataset.
 
-    The names of the methods from this class can be identified in the
-    parameterization, along with:
-      - the user type they should be run under
-      - The tests that the data should be used with
-      - The expected outcome
-    '''
-
-    def __init__(self, dataset_schema, resource_schema):
-        # Construct a , BCDCDataset
-        self.dataset_schema = dataset_schema
-        self.resource_schema = resource_schema
-        pass
-
-    def create_BCDC_dataset(self):
-        '''
-        - hits the end point for scheming,
-        - uses the scheming struct to construct a BCDCDataset for the dataset_fields
-        - use the BCDCDataset and methods in DataPopulationResource to create an
-          example record.
-        '''
-        pass
 
 
     

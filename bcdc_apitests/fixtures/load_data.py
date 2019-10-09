@@ -39,6 +39,8 @@ def test_data_dir():
 def test_pkg_data(org_create_if_not_exists_fixture, test_data_dir,
                   test_package_name, test_user, data_label_fixture):
     '''
+    :param org_create_if_not_exists_fixture: creates the test org if it doesn't
+        already exist.
     :param test_data_dir: the data directory fixture, provides the directory
                           where data is located
     :param test_package_name: the name of the test package
