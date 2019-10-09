@@ -97,7 +97,7 @@ def package_exists(remote_api, package_name, pkgtype='ANY'):
         if pkgtype != exists_pkg_type:
             pkg_exists = False
 
-    return pkg_exists
+    yield pkg_exists
 
 # --------------------- Fixtures ----------------------
 @pytest.fixture

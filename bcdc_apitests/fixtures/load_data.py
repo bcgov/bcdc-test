@@ -24,25 +24,15 @@ from bcdc_apitests.helpers.file_utils import FileUtils
 LOGGER = logging.getLogger(__name__)
 
 
-@pytest.fixture(scope='session')
-def test_data_dir():
-    '''
-    :return: the data directory
-    '''
-    file_utils = FileUtils()
-    # pkg_json_dir = os.path.join(os.path.dirname(__file__), '..', 'test_data')
-    pkg_json_dir = file_utils.get_test_data_dir()
-    yield pkg_json_dir
-
 
 @pytest.fixture
-def test_pkg_data(org_create_if_not_exists_fixture, test_data_dir,
-                  test_package_name, test_user, data_label_fixture):
+def test_pkg_data(org_create_if_not_exists_fixture, get_cached_package_path,
+                  test_package_name, test_user):
     '''
     :param org_create_if_not_exists_fixture: creates the test org if it doesn't
         already exist.
     :param test_data_dir: the data directory fixture, provides the directory
-                          where data is located
+        where data is located
     :param test_package_name: the name of the test package
 
     assumption is that the 'data_label_fixture' is the name of a method in
@@ -52,6 +42,12 @@ def test_pkg_data(org_create_if_not_exists_fixture, test_data_dir,
     #TODO: 9-26-2019 in the middle of implementing what is described above.
 
     '''
+    if not os.path.exists(get_cached_package_path):
+        # generate package data and cache it
+        
+        
+    
+    
     org_id = org_create_if_not_exists_fixture['id']
     LOGGER.debug("test_package_name: %s", test_package_name)
     LOGGER.debug("test user: %s", test_user)

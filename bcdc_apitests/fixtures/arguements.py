@@ -71,3 +71,12 @@ def cancel_resource_teardown(df):
     if df in DF_OPTS:
         cancel_teardown = True
     return cancel_teardown
+
+@pytest.fixture(scope="session")
+def cancel_cache_teardown(df):
+    cancel_teardown_opts = ['cache', 'ALL', None]
+    cancel_teardown = False
+    if df in DF_OPTS:
+        cancel_teardown = True
+    return cancel_teardown
+

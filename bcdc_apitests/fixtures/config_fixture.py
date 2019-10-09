@@ -21,6 +21,8 @@ def test_user():
     '''
     return TEST_USER
 
+
+
 @pytest.fixture
 def test_prefix():
     '''
@@ -55,6 +57,14 @@ def test_package_name():
     :return: the name of the package to be used for the testing.
     '''
     return TEST_PACKAGE
+
+@pytest.fixture(scope='session')
+def test_package_title():
+    '''
+    :return: the title of the package to be used for the testing.
+    '''
+    return TEST_PACKAGE_TITLE
+
 
 @pytest.fixture
 def test_package_state():

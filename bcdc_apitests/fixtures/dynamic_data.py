@@ -6,16 +6,24 @@ Created on Oct. 7, 2019
 Fixtures that link to the generation of dynamic data sets.
 '''
 
-import pytest
+import json
 import logging
-import bcdc_apitests.helpers.bcdc_dynamic_data_population as bcdc_dataset_populator
+import os.path
+
+import pytest
+
 import bcdc_apitests.helpers.bcdc_dataset_schema as bcdc_dataset_schema
+import bcdc_apitests.helpers.bcdc_dynamic_data_population as bcdc_dataset_populator
 
 LOGGER = logging.getLogger(__name__)
 
+# pylint: disable=logging-fstring-interpolation
+
 
 @pytest.fixture
-def populate_random(org_create_if_not_exists_fixture, get_scheming):
+def populate_random(org_create_if_not_exists_fixture, test_package_name,
+                    get_scheming, test_package_title,
+                    cancel_cache_teardown):
     '''
        * org_create_if_not_exists_fixture - verifies that the org exists
             and makes org id available
@@ -31,19 +39,28 @@ def populate_random(org_create_if_not_exists_fixture, get_scheming):
     * teardown: removes the cached json files created by the dynamic data
     * need to add the switch required to disable teardown
     '''
+
+    # generate a dataset and then cache it.
+    ds_schema = bcdc_dataset_schema.BCDCDataset(dataset_type='dataset_fields',
+                           struct=get_scheming)
+
     # get the scheming data defs
-    msg = f'scheming data: {get_scheming}'
-    
-    # org id, owner_org
+    LOGGER.debug(f'scheming data: {get_scheming}')
     org_id = org_create_if_not_exists_fixture['id']
+    overrides = {'owner_org': org_id,
+                 'name': test_package_name,
+                 'title': test_package_title}
 
-    bcdc_dataset = bcdc_dataset_schema.BCDCDataset(dataset_type='dataset_fields',
-                               struct=get_scheming)
-    LOGGER.debug(msg)
+    dataset_populator = bcdc_dataset_populator.DataPopulation(ds_schema)
+    bcdc_dataset = dataset_populator.bcdc_dataset_random(overrides=overrides)
 
-    dataset_populator = bcdc_dataset_populator.DataPopulation(bcdc_dataset)
-    bcdc_dataet = dataset_populator.populate_random()
-    yield bcdc_dataet
+    yield bcdc_dataset
+
+    # teardown code
+    if not cancel_cache_teardown:
+        LOGGER.debug("calling data cache teardown")
+        cache = dataset_populator.cache
+        cache.delete_cache()
 
 
 @pytest.fixture
