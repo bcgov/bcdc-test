@@ -14,9 +14,9 @@ import pytest
 from bcdc_apitests.fixtures.config_fixture import *
 from bcdc_apitests.fixtures.load_config import *
 from bcdc_apitests.fixtures.load_data import *
+from bcdc_apitests.fixtures.users import *
 from bcdc_apitests.fixtures.orgs import *
 from bcdc_apitests.fixtures.groups import *
-from bcdc_apitests.fixtures.users import *
 from bcdc_apitests.fixtures.ckan import *
 from bcdc_apitests.fixtures.setup_fixtures import *
 from bcdc_apitests.fixtures.arguements import *

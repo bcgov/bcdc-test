@@ -10,18 +10,26 @@ This module will use the scheming data to return actual data that will be used
 in the testing.
 '''
 import datetime
+import inspect
+import json
 import logging
+import os.path
 import random
 import re
-import json
 
 import randomwordgenerator.randomwordgenerator
 
 import bcdc_apitests.config.testConfig as testConfig
 import bcdc_apitests.helpers.data_config as data_config
+from bcdc_apitests.helpers.file_utils import FileUtils
+
 
 LOGGER = logging.getLogger(__name__)
 WORDS = []
+
+# pylint: disable=logging-fstring-interpolation, logging-not-lazy
+
+# caching should go here.
 
 
 class DataPopulation():
@@ -41,34 +49,63 @@ class DataPopulation():
         self.pop_resource = DataPopulationResource(fields_schema)
         self.fields_schema = fields_schema
 
-    def bcdc_dataset_random(self):
+        # calculate cache file
+        self.cache_dir = FileUtils().get_test_data_dir()
+        self.cache = None
+
+    def bcdc_dataset_random(self, overrides=None):
         '''
         Returns a single dataset, fields are all randomly populated, fields will
         obey domains, and dependencies, however their actual values are completely
         randomized.
-        '''
-        dataset = self.pop_resource.populate_all()
-        iter = DataSetIterator(dataset)
-        
-        # should override the following data values:
-        # - name
-        # - title
-        # - org
-        # - owner_org
-        # - sub_org
-        
-        return iter
 
-    def required_fields_verification(self):
+        :param overrides: A dictionary of keys for values in the dataset that
+            should be overriden, by static values vs dynamic / random values
+            common values that you may want to override include:
+              - name
+              - title
+              - org
+              - owner_org (org id)
+        '''
+        # name of the cache file will be defined either by the test config
+        # in the property 'test_data'.  'test_data' is a list of the methods
+        # to use to generate dynamic data sets for use in a test.  All the
+        # method names are members of this class.  This method is an example
+        # of a method that can be referenced in the test config file
+        # 'testParams.json'
+        file_name = f'{inspect.currentframe().f_code.co_name}.json'
+        cache_file = os.path.join(self.cache_dir, file_name)
+        self.cache = DataCache(cache_file)
+        
+        # debugging
+        #LOGGER.debug("dropping the cache")
+        #self.cache.delete_cache()
+        
+        data_iterable = None
+        if self.cache.cache_exists():
+            LOGGER.debug("loading a cached dataset")
+            data_iterable = self.cache.load_cache_data()
+        if data_iterable is None:
+            LOGGER.debug("generating a new dynamic dataset")
+            dataset = self.pop_resource.populate_all(overrides=overrides)
+            data_iterable = DataSetIterator(dataset)
+            self.cache.write_cache_data(data_iterable)
+        LOGGER.debug(f"iterable: {data_iterable}")
+        return data_iterable
+
+    def required_fields_verification(self, overrides=None):
         '''
         returns an iterable object that can be used to verify that the fields
         that are documented as 'required' are actually required.  Each iteration
         will return the same dataset however with a different 'required' field
         removed.
         '''
-        coreData = self.pop_resource.populate_all()
+        # TODO: could add a metaclass that does the caching automatically
+        file_name = f'{inspect.currentframe().f_code.co_name}.json'
+        cache_file = os.path.join(self.cache_dir, file_name)
+        self.cache = DataCache(cache_file)
 
-        datalist = []
+        coreData = self.pop_resource.populate_all(overrides=overrides)
 
         # get list of required field names
         required = []
@@ -76,9 +113,75 @@ class DataPopulation():
             if fld.required:
                 required.append(fld.field_name)
 
-        iter = DataSetIterator(coreData)
-        iter.flds_to_remove(required)
-        return iter
+        if self.cache.cache_exists():
+            data_iterable = self.cache.load_cache_data()
+        else:
+            data_iterable = DataSetIterator(coreData)
+            data_iterable.flds_to_remove(required)
+            self.cache.write_cache_data(data_iterable)
+        return data_iterable
+
+
+class DataCache():
+    '''
+    used to create and load from cached data files.  Dynamic data gets generated
+    and cached so that it can be re-used for different tests.  This class
+    contains the logic to easily write and read from caches
+    '''
+
+    def __init__(self, cache_file):
+        self.cache_file = cache_file
+        LOGGER.debug(f"cache file: {self.cache_file}")
+
+    def cache_exists(self):
+        ret_val = True if os.path.exists(self.cache_file) else False
+        LOGGER.debug(f"cache file exists? {ret_val}")
+        return ret_val
+
+    def write_cache_data(self, iter_obj):
+        '''
+        :param iter_obj:
+        :type iter_obj: DataPopulation
+        '''
+        # converts the iterable DataPopulation object to a list then
+        # writes
+        LOGGER.debug(f"iter type: {type(iter_obj)}")
+        bcdc_dataets = []
+        for ds in iter_obj:
+            LOGGER.debug(f'dataset in iterable: {ds}')
+            bcdc_dataets.append(ds)
+
+        with open(self.cache_file, 'w', encoding='utf8') as file_hand:
+            json.dump(bcdc_dataets, file_hand, ensure_ascii=False)
+        LOGGER.debug(f"cache has been written to: {self.cache_file}")
+
+    def load_cache_data(self):
+        '''
+        loads data from cached file and returns as a DataPopulation
+        object
+
+        :return: a data population object of the data loaded from the cache
+        :rtype: DataPopulation
+        '''
+        LOGGER.debug(f"Cache file is being read from: {self.cache_file}")
+        bcdc_dataset = None
+        if self.cache_exists():
+            LOGGER.debug(f"Cache file exists")
+            with open(self.cache_file, 'r') as file_hand:
+                data_struct_list = json.load(file_hand)
+            LOGGER.debug("loading from cache file")
+            bcdc_dataset = DataSetIterator(data_struct_list)
+        return bcdc_dataset
+
+    def delete_cache(self):
+        '''
+        Delete the cache file if it exists.
+        '''
+        if self.cache_exists():
+            LOGGER.info(f"removing the data cache file: {self.cache_file}")
+            
+            # DEBUGGING
+            #os.remove(self.cache_file)
 
 
 class DataSetIterator():
@@ -93,9 +196,15 @@ class DataSetIterator():
     '''
 
     def __init__(self, coredata):
+        # if core data is a dict then stuff it in a list
+        LOGGER.debug(f"coredata: {coredata}")
         self.core_data = coredata
+        if isinstance(coredata, dict):
+            self.core_data = [coredata]
+        LOGGER.debug(f"coredata: {coredata}")
         self.remove_flds = []
-        self.iter_cnt = 0
+        self.ds_cnt = 0  # dataset count
+        self.fld_cnt = 0  # field count
 
     def flds_to_remove(self, fldname_list):
         '''
@@ -115,24 +224,34 @@ class DataSetIterator():
            removed with each iteration.
          - more later!
         '''
-        dataset = self.core_data.copy()
+        if self.ds_cnt >= len(self.core_data):
+            LOGGER.debug(f"core data: {self.core_data}")
+            LOGGER.debug(f"cnt: {self.ds_cnt}")
+            raise StopIteration
+
+        #dataset = self.core_data.copy()
+        return_dataset = self.core_data[self.ds_cnt].copy()
+        LOGGER.debug(f"return_dataset: {return_dataset}")
+        # if remvoe_flds have been defined then iterate over each
+        # dataset, and for each dataset remove the core fields thus
+        # the total number of iterations ends up being datasets * remove fields
         if self.remove_flds:
-            if self.iter_cnt >= len(self.remove_flds):
-                raise StopIteration
+            if self.fld_cnt >= len(self.remove_flds):
+                # iterate to next dataset
+                self.ds_cnt += 1
+                self.fld_cnt = 0
             else:
-                fld_to_drop = self.remove_flds[self.iter_cnt]
-                if fld_to_drop in dataset:
-                    del dataset[fld_to_drop]
+                
+                fld_to_drop = self.remove_flds[self.fld_cnt]
+                if fld_to_drop in return_dataset:
+                    del return_dataset[fld_to_drop]
                 else:
                     LOGGER.warning(f'The required field {fld_to_drop} does not ' +
                                    'exist in the current dataset')
-        else:
-            # assume only one dataset, thus one iteration
-            if self.iter_cnt >= 1:
-                raise StopIteration
+                self.fld_cnt += 1
 
-        self.iter_cnt += 1
-        return dataset
+        self.ds_cnt += 1
+        return return_dataset
 
 
 class DataPopulationResource():
@@ -203,16 +322,25 @@ class DataPopulationResource():
         LOGGER.debug(f"conditional_satisfied return: {proceed}")
         return proceed
 
-    def select(self, fld):
+    def select(self, fld, override=None):
         '''
         used for preset "select", grabs a random value from the choices option.
 
         Future: some fields may need the ability to select multiple values.
+
+        :param fld: A Field object
         '''
-        LOGGER.debug(f" Calling Select on fld: {fld}")
+        LOGGER.debug(f"Calling Select on fld: {fld}")
+
         if fld.choices:
             LOGGER.debug(f" number of choices: {len(fld.choices)}")
             values = fld.choices.values
+            if (override) and override not in values:
+                msg = f'A static/override value of {override[fld.field_name]}' + \
+                      f'was specified for the field {fld.field_name} ' + \
+                      'however that value is not defined in the domain: ' + \
+                      f'{values}'
+                raise ValueError(msg)
             LOGGER.debug(f" values: {values}")
             value = values[random.randint(0, len(values) - 1)]
         elif (fld.choices_helper) and fld.choices_helper == 'edc_orgs_form':
@@ -225,7 +353,7 @@ class DataPopulationResource():
             raise ValueError(msg)
         return value
 
-    def title(self, fld):  # pylint: disable=no-self-use
+    def title(self, fld, override=None):  # pylint: disable=no-self-use
         '''
         sets the title for the data set, going to hard code this as
         test_data
@@ -233,29 +361,32 @@ class DataPopulationResource():
         LOGGER.debug(f"{fld.field_name}: {data_config.DataSetValues.title}")
         return data_config.DataSetValues.title
 
-    def dataset_slug(self, fld):  # pylint: disable=no-self-use
+    def dataset_slug(self, fld, override=None):  # pylint: disable=no-self-use
         '''
         This is currently configured for the name of the dataset to just returning
         the name of the dataset.
         '''
         LOGGER.debug(f"{fld.field_name}: {testConfig.TEST_PACKAGE}")
-        return testConfig.TEST_PACKAGE
+        return testConfig.TEST_PACKAGE if not override else override
 
-    def dataset_organization(self, fld):  # pylint: disable=no-self-use
+    def dataset_organization(self, fld, override=None):  # pylint: disable=no-self-use
         '''
         :returns: retrieves the name of the organization that is going to be
                  used by the testing and returns it
         '''
+        ds_org = testConfig.TEST_ORGANIZATION if override is None else override
         LOGGER.debug(f"{fld.field_name}: {testConfig.TEST_ORGANIZATION}")
-        return testConfig.TEST_ORGANIZATION
+        return ds_org
 
-    def string(self, fld):
+    def string(self, fld, override=None):
         '''
         :return: a random string for the field
         '''
         word = self.rand.getword()
         # does the field name end with _email?
-        if re.match('^\w+_+email$', fld.field_name):
+        if override:
+            word = override
+        elif re.match('^\w+_+email$', fld.field_name):
             domain = self.rand.getword()
             email = f'{word}@{domain}.com'
             word = email
@@ -265,14 +396,14 @@ class DataPopulationResource():
         LOGGER.debug(f"random word assigned to the field {fld.field_name}: {word}")
         return word
 
-    def tag_string_autocomplete(self, fld):
+    def tag_string_autocomplete(self, fld, override=None):
         '''
         Not sure if this should be referencing existing tags... for now
         just making it random text.
         '''
-        return self.string(fld)
+        return self.string(fld, override)
 
-    def composite_repeating(self, fld, flds2gen=None):  # pylint: disable=no-self-use
+    def composite_repeating(self, fld, flds2gen=None, override=None):  # pylint: disable=no-self-use
         '''
         This type of field is a list made up of a bunch of subfields, this
         call will make a couple calls to this Datapopulation class to generate
@@ -294,13 +425,13 @@ class DataPopulationResource():
         LOGGER.debug(f"subfields_values as stringify json: {subfield_json_str}")
         return subfield_json_str
 
-    def multiple_checkbox(self, fld):
+    def multiple_checkbox(self, fld, override=None):
         '''
         can select multiple values from the choices.
         '''
-        return self.select(fld)
+        return self.select(fld, override)
 
-    def date(self, fld):  # pylint: disable=unused-argument
+    def date(self, fld, override=None):  # pylint: disable=unused-argument
         '''
         :return: a random date.  will be some time between now and 10 years
                  ago.
@@ -309,7 +440,7 @@ class DataPopulationResource():
         delta = datetime.timedelta(days=365 * 10)
         date_2 = date_1 - delta
         rand_date = self.random_date(date_2, date_1)
-        return rand_date.strftime('%Y-%m-%d')
+        return override if override else rand_date.strftime('%Y-%m-%d')
 
     def random_date(self, start, end):
         '''
@@ -326,32 +457,33 @@ class DataPopulationResource():
         LOGGER.debug(f"random_second: {random_second}")
         return start + datetime.timedelta(seconds=random_second)
 
-    def resource_url_upload(self, fld):
+    def resource_url_upload(self, fld, override=None):
         '''
         :return: gets a random string and then assembles into a url by appending
             https:// and .com
         '''
         randomString = self.string(fld)
-        url = f'https://{randomString}.com'
+        url = f'https://{randomString}.com' if not override else override
         return url
 
-    def json_object(self, fld):  # pylint: disable=no-self-use, unused-argument
+    def json_object(self, fld, override=None):  # pylint: disable=no-self-use, unused-argument
         '''
         right now returning a static json text
         '''
         dummyjson = '{"schema": { "fields":[ { "mode": "nullable", "name": ' + \
                     '"placeName", "type": "string"  },  { "mode": "nullable' + \
                     '", "name": "kind", "type": "string"  }  ] }'
-        return dummyjson
 
-    def composite(self, fld):
+        return dummyjson if override is None else override
+
+    def composite(self, fld, override=None):
         '''
         :return: right now just treating the same as composite_repeating but specify
         to only return a single subfield
         '''
-        return self.composite_repeating(fld, 1)
+        return self.composite_repeating(fld, flds2gen=1, override=override)
 
-    def autocomplete(self, fld):
+    def autocomplete(self, fld, override=None):
         '''
         example of what an autocomplete json snippet looks like:
         {
@@ -384,9 +516,9 @@ class DataPopulationResource():
 
         :return:
         '''
-        return self.select(fld)
+        return self.select(fld, override)
 
-    def populate_all(self):
+    def populate_all(self, overrides=None):
         '''
         iterates over the fields object populating it with data.
 
@@ -413,6 +545,8 @@ class DataPopulationResource():
         # datastruct = {}
         # set the scope for this variable for this method
         fld = None
+        if overrides is None:
+            overrides = {}
 
         def undefined_prefix(fld):
             msg = f'prefix is set to: {fld.preset}.  There is no code to ' + \
@@ -433,21 +567,23 @@ class DataPopulationResource():
                 LOGGER.debug(f"adding to the deferred list: {fld}")
                 self.deferred.append(fld)
             else:
+                field_override = overrides[fld.field_name] if fld.field_name in overrides else None
+
                 if fld.preset is None:
-                    field_value = self.string(fld)
+                    field_value = self.string(fld, override=field_override)
                 else:
                     # the name of the method to call is contained in the property: preset,
                     # turning the value of preset into a method call
                     func = getattr(self, fld.preset, undefined_prefix)
-                    field_value = func(fld)
+                    field_value = func(fld, override=field_override)
                 self.datastruct[fld.field_name] = field_value
         if self.deferred:
-            self.process_deferred_fields()
+            self.process_deferred_fields(overrides=overrides)
             # shortcut for now... should really continuously iterate through deferred
             # fields until they are all removed
         return self.datastruct
 
-    def process_deferred_fields(self):
+    def process_deferred_fields(self, overrides=None):
         '''
         Some fields like
         '''
@@ -462,13 +598,17 @@ class DataPopulationResource():
                     LOGGER.debug(f"conditional field exists: {defer_fld}")
                     # is the condition satisfied
                     if self.conditional_satisfied(defer_fld):
+                        field_override = overrides[defer_fld.field_name] if \
+                            defer_fld.field_name in overrides else None
                         if defer_fld.preset is None:
-                            field_value = self.string(defer_fld)
+                            field_value = self.string(defer_fld,
+                                                      override=field_override)
                         else:
-                            # the name of the method to call is contained in the property: preset,
-                            # turning the value of preset into a method call
+                            # the name of the method to call is contained in the
+                            # property: preset, turning the value of preset into
+                            # a method call
                             func = getattr(self, defer_fld.preset)
-                            field_value = func(defer_fld)
+                            field_value = func(defer_fld, override=field_override)
                         self.datastruct[defer_fld.field_name] = field_value
                         to_remove.append(defer_fld)
                     else:
@@ -501,6 +641,7 @@ class RandomWords():
         '''
         global WORDS  # pylint: disable=global-statement
         if not WORDS:
+            LOGGER.debug("getting words from network")
             self.get_words_from_network()
         return WORDS.pop()
 
@@ -516,6 +657,7 @@ class RandomWords():
         global WORDS  # pylint: disable=global-statement
         WORDS = randomwordgenerator.randomwordgenerator.generate_random_words(
             self.cache_size)
+        LOGGER.debug(f"WORDS: {WORDS}")
 
 
 class UndefinedPreset(AttributeError):
@@ -528,62 +670,62 @@ class UndefinedPreset(AttributeError):
         # Call the base class constructor with the parameters it needs
         super().__init__(message)
 
-
-if __name__ == '__main__':
-    import os.path
-    import json
-    import bcdc_apitests.helpers.bcdc_dataset_schema as bcdc_dataset_schema
-
-    dataSchemaFile = os.path.join(os.path.dirname(__file__), '..', 'test_data',
-                                  'data_schema.json')
-    fh = open(dataSchemaFile, 'r')
-    schematext = fh.read()
-    fh.close()
-    data_struct = json.loads(schematext)
-
-    # simple logging setup
-    LOGGER = logging.getLogger(__name__)
-    LOGGER.setLevel(logging.DEBUG)
-    hndlr = logging.StreamHandler()
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s -' +
-                                  ' %(lineno)d - %(message)s')
-    hndlr.setFormatter(formatter)
-    LOGGER.addHandler(hndlr)
-    LOGGER.debug("test")
-
-    # BCDC_Dataset Dataset Fields.
-    bcdc_dataset = bcdc_dataset_schema.BCDCDataset(dataset_type='dataset_fields',
-                               struct=data_struct['result'])
-
-    # # BCDC_Dataset  Resources Fields
-    resources = bcdc_dataset_schema.BCDCDataset(dataset_type='resource_fields',
-                            struct=data_struct['result'])
-
-    # summarize presets
-    presets = bcdc_dataset.get_presets()
-    resource_preset = resources.get_presets()
-    presets.extend(resource_preset)  # combine presets
-    presets = list(set(presets))
-    presets.sort()
-    LOGGER.debug(f'presets: {presets}')
-
-    # set up a filtered list, Filters at the moment remain untested
-    # bcdc_dataset.set_field_type_filter('required', True)
-    # for bcdc_dataset_fld in bcdc_dataset:
-    #    fld_nm = bcdc_dataset_fld.get_value('field_name')
-    #    LOGGER.debug(f"field_name: {fld_nm}, {bcdc_dataset_fld.preset}")
-
-    dataset_populator = DataPopulation(bcdc_dataset)
-    bcdc_dataet = dataset_populator.populate_random()
-
-    resource_populator = DataPopulation(resources)
-    resources_data = resource_populator.populate_random()
-
-    import pprint
-    pp = pprint.PrettyPrinter(indent=4)
-
-    pp.pprint(bcdc_dataet)
-
-    print('*' * 80)
-
-    pp.pprint(resources_data)
+# TODO: Could move this to test - test code
+# if __name__ == '__main__':
+#     import os.path
+#     import json
+#     import bcdc_apitests.helpers.bcdc_dataset_schema as bcdc_dataset_schema
+#
+#     dataSchemaFile = os.path.join(os.path.dirname(__file__), '..', 'test_data',
+#                                   'data_schema.json')
+#     fh = open(dataSchemaFile, 'r')
+#     schematext = fh.read()
+#     fh.close()
+#     data_struct = json.loads(schematext)
+#
+#     # simple logging setup
+#     LOGGER = logging.getLogger(__name__)
+#     LOGGER.setLevel(logging.DEBUG)
+#     hndlr = logging.StreamHandler()
+#     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s -' +
+#                                   ' %(lineno)d - %(message)s')
+#     hndlr.setFormatter(formatter)
+#     LOGGER.addHandler(hndlr)
+#     LOGGER.debug("test")
+#
+#     # BCDC_Dataset Dataset Fields.
+#     bcdc_dataset = bcdc_dataset_schema.BCDCDataset(dataset_type='dataset_fields',
+#                                struct=data_struct['result'])
+#
+#     # # BCDC_Dataset  Resources Fields
+#     resources = bcdc_dataset_schema.BCDCDataset(dataset_type='resource_fields',
+#                             struct=data_struct['result'])
+#
+#     # summarize presets
+#     presets = bcdc_dataset.get_presets()
+#     resource_preset = resources.get_presets()
+#     presets.extend(resource_preset)  # combine presets
+#     presets = list(set(presets))
+#     presets.sort()
+#     LOGGER.debug(f'presets: {presets}')
+#
+#     # set up a filtered list, Filters at the moment remain untested
+#     # bcdc_dataset.set_field_type_filter('required', True)
+#     # for bcdc_dataset_fld in bcdc_dataset:
+#     #    fld_nm = bcdc_dataset_fld.get_value('field_name')
+#     #    LOGGER.debug(f"field_name: {fld_nm}, {bcdc_dataset_fld.preset}")
+#
+#     dataset_populator = DataPopulation(bcdc_dataset)
+#     bcdc_dataet = dataset_populator.populate_random()
+#
+#     resource_populator = DataPopulation(resources)
+#     resources_data = resource_populator.populate_random()
+#
+#     import pprint
+#     pp = pprint.PrettyPrinter(indent=4)
+#
+#     pp.pprint(bcdc_dataet)
+#
+#     print('*' * 80)
+#
+#     pp.pprint(resources_data)

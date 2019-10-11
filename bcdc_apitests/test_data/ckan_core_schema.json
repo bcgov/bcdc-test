@@ -5,7 +5,7 @@
   "about_url": "http://github.com/bcgov/ckanext-bcgov",
   "dataset_fields": [
       {
-      "field_name": "name  ",
+      "field_name": "name",
       "label": "Package name",
       "preset": "string",
       "form_placeholder": " the name of the new dataset, must be between 2 and 100 characters long and contain only lowercase alphanumeric characters, - and _, e.g. 'warandpeace'",

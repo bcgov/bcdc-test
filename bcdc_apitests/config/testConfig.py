@@ -40,6 +40,9 @@ TEST_GROUP = '{0}_{1}_testgroup'.format(TEST_PREFIX, TEST_USER)
 # test package name
 TEST_PACKAGE = '{0}_{1}_testpkg'.format(TEST_PREFIX, TEST_USER)
 
+# test package title
+TEST_PACKAGE_TITLE = '{0} {1} testpkg title'.format(TEST_PREFIX, TEST_USER)
+
 # test resource name
 TEST_RESOURCE = '{0}_{1}_testresource'.format(TEST_PREFIX, TEST_USER)
 
@@ -76,7 +79,7 @@ TEST_PACKAGE_VISIBILITY = TEST_VISIBILITY
 
 # these are the options that can be sent to the --df flag. The --df flag
 # allows you to disable the teardown associated with certain object types
-DF_OPTS = ['orgs', 'groups', 'packages', 'resources', 'users', 'other', 'ALL']
+DF_OPTS = ['orgs', 'groups', 'packages', 'resources', 'users', 'other', 'cache', 'ALL', 'none']
 
 # The name of the environment variable that the tests are expecting to retrieve
 # api keys from

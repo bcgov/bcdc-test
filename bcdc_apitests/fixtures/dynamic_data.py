@@ -64,6 +64,19 @@ def populate_random(org_create_if_not_exists_fixture, test_package_name,
 
 
 @pytest.fixture
+def populate_random_single(populate_random):
+    '''
+    same thing as populate_random_single except this method will return a
+    single json dataset instead of an iterable containing datasets.
+    '''
+    LOGGER.debug(f"populate_random type: {type(populate_random)}")
+    #iterator = iter(populate_random)
+    dataset = next(populate_random)
+    LOGGER.debug(f"Dataset Retrieved from iterator: {dataset}")
+    return dataset
+
+
+@pytest.fixture
 def data_population(get_scheming):
     '''
     :param get_scheming: the scheming
