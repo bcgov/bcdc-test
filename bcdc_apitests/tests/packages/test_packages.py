@@ -19,6 +19,8 @@ import ckanapi
 import pytest  # @UnusedImport
 import requests
 
+import bcdc_apitests.config.testConfig as testConfig
+
 # import bcdc_apitests.helpers.bcdc_dynamic_data_population
 
 LOGGER = logging.getLogger(__name__)  # pylint: disable=invalid-name
@@ -26,7 +28,7 @@ LOGGER = logging.getLogger(__name__)  # pylint: disable=invalid-name
 # pylint: disable=redefined-outer-name, unused-argument, logging-fstring-interpolation
 
 
-def test_package_create(conf_fixture, ckan_auth_header, data_population,
+def test_package_create(conf_fixture, ckan_auth_header, bcdc_dataset_populator,
                         test_pkg_teardown, package_delete_if_exists, ckan_url,
                         ckan_rest_dir):
     '''
@@ -40,15 +42,17 @@ def test_package_create(conf_fixture, ckan_auth_header, data_population,
     Using requests to form this call to get status code and for increased level
     of granularity over
     '''
-    # conf_fixture contains the name of the 'data_population' method that we
+    # conf_fixture contains the name of the 'bcdc_dataset_populator' method that we
     # want to call to retrieve the required data,  These lines convert the name
     # of the method (in string) to an actual function reference (func)
     LOGGER.debug(f'conf_fixture dataname: {conf_fixture.test_data }')
-    LOGGER.debug(f'type(data_population): {type(data_population) }')
-    func = getattr(data_population, conf_fixture.test_data[0])
-    populate_random = func()
+    LOGGER.debug(f'type(bcdc_dataset_populator): {type(bcdc_dataset_populator) }')
+    func = getattr(bcdc_dataset_populator, conf_fixture.test_data[0])
+    overrides = {'name': testConfig.TEST_PACKAGE}
+    populate_bcdc_dataset = func(overrides)
 
-    LOGGER.debug(f'populate_random: {populate_random}')
+    LOGGER.debug(f'populate_bcdc_dataset: {populate_bcdc_dataset}')
+    
     # debugging the parameterization, makes sure this test is getting the correct
     # parameters
     func_name = inspect.stack()[0][3]
@@ -64,7 +68,7 @@ def test_package_create(conf_fixture, ckan_auth_header, data_population,
     LOGGER.debug('ckan_auth_header: %s', ckan_auth_header)
 
     # loop to iterate over all the datasets returned by the data method.
-    for dataset in populate_random:
+    for dataset in populate_bcdc_dataset:
 
         LOGGER.debug('bcdc_dataset data: %s', dataset)
         resp = requests.post(api_call, headers=ckan_auth_header, json=dataset)
@@ -106,7 +110,7 @@ def test_package_show(conf_fixture, remote_api_auth, test_package_name,
     assert (pkg_show_data['name'] == test_package_name) == conf_fixture.test_result
 
 
-def test_package_update(conf_fixture, remote_api_auth, populate_random_single, ckan_url,
+def test_package_update(conf_fixture, remote_api_auth, populate_bcdc_dataset_single, ckan_url,
                         ckan_rest_dir, ckan_auth_header,
                         package_create_if_not_exists, test_pkg_teardown):
     '''
@@ -115,7 +119,7 @@ def test_package_update(conf_fixture, remote_api_auth, populate_random_single, c
                          described in test_data.testParams.json.
     :type conf_fixture: helpers.read_test_config.TestParameters
     :param remote_api_auth: a ckanapi remote object with auth
-    :param populate_random: the package data
+    :param populate_bcdc_dataset: the package data
     :param ckan_url: ckan domain
     :param ckan_rest_dir: path to rest dir
     :param ckan_auth_header: authorization header to use in request, changes
@@ -132,28 +136,28 @@ def test_package_update(conf_fixture, remote_api_auth, populate_random_single, c
     if func_name != conf_fixture.test_function:
         raise ValueError("incorrect conf_fixtures was sent")
 
-    test_package_name = populate_random_single['name']
-    original_title = populate_random_single['title']
-    populate_random_single['title'] = 'zzz changed the title'
+    test_package_name = populate_bcdc_dataset_single['name']
+    original_title = populate_bcdc_dataset_single['title']
+    populate_bcdc_dataset_single['title'] = 'zzz changed the title'
     pkg_show_data_orig = remote_api_auth.action.package_show(id=test_package_name)
     # LOGGER.debug("pkg_show_data: %s", pkg_show_data)
 
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'package_update')
-    resp = requests.post(api_call, headers=ckan_auth_header, json=populate_random_single)
+    resp = requests.post(api_call, headers=ckan_auth_header, json=populate_bcdc_dataset_single)
     LOGGER.debug("resp.status_code: %s", resp.status_code)
     LOGGER.debug("resp.text: %s", resp.text)
     assert (resp.status_code == 200) == conf_fixture.test_result
     # now double check that the data has been changed
     pkg_show_data = remote_api_auth.action.package_show(id=test_package_name)
-    assert (pkg_show_data['title'] == populate_random_single['title']) == conf_fixture.test_result
+    assert (pkg_show_data['title'] == populate_bcdc_dataset_single['title']) == conf_fixture.test_result
     assert (pkg_show_data_orig['title'] != pkg_show_data['title']) == conf_fixture.test_result
 
     # now change back to original values so test will work on next iteration,
     # but also alows further testing of the package_update
     # only run if the data was successfully changed.
-    if pkg_show_data['title'] == populate_random_single['title']:
-        populate_random_single['title'] = original_title
-        resp = requests.post(api_call, headers=ckan_auth_header, json=populate_random_single)
+    if pkg_show_data['title'] == populate_bcdc_dataset_single['title']:
+        populate_bcdc_dataset_single['title'] = original_title
+        resp = requests.post(api_call, headers=ckan_auth_header, json=populate_bcdc_dataset_single)
         assert (resp.status_code == 200) == conf_fixture.test_result
         pkg_show_data = remote_api_auth.action.package_show(id=test_package_name)
         assert (pkg_show_data['title'] == original_title) == conf_fixture.test_result
@@ -425,7 +429,7 @@ def test_edc_package_update_bcgw(conf_fixture, ckan_url, ckan_rest_dir,
                                  ckan_auth_header,
                                  package_create_if_not_exists,
                                  set_package_state_active,
-                                 populate_random,
+                                 populate_bcdc_dataset,
                                  remote_api_super_admin_auth):
     '''
     :param conf_fixture: parameterization fixture.
@@ -437,7 +441,7 @@ def test_edc_package_update_bcgw(conf_fixture, ckan_url, ckan_rest_dir,
     :param set_package_state_active: Makes sure that the state of the package
             was set to active.  This is required to be able to make changes to
             the package by the edc_ end points that are being tested.
-    :param populate_random: The json data as a python struct that was used to
+    :param populate_bcdc_dataset: The json data as a python struct that was used to
             create the original package
     :param remote_api_super_admin_auth: a ckanapi remote object that has been
             authorized with superadmin privs.
@@ -465,7 +469,7 @@ def test_edc_package_update_bcgw(conf_fixture, ckan_url, ckan_rest_dir,
                     'short_name': 'TST_CHG'}
                 ]}
 
-    LOGGER.debug(f"package name: {populate_random['name']}")
+    LOGGER.debug(f"package name: {populate_bcdc_dataset['name']}")
 
     resp = requests.post(api_call, headers=ckan_auth_header,
                          json=body)
@@ -501,7 +505,7 @@ def test_edc_package_update(conf_fixture, ckan_url, ckan_rest_dir,
                             ckan_auth_header,
                             package_create_if_not_exists,
                             set_package_state_active,
-                            populate_random,
+                            populate_bcdc_dataset,
                             remote_api_super_admin_auth):
     '''
     :param conf_fixture: parameterization fixture.
@@ -513,7 +517,7 @@ def test_edc_package_update(conf_fixture, ckan_url, ckan_rest_dir,
     :param set_package_state_active: Makes sure that the state of the package
             was set to active.  This is required to be able to make changes to
             the package by the edc_ end points that are being tested.
-    :param populate_random: The json data as a python struct that was used to
+    :param populate_bcdc_dataset: The json data as a python struct that was used to
             create the original package
     :param remote_api_super_admin_auth: a ckanapi remote object that has been
             authorized with superadmin privs.

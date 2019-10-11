@@ -13,7 +13,9 @@ import os.path
 import pytest
 
 import bcdc_apitests.helpers.bcdc_dataset_schema as bcdc_dataset_schema
-import bcdc_apitests.helpers.bcdc_dynamic_data_population as bcdc_dataset_populator
+import bcdc_apitests.helpers.bcdc_dynamic_data_population as bcdc_dynamic_data_population
+import bcdc_apitests.config.testConfig as testConfig
+
 
 LOGGER = logging.getLogger(__name__)
 
@@ -21,7 +23,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 @pytest.fixture
-def populate_random(org_create_if_not_exists_fixture, test_package_name,
+def populate_bcdc_dataset(org_create_if_not_exists_fixture, test_package_name,
                     get_scheming, test_package_title,
                     cancel_cache_teardown):
     '''
@@ -51,8 +53,8 @@ def populate_random(org_create_if_not_exists_fixture, test_package_name,
                  'name': test_package_name,
                  'title': test_package_title}
 
-    dataset_populator = bcdc_dataset_populator.DataPopulation(ds_schema)
-    bcdc_dataset = dataset_populator.bcdc_dataset_random(overrides=overrides)
+    dataset_populator = bcdc_dynamic_data_population.DataPopulation(ds_schema, 'dataset_fields')
+    bcdc_dataset = dataset_populator.populate_randomized(overrides=overrides)
 
     yield bcdc_dataset
 
@@ -64,27 +66,72 @@ def populate_random(org_create_if_not_exists_fixture, test_package_name,
 
 
 @pytest.fixture
-def populate_random_single(populate_random):
+def populate_bcdc_dataset_single(populate_bcdc_dataset):
     '''
-    same thing as populate_random_single except this method will return a
+    same thing as populate_bcdc_dataset_single except this method will return a
     single json dataset instead of an iterable containing datasets.
     '''
-    LOGGER.debug(f"populate_random type: {type(populate_random)}")
-    #iterator = iter(populate_random)
-    dataset = next(populate_random)
+    LOGGER.debug(f"populate_bcdc_dataset type: {type(populate_bcdc_dataset)}")
+    # iterator = iter(populate_bcdc_dataset)
+    try:
+        dataset = next(populate_bcdc_dataset)
+    except StopIteration:
+        populate_bcdc_dataset.reset()
+        dataset = next(populate_bcdc_dataset)
     LOGGER.debug(f"Dataset Retrieved from iterator: {dataset}")
     return dataset
 
 
 @pytest.fixture
-def data_population(get_scheming):
+def bcdc_dataset_populator(get_scheming):
     '''
     :param get_scheming: the scheming
     gets the scheming defs
     using scheming defs returns a data population object
     '''
-    bcdc_dataset = bcdc_dataset_schema.BCDCDataset(dataset_type='dataset_fields',
-                               struct=get_scheming)
+    dataset_schema = bcdc_dataset_schema.BCDCDataset(
+        dataset_type='dataset_fields', struct=get_scheming)
 
-    dataset_populator = bcdc_dataset_populator.DataPopulation(bcdc_dataset)
+    dataset_populator = bcdc_dynamic_data_population.DataPopulation(
+        dataset_schema, 'dataset_fields')
     yield dataset_populator
+
+
+@pytest.fixture
+def bcdc_resource_populator(get_scheming, package_create_if_not_exists):
+    '''
+    :param get_scheming: the scheming
+    gets the scheming defs
+    using scheming defs returns a data population object
+    '''
+    resource_schema = bcdc_dataset_schema.BCDCDataset(
+        dataset_type='resource_fields', struct=get_scheming)
+    # resource_fields dataset_fields
+    resource_populator = bcdc_dynamic_data_population.DataPopulation(
+        resource_schema, 'resource_fields')
+    # overrides
+    overrides = {"name": testConfig.TEST_RESOURCE,
+                 "package_id": package_create_if_not_exists['id']}
+    
+    
+    resource_data = resource_populator.populate_randomized(overrides)
+    LOGGER.debug(f"resource_populator: {resource_populator}")
+    yield resource_data
+    
+@pytest.fixture
+def bcdc_resource_populator_single(bcdc_resource_populator, remote_api_super_admin_auth):
+    LOGGER.debug(f"resource type: {type(bcdc_resource_populator)}")
+    # iterator = iter(populate_bcdc_dataset)
+    
+    pkg = remote_api_super_admin_auth.action.package_show(id=testConfig.TEST_PACKAGE)
+
+    
+    
+    try:
+        resource = next(bcdc_resource_populator)
+    except StopIteration:
+        populate_bcdc_dataset.reset()
+        resource = next(populate_bcdc_dataset)
+    LOGGER.debug(f"Resource Retrieved from iterator: {resource}")
+    return resource
+

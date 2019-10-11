@@ -90,7 +90,7 @@ def ckan_host(secret_file, env, import_dbcsecrets):
     LOGGER.debug('import_dbcsecrets: %s', import_dbcsecrets)
     if testConfig.BCDC_URL in os.environ:
         host = None
-        LOGGER.info(f"Env Var BCDC_URL is set: {os.environ[testConfig.BCDC_URL]}", )
+        LOGGER.info(f"Env Var BCDC_URL is set: {os.environ[testConfig.BCDC_URL]}",)
     elif 'GetSecrets' in dir(DBCSecrets):
         # if the DBCSecrets module was imported
         LOGGER.debug("using secrets file: %s", secret_file)
@@ -143,22 +143,23 @@ def ckan_superadmin_apitoken(secret_file, env, import_dbcsecrets):
         raise SecretsNotFound(msg)
     yield token
 
+
 @pytest.fixture(scope="session")
 def temp_user_password(import_dbcsecrets, secret_file):
     '''
     The tests generate temp users of various types.  The tests then confirm that
-    the security model for these different users types works as expected.  In 
+    the security model for these different users types works as expected.  In
     order to generate new users they must be assigned passwords.  This fixture
     generates those passwords.
-    
+
     How:
-      a: looks for the env var BCDC_TMP_USER_PASSWORD if found then just uses 
+      a: looks for the env var BCDC_TMP_USER_PASSWORD if found then just uses
          that as the temporary password
-      b: if that doesn't exist then the process will look for secrets.json 
+      b: if that doesn't exist then the process will look for secrets.json
          and retrieve from the key for BCDC_TMP_USER_PASSWORD.
-      c: if the secret file fails or doesn't exist then the password is 
+      c: if the secret file fails or doesn't exist then the password is
          generated from random numbers.
-    
+
     If that env var is not found will try to retrieve the password from the
     secrets file.  If it cannot be found there then raises the SecretsNotFound
     error message
@@ -177,7 +178,7 @@ def temp_user_password(import_dbcsecrets, secret_file):
         except:
             LOGGER.error("unable to get BCDC_TMP_USER_PASSWORD from secret config")
     if password is None:
-        # none of the above methods worked to retrieve a password so just 
+        # none of the above methods worked to retrieve a password so just
         # going to generate one.
         alphabet = string.ascii_letters + string.digits
         password = ''.join(secrets.choice(alphabet) for i in range(10))
@@ -210,6 +211,7 @@ def ckan_apitoken_session(user_data_fixture_session):
     # for now to make work just continue to use super admin
     # api tokens
     yield apitoken
+
 
 @pytest.fixture()
 def ckan_apitoken(user_data_fixture):

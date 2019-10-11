@@ -10,4 +10,4 @@ package metadata.
 '''
 
 name = 'bcdc_apitests'
-version = '0.2.0'
+version = '1.0.0'

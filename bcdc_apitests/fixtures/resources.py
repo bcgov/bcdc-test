@@ -10,6 +10,8 @@ import logging
 import pytest
 import ckanapi
 # from bcdc_apitests.fixtures.ckan import remote_api_super_admin_auth
+import bcdc_apitests.config.testConfig as testConfig
+
 
 LOGGER = logging.getLogger(__name__)
 
@@ -88,11 +90,12 @@ def resource_get_id_fixture(get_resource_fixture):
 
 @pytest.fixture
 def get_resource_fixture(res_create_if_not_exists,
-                         remote_api_super_admin_auth, test_resource_name):
+                         remote_api_super_admin_auth ):
     '''
     :param remote_api_admin_auth: a ckanapi remote object with auth
     :param test_resource_name: test resource name
     '''
+    test_resource_name = testConfig.TEST_RESOURCE
     res_data = remote_api_super_admin_auth.action.resource_search(
         query="name:{0}".format(test_resource_name))
     LOGGER.debug("resource_data: %s", res_data)
@@ -102,7 +105,7 @@ def get_resource_fixture(res_create_if_not_exists,
 @pytest.fixture
 def res_create_if_not_exists(package_create_if_not_exists,
                              remote_api_super_admin_auth,
-                             test_resource_name, resource_data):
+                             bcdc_resource_populator_single):
     '''
     Checks to see if the resource exists and creates it if does not
 
@@ -110,11 +113,13 @@ def res_create_if_not_exists(package_create_if_not_exists,
         resources are added to packages so the package needs to exist.
     :param remote_api_super_admin_auth:
     '''
+    test_resource_name = testConfig.TEST_RESOURCE
+    LOGGER.debug(f"bcdc_resource_populator_single: {bcdc_resource_populator_single}")
     pkgid = package_create_if_not_exists['id']
     resource = get_resource(remote_api_super_admin_auth, test_resource_name,
                             pkgid)
     if not resource:
-        resource = remote_api_super_admin_auth.action.resource_create(**resource_data)
+        resource = remote_api_super_admin_auth.action.resource_create(**bcdc_resource_populator_single)
         LOGGER.debug("created resource: %s", resource)
     yield resource
 
@@ -126,6 +131,7 @@ def resource_delete_if_exists(package_create_if_not_exists,
     deletes all the resources from the test package
     '''
     # thinking just delete all the resources from the package
+    LOGGER.debug("resource delete called: %s", package_create_if_not_exists)
     if 'resources' in package_create_if_not_exists:
         for rsrc in package_create_if_not_exists['resources']:
             LOGGER.debug("rsrc: %s", rsrc)
@@ -136,11 +142,12 @@ def resource_delete_if_exists(package_create_if_not_exists,
 
 @pytest.fixture
 def resource_exists_fixture(package_create_if_not_exists,
-                            remote_api_super_admin_auth, test_resource_name):
+                            remote_api_super_admin_auth):
     '''
     :param remote_api_admin_auth: a ckanapi remote object with authenticated
     :param test_resource_name: the name of a package that exists
     '''
+    test_resource_name = testConfig.TEST_RESOURCE
     pkgid = package_create_if_not_exists['id']
     exists = resource_exists(remote_api_super_admin_auth, test_resource_name,
                              pkgid)

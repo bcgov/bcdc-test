@@ -12,18 +12,17 @@ import pytest
 
 from .ckan import remote_api_super_admin_auth
 from .config_fixture import test_package_name
-from bcdc_apitests.fixtures.dynamic_data import populate_random
+from bcdc_apitests.fixtures.dynamic_data import populate_bcdc_dataset
 
 import bcdc_apitests.config.testConfig as testConfig
 
 LOGGER = logging.getLogger(__name__)
-# pylint: disable=redefined-outer-name
-
+# pylint: disable=redefined-outer-name, logging-fstring-interpolation
 # --------------------- Supporting Functions ----------------------
 
 # def get_package_data(data_population_obj, method_name):
 #     func = getattr(data_population_obj, method_name)
-#     populate_random = func()
+#     populate_bcdc_dataset = func()
 
 
 # need to be able to call directly... don't need to make this a fixture.
@@ -67,15 +66,17 @@ def set_package_active(remote_api, pkg_name):
     '''
     if package_exists(remote_api, pkg_name, 'ANY'):
         pkg_data = remote_api.action.package_show(id=pkg_name)
+        LOGGER.debug("update package...")
         # update for the owner org
         # test org name
         org_data = remote_api.action.organization_show(id=testConfig.TEST_ORGANIZATION)
         org_id = org_data['id']
         LOGGER.debug(f"pkg_data: {pkg_data}")
-        if pkg_data['state'] != 'active':
+        if pkg_data['state'] != 'active' or pkg_data['owner_org'] != org_id:
             del pkg_data['resources']
             pkg_data['state'] = 'active'
             pkg_data['owner_org'] = org_id
+            LOGGER.debug(f"setting package active and org to: {org_id}")  
             remote_api.action.package_update(**pkg_data)
 
 
@@ -128,12 +129,12 @@ def package_exists(remote_api, package_name, pkgtype='ANY'):
 
 # --------------------- Fixtures ----------------------
 @pytest.fixture
-def package_create_fixture(remote_api_super_admin_auth, populate_random):
+def package_create_fixture(remote_api_super_admin_auth, populate_bcdc_dataset):
     '''
     :param remote_api_super_admin_auth: a ckanapi remote object with auth
-    :param populate_random: json that contains a valid object
+    :param populate_bcdc_dataset: json that contains a valid object
     '''
-    pkg_return = remote_api_super_admin_auth.action.package_create(**populate_random)
+    pkg_return = remote_api_super_admin_auth.action.package_create(**populate_bcdc_dataset)
     LOGGER.debug("pkg_return: %s", pkg_return)
     yield pkg_return
 
@@ -142,7 +143,8 @@ def package_create_fixture(remote_api_super_admin_auth, populate_random):
 def package_create_if_not_exists(remote_api_super_admin_auth,
                                  test_valid_package_exists,
                                  test_invalid_package_exists, data_label_fixture,
-                                 populate_random_single):
+                                 populate_bcdc_dataset_single,
+                                 org_create_if_not_exists_fixture):
     '''
     :param remote_api_super_admin_auth: ckanapi remote object with super admin
         credentials
@@ -151,7 +153,7 @@ def package_create_if_not_exists(remote_api_super_admin_auth,
         is a valid package
     :param test_valid_package_exists: Does the package exists and is valid, (not
         a ghost package)
-    :param populate_random: the data to use when creating the packages
+    :param populate_bcdc_dataset: the data to use when creating the packages
     '''
     # use the conf_fixture to get the name of the dataset to be used for
     # the test.
@@ -160,8 +162,8 @@ def package_create_if_not_exists(remote_api_super_admin_auth,
     # the data.
     LOGGER.debug("calling package_create_if_not_exists")
     pkg_data = None
-    data_pkg = populate_random_single
-    LOGGER.debug(f"populate_random: {data_pkg}")
+    data_pkg = populate_bcdc_dataset_single
+    LOGGER.debug(f"populate_bcdc_dataset: {data_pkg}")
 
     test_package_name = data_pkg['name']
     LOGGER.debug("test_package_exists (%s): %s %s", test_package_name,
@@ -169,7 +171,7 @@ def package_create_if_not_exists(remote_api_super_admin_auth,
 
     # if a package is found that is invalid it will get deleted and a valid
     # one will be created in its place
-    #if test_invalid_package_exists:
+    # if test_invalid_package_exists:
     #    LOGGER.debug("invalid package exists, deleting")
     #    package_delete(remote_api_super_admin_auth, test_package_name)
     #    package_purge(remote_api_super_admin_auth, test_package_name)
@@ -182,20 +184,26 @@ def package_create_if_not_exists(remote_api_super_admin_auth,
         LOGGER.debug("Package does not exist, creating it...")
 
         pkg_data = remote_api_super_admin_auth.action.package_create(
-            **populate_random_single)
+            **populate_bcdc_dataset_single)
         LOGGER.debug("pkg_return: %s", pkg_data)
-    
-    if pkg_data['state'] != 'active':
+
+    # package should be active and owned by test org
+    LOGGER.debug(f"org id: {org_create_if_not_exists_fixture['id']}")
+    LOGGER.debug(f"package owner: {pkg_data['owner_org']}")
+    if pkg_data['state'] != 'active' or \
+        pkg_data['owner_org'] != org_create_if_not_exists_fixture['id']:
+        # set package active will also correct the org id
         set_package_active(remote_api_super_admin_auth, data_pkg['name'])
+
     yield pkg_data
 
 
 @pytest.fixture
-def set_package_state_active(remote_api_super_admin_auth, populate_random_single):
-    LOGGER.debug(f"package name: {populate_random_single['name']}")
-    pckg_shw_data = remote_api_super_admin_auth.action.package_show(id=populate_random_single['name'])
+def set_package_state_active(remote_api_super_admin_auth, populate_bcdc_dataset_single):
+    LOGGER.debug(f"package name: {populate_bcdc_dataset_single['name']}")
+    pckg_shw_data = remote_api_super_admin_auth.action.package_show(id=populate_bcdc_dataset_single['name'])
     if pckg_shw_data['state'] != 'active':
-        LOGGER.debug(f"package: {populate_random_single['name']} state is  {populate_random_single['state']}")
+        LOGGER.debug(f"package: {populate_bcdc_dataset_single['name']} state is  {populate_bcdc_dataset_single['state']}")
 
         pckg_shw_data['state'] = 'active'
         pkg_updt_data = remote_api_super_admin_auth.action.package_update(**pckg_shw_data)
@@ -225,29 +233,29 @@ def test_package_exists(remote_api_super_admin_auth, test_package_name):
 
 
 @pytest.fixture
-def update_pkg_state(remote_api_super_admin_auth, populate_random, test_package_state):
+def update_pkg_state(remote_api_super_admin_auth, populate_bcdc_dataset, test_package_state):
     '''
-    :param populate_random: package data structure that can be used to load a new
+    :param populate_bcdc_dataset: package data structure that can be used to load a new
                           package
     '''
     logging.debug("edc_state Change :: %s", test_package_name)
-    populate_random['edc_state'] = test_package_state
-    pkg_data = remote_api_super_admin_auth.action.package_update(**populate_random)
+    populate_bcdc_dataset['edc_state'] = test_package_state
+    pkg_data = remote_api_super_admin_auth.action.package_update(**populate_bcdc_dataset)
     LOGGER.debug("pkg_return: %s", pkg_data)
-    yield populate_random
+    yield populate_bcdc_dataset
 
 
 @pytest.fixture
-def update_pkg_visibility(remote_api_super_admin_auth, populate_random, test_package_visibility):
+def update_pkg_visibility(remote_api_super_admin_auth, populate_bcdc_dataset, test_package_visibility):
     '''
-    :param populate_random: package data structure that can be used to load a new
+    :param populate_bcdc_dataset: package data structure that can be used to load a new
                           package
     '''
     logging.debug("metadata_visibility Change :: %s", test_package_name)
-    populate_random['metadata_visibility'] = test_package_visibility
-    pkg_data = remote_api_super_admin_auth.action.package_update(**populate_random)
+    populate_bcdc_dataset['metadata_visibility'] = test_package_visibility
+    pkg_data = remote_api_super_admin_auth.action.package_update(**populate_bcdc_dataset)
     LOGGER.debug("pkg_return: %s", pkg_data)
-    yield populate_random
+    yield populate_bcdc_dataset
 
 
 @pytest.fixture
@@ -276,7 +284,8 @@ def package_get_id_fixture(get_test_package):
         pkg_id = get_test_package['id']
     yield pkg_id
 
-# trying to remove this, as suspect that that package doesn't show up because it 
+
+# trying to remove this, as suspect that that package doesn't show up because it
 # is in a deleted state.
 @pytest.fixture
 def test_invalid_package_exists(remote_api_super_admin_auth, test_package_name):
@@ -286,7 +295,7 @@ def test_invalid_package_exists(remote_api_super_admin_auth, test_package_name):
 
     returns True if the package exists and is valid.
     '''
-    
+
     LOGGER.debug("testing if a valid package exists: %s", test_package_name)
     exists = package_exists(remote_api_super_admin_auth, test_package_name, 'INVALID')
     yield exists

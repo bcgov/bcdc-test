@@ -235,6 +235,7 @@ def org_setup_fixture(remote_api_super_admin_auth, test_session_organization,
     :param session_test_org_data: data to use when creating the org
     '''
     session_test_org_data['users'] = user_setup_fixture
+    LOGGER.debug(f"session_test_org_data: {session_test_org_data}")
     LOGGER.debug(f"users to add to org: {user_setup_fixture}")
 
     LOGGER.debug("Setup Org: %s", test_session_organization)

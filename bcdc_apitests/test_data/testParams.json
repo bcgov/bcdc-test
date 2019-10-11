@@ -3,7 +3,7 @@
         "test_module":"bcdc_apitests.tests.packages.test_packages",
         "test_function": "test_package_create",
         "test_users": ["admin", "editor"],
-        "test_data": ["bcdc_dataset_random"],
+        "test_data": ["populate_randomized"],
         "test_result": true, 
         "comments": "tests creation of a completely random set of values in a bcdc_dataset as admin and editor"
     },
@@ -11,7 +11,7 @@
         "test_module":"bcdc_apitests.tests.packages.test_packages",
         "test_function": "test_package_create",
         "test_users": ["viewer"],
-        "test_data": ["bcdc_dataset_random"],
+        "test_data": ["populate_randomized"],
         "test_result": false, 
         "comments": "tests package_create as viewer, should fail"
     }, 
@@ -19,7 +19,7 @@
 		"test_module":"bcdc_apitests.tests.packages.test_packages",
 		"test_function": "test_package_show",
 		"test_users": ["admin", "editor", "viewer"],
-		"test_data": ["bcdc_dataset_random"],
+		"test_data": ["populate_randomized"],
 		"test_result": true, 
 		"comment": "ADD: editor and viewer back in! package should exist and be viewable by all"
 	},
@@ -27,7 +27,7 @@
         "test_module":"bcdc_apitests.tests.packages.test_packages",
         "test_function": "test_package_update",
         "test_users": ["admin", "editor"],
-        "test_data": ["bcdc_dataset_random"],
+        "test_data": ["populate_randomized"],
         "test_result": true, 
         "comment": "editor:  testing ability to update packages"
     },
@@ -35,43 +35,100 @@
         "test_module":"bcdc_apitests.tests.packages.test_packages",
         "test_function": "test_package_update",
         "test_users": ["viewer"],
-        "test_data": ["bcdc_dataset_random"],
+        "test_data": ["populate_randomized"],
         "test_result": false
     },
         {
         "test_module":"bcdc_apitests.tests.packages.test_packages",
         "test_function": "test_package_search",
         "test_users": ["admin", "editor", "viewer"],
-        "test_data": ["bcdc_dataset_random"],
+        "test_data": ["populate_randomized"],
         "test_result": true
     },
     {
         "test_module":"bcdc_apitests.tests.packages.test_packages",
         "test_function": "test_package_list_vs_package_show",
         "test_users": ["admin", "editor", "viewer"],
-        "test_data": ["bcdc_dataset_random"],
+        "test_data": ["populate_randomized"],
         "test_result": true
     },
     {
         "test_module":"bcdc_apitests.tests.packages.test_packages",
         "test_function": "test_package_delete",
         "test_users": ["admin", "editor"],
-        "test_data": ["bcdc_dataset_random"],
+        "test_data": ["populate_randomized"],
         "test_result": true
     },
     {
         "test_module":"bcdc_apitests.tests.packages.test_packages",
         "test_function": "test_package_delete",
         "test_users": ["viewer"],
-        "test_data": ["bcdc_dataset_random"],
+        "test_data": ["populate_randomized"],
         "test_result": false
     },
     {
         "test_module":"bcdc_apitests.tests.packages.test_packages",
         "test_function": "test_create_package_coredataonly",
         "test_users": ["admin", "editor"],
-        "test_data": ["bcdc_dataset_random"],
+        "test_data": ["populate_randomized"],
         "test_result": true, 
         "comment": "only configure this test for admin/editor as only they can create data.  This test determines if it is possible to create a package with only the fields identified in the ckan docs.  Expected result should be false."
+    },
+    {
+        "test_module":"bcdc_apitests.tests.resources.test_resources",
+        "test_function": "test_resource_create",
+        "test_users": ["admin", "editor"],
+        "test_data": ["populate_randomized"],
+        "test_result": true,
+        "comment": " only configure this test for admin/editor as only they can create data.  This test determines if it is possible to create a package with only the fields identified in the ckan docs.  Expected result should be false."
+    }, 
+    {
+        "test_module":"bcdc_apitests.tests.resources.test_resources",
+        "test_function": "test_resource_create",
+        "test_users": ["viewer"],
+        "test_data": ["populate_randomized"],
+        "test_result": false
+    }, 
+    {
+        "test_module":"bcdc_apitests.tests.resources.test_resources",
+        "test_function": "test_resource_update",
+        "test_users": ["admin", "editor"],
+        "test_data": ["populate_randomized"],
+        "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.resources.test_resources",
+        "test_function": "test_resource_update",
+        "test_users": ["viewer"],
+        "test_data": ["populate_randomized"],
+        "test_result": false
+    },
+    {
+        "test_module":"bcdc_apitests.tests.resources.test_resources",
+        "test_function": "test_resource_search",
+        "test_users": ["admin", "editor", "viewer"],
+        "test_data": ["populate_randomized"],
+        "test_result": true
+    },
+        {
+        "test_module":"bcdc_apitests.tests.resources.test_resources",
+        "test_function": "test_resource_delete",
+        "test_users": ["admin", "editor"],
+        "test_data": ["populate_randomized"],
+        "test_result": true
+    },
+    {
+        "test_module":"bcdc_apitests.tests.resources.test_resources",
+        "test_function": "test_resource_delete",
+        "test_users": ["viewer"],
+        "test_data": ["populate_randomized"],
+        "test_result": false
+    }, 
+    {
+        "test_module":"bcdc_apitests.tests.organizations.test_orgs",
+        "test_function": "test_organization_show",
+        "test_users": ["viewer", "editor", "admin"],
+        "test_data": ["dummy"],
+        "test_result": true
     }
 ]

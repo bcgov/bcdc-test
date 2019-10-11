@@ -24,7 +24,7 @@ from bcdc_apitests.helpers.file_utils import FileUtils
 LOGGER = logging.getLogger(__name__)
 
 # @pytest.fixture
-# def populate_random(org_create_if_not_exists_fixture, get_cached_package_path,
+# def populate_bcdc_dataset(org_create_if_not_exists_fixture, get_cached_package_path,
 #                   test_package_name, test_user):
 #     '''
 #     :param org_create_if_not_exists_fixture: creates the test org if it doesn't
@@ -83,9 +83,9 @@ def resource_data(package_create_if_not_exists,
 
 
 @pytest.fixture
-def test_pkg_data_core_only(populate_random):
+def test_pkg_data_core_only(populate_bcdc_dataset):
     '''
-    :param populate_random: Valid package data
+    :param populate_bcdc_dataset: Valid package data
 
     Method will remove all but the core attributes required as described in
     the ckan docs.
@@ -98,37 +98,37 @@ def test_pkg_data_core_only(populate_random):
         - private (bool)
         - owner_org (configurable as optional, assuming its not)
     '''
-    logging.debug("test_package_name: %s", populate_random)
+    logging.debug("test_package_name: %s", populate_bcdc_dataset)
     core_attribs = ['name', 'title', 'private', 'owner_org']
     core_atribs_only_pkg = {}
-    for key in populate_random.keys():
+    for key in populate_bcdc_dataset.keys():
         if key in core_attribs:
-            core_atribs_only_pkg[key] = populate_random[key]
+            core_atribs_only_pkg[key] = populate_bcdc_dataset[key]
     return core_atribs_only_pkg
 
 
 @pytest.fixture
-def test_pkg_data_updated(populate_random):
+def test_pkg_data_updated(populate_bcdc_dataset):
     '''
-    :param populate_random: package data structure that can be used to load a new
+    :param populate_bcdc_dataset: package data structure that can be used to load a new
                           package
     :return: a ckan package data structure that can be loaded to ckan for testing
     '''
     logging.debug("test_package_name: %s", test_package_name)
-    populate_random['title'] = 'test package update'
-    return populate_random
+    populate_bcdc_dataset['title'] = 'test package update'
+    return populate_bcdc_dataset
 
 
 @pytest.fixture
-def test_pkg_data_prep(populate_random, test_package_state, test_package_visibility):
+def test_pkg_data_prep(populate_bcdc_dataset, test_package_state, test_package_visibility):
     '''
-    :param populate_random: package data structure that can be used to load a new
+    :param populate_bcdc_dataset: package data structure that can be used to load a new
                           package
     '''
     logging.debug("test_package_name: %s", test_package_name)
-    populate_random['edc_state'] = test_package_state
-    populate_random['metadata_visibility'] = test_package_visibility
-    return populate_random
+    populate_bcdc_dataset['edc_state'] = test_package_state
+    populate_bcdc_dataset['metadata_visibility'] = test_package_visibility
+    return populate_bcdc_dataset
 
 
 @pytest.fixture
