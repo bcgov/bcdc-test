@@ -16,7 +16,6 @@ import bcdc_apitests.helpers.bcdc_dataset_schema as bcdc_dataset_schema
 import bcdc_apitests.helpers.bcdc_dynamic_data_population as bcdc_dynamic_data_population
 import bcdc_apitests.config.testConfig as testConfig
 
-
 LOGGER = logging.getLogger(__name__)
 
 # pylint: disable=logging-fstring-interpolation
@@ -24,8 +23,8 @@ LOGGER = logging.getLogger(__name__)
 
 @pytest.fixture
 def populate_bcdc_dataset(org_create_if_not_exists_fixture, test_package_name,
-                    get_scheming, test_package_title,
-                    cancel_cache_teardown):
+                          get_scheming, test_package_title,
+                          cancel_cache_teardown):
     '''
        * org_create_if_not_exists_fixture - verifies that the org exists
             and makes org id available
@@ -79,15 +78,19 @@ def populate_bcdc_dataset_single(populate_bcdc_dataset):
         populate_bcdc_dataset.reset()
         dataset = next(populate_bcdc_dataset)
     LOGGER.debug(f"Dataset Retrieved from iterator: {dataset}")
-    return dataset
+    yield dataset
 
 
 @pytest.fixture
 def bcdc_dataset_populator(get_scheming):
     '''
-    :param get_scheming: the scheming
-    gets the scheming defs
-    using scheming defs returns a data population object
+    :param get_scheming: the scheming definitions retrieved from the scheming
+        end point.
+
+    Test generates a DataPopulation object and returns it.  Individual tests
+    will then receive method names through parameterization that belong to the
+    object returned by this fixture.  They will call those methods to retrieve
+    the data to be used for various tests.
     '''
     dataset_schema = bcdc_dataset_schema.BCDCDataset(
         dataset_type='dataset_fields', struct=get_scheming)
@@ -95,43 +98,63 @@ def bcdc_dataset_populator(get_scheming):
     dataset_populator = bcdc_dynamic_data_population.DataPopulation(
         dataset_schema, 'dataset_fields')
     yield dataset_populator
+    
+    
+@pytest.fixture
+def bcdc_resource_populator(get_scheming):
+    '''
+    :param get_scheming: the scheming definitions retrieved from the scheming
+        end point.
+
+    Test generates a DataPopulation object and returns it.  Individual tests
+    will then receive method names through parameterization that belong to the
+    object returned by this fixture.  They will call those methods to retrieve
+    the data to be used for various tests.
+    '''
+    dataset_schema = bcdc_dataset_schema.BCDCDataset(
+        dataset_type='resource_fields', struct=get_scheming)
+
+    dataset_populator = bcdc_dynamic_data_population.DataPopulation(
+        dataset_schema, 'resource_fields')
+    yield dataset_populator
 
 
 @pytest.fixture
-def bcdc_resource_populator(get_scheming, package_create_if_not_exists):
+def populate_resource(get_scheming, package_create_if_not_exists, 
+                      bcdc_resource_populator,
+                      cancel_cache_teardown):
     '''
     :param get_scheming: the scheming
     gets the scheming defs
     using scheming defs returns a data population object
     '''
-    resource_schema = bcdc_dataset_schema.BCDCDataset(
-        dataset_type='resource_fields', struct=get_scheming)
-    # resource_fields dataset_fields
-    resource_populator = bcdc_dynamic_data_population.DataPopulation(
-        resource_schema, 'resource_fields')
     # overrides
     overrides = {"name": testConfig.TEST_RESOURCE,
-                 "package_id": package_create_if_not_exists['id']}
-    
-    
-    resource_data = resource_populator.populate_randomized(overrides)
-    LOGGER.debug(f"resource_populator: {resource_populator}")
-    yield resource_data
-    
-@pytest.fixture
-def bcdc_resource_populator_single(bcdc_resource_populator, remote_api_super_admin_auth):
-    LOGGER.debug(f"resource type: {type(bcdc_resource_populator)}")
-    # iterator = iter(populate_bcdc_dataset)
-    
-    pkg = remote_api_super_admin_auth.action.package_show(id=testConfig.TEST_PACKAGE)
+                 "package_id": package_create_if_not_exists['id'], 
+                 "bcdc_type": "geographic"}
 
-    
-    
+    resource_data = bcdc_resource_populator.populate_randomized(overrides)
+    LOGGER.debug(f"resource_populator: {bcdc_resource_populator}")
+    yield resource_data
+
+    if not cancel_cache_teardown:
+        LOGGER.debug("calling data cache teardown")
+        cache = bcdc_resource_populator.cache
+        cache.delete_cache()
+
+
+@pytest.fixture
+def populate_resource_single(populate_resource, remote_api_super_admin_auth):
+    LOGGER.debug(f"resource type: {type(populate_resource)}")
+    # iterator = iter(populate_bcdc_dataset)
+
+    #pkg = remote_api_super_admin_auth.action.package_show(id=testConfig.TEST_PACKAGE)
+
     try:
-        resource = next(bcdc_resource_populator)
+        resource = next(populate_resource)
     except StopIteration:
-        populate_bcdc_dataset.reset()
-        resource = next(populate_bcdc_dataset)
+        populate_resource.reset()
+        resource = next(populate_resource)
     LOGGER.debug(f"Resource Retrieved from iterator: {resource}")
-    return resource
+    yield resource
 

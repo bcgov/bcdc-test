@@ -16,7 +16,6 @@ import pytest  # @UnusedImport
 LOGGER = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
 
-
 def test_organization_list(conf_fixture, org_create_if_not_exists_fixture,
                            test_organization, ckan_url, ckan_rest_dir,
                            ckan_auth_header, user_label_fixture):
@@ -81,6 +80,7 @@ def test_organization_show(conf_fixture, org_create_if_not_exists_fixture,
                                                      org_data['success'],
                                                      user_label_fixture)
     assert org_data['success'] == conf_fixture.test_result, request_success_msg
+
 
 def test_organization_list_related(conf_fixture, org_create_if_not_exists_fixture,
                            test_organization, ckan_url, ckan_rest_dir,

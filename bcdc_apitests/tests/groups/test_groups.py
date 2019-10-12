@@ -14,8 +14,8 @@ LOGGER = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
 
 def test_group_list(conf_fixture, group_create_if_not_exists_fixture,
-                           test_group, ckan_url, ckan_rest_dir,
-                           ckan_auth_header, user_label_fixture):
+                    test_group, ckan_url, ckan_rest_dir,
+                    ckan_auth_header, user_label_fixture):
     '''
     verifies can retrieve a list of groups and that there is at least
     one group defined

@@ -20,7 +20,7 @@ import re
 import randomwordgenerator.randomwordgenerator
 
 import bcdc_apitests.config.testConfig as testConfig
-import bcdc_apitests.helpers.data_config as data_config
+#import bcdc_apitests.helpers.data_config as data_config
 from bcdc_apitests.helpers.file_utils import FileUtils
 
 LOGGER = logging.getLogger(__name__)
@@ -192,10 +192,7 @@ class DataCache():
         '''
         if self.cache_exists():
             LOGGER.info(f"removing the data cache file: {self.cache_file}")
-
-            # DEBUGGING
             os.remove(self.cache_file)
-            #LOGGER.info(f"didn't delete")
 
 
 class DataSetIterator():
@@ -379,9 +376,9 @@ class DataPopulationResource():
         sets the title for the data set, going to hard code this as
         test_data
         '''
-        LOGGER.debug(f"{fld.field_name}: {data_config.DataSetValues.title}")
-        return data_config.DataSetValues.title
-
+        LOGGER.debug(f"{fld.field_name}: {testConfig.TEST_PACKAGE_TITLE}")
+        return testConfig.TEST_PACKAGE_TITLE
+        
     def dataset_slug(self, fld, override=None):  # pylint: disable=no-self-use
         '''
         This is currently configured for the name of the dataset to just returning

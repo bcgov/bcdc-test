@@ -15,8 +15,11 @@ import pytest  # @UnusedImport
 LOGGER = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
 
-def test_dashboard_activity_list(conf_fixture, user_label_fixture, remote_api_auth, populate_bcdc_dataset, test_package_name,
-                                 ckan_url, ckan_rest_dir, ckan_auth_header, package_delete_if_exists, test_pkg_teardown):
+def test_dashboard_activity_list(conf_fixture, user_label_fixture,
+                                 remote_api_auth, populate_bcdc_dataset_single,
+                                 test_package_name, ckan_url, ckan_rest_dir,
+                                 ckan_auth_header, package_delete_if_exists,
+                                 test_pkg_teardown):
     '''
     :param remote_api_auth: a ckan remote api object
     :param populate_bcdc_dataset: pkg data to be updated
@@ -24,20 +27,23 @@ def test_dashboard_activity_list(conf_fixture, user_label_fixture, remote_api_au
                       exists.
     :param user_label_fixture: get user name
 
-    Create pkg and then check if pkg_id is recorded in the activity_list as an object_id
+    Create pkg and then check if pkg_id is recorded in the activity_list as an
+    object_id
     '''
 
     # create new pkg as user
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'package_create')
     LOGGER.debug('api_call: %s', api_call)
-    resp = requests.post(api_call, headers=ckan_auth_header, json=populate_bcdc_dataset)
+    resp = requests.post(api_call, headers=ckan_auth_header,
+                         json=populate_bcdc_dataset_single)
     assert (resp.status_code == 200) == conf_fixture.test_result
     pkg_data = resp.json()
     new_pkg_id = pkg_data['result']['id']
     LOGGER.debug('new_pkg_id: %s', new_pkg_id)
 
     # get activity list
-    api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'dashboard_activity_list')
+    api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir,
+                                   'dashboard_activity_list')
     LOGGER.debug('api_call: %s', api_call)
     resp = requests.post(api_call, headers=ckan_auth_header)
     assert (resp.status_code == 200) == conf_fixture.test_result
@@ -63,7 +69,7 @@ def test_tag_list(conf_fixture, remote_api_auth):
     :param remote_api: a ckan remote api object
 
     '''
-    #TODO: WIP
+    # TODO: WIP
     tag_list_data = remote_api_auth.action.tag_list()
     LOGGER.debug("tag_list_data: %s", tag_list_data)
 
@@ -74,7 +80,7 @@ def test_vocabulary_list(conf_fixture, remote_api_super_admin_auth):
 
     sysAdmin Only
     '''
-    #TODO: WIP
+    # TODO: WIP
     vocabulary_list_data = remote_api_super_admin_auth.action.vocabulary_list()
     LOGGER.debug("vocabulary_list_data: %s", vocabulary_list_data)
 
@@ -84,7 +90,7 @@ def test_license_list(conf_fixture, remote_api_auth):
     :param remote_api: a ckan remote api object
 
     '''
-    #TODO: WIP
+    # TODO: WIP
     license_list_data = remote_api_auth.action.license_list()
     LOGGER.debug("license_list_data: %s", license_list_data)
 
@@ -118,6 +124,4 @@ def test_config_option_show(conf_fixture, remote_api_super_admin_auth,
         fail_msg = "failed to get config data option for {0} "
         fail_msg = fail_msg.format(config)
         assert config_option_show_data['success'] == conf_fixture.test_result, fail_msg
-
-
 

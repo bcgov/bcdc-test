@@ -73,6 +73,7 @@ def resource_teardown(remote_api, pkg_name):
         remote_api.action.resource_delete(id=rsrc['id'])
     LOGGER.debug("deleting package: %s", pkg_name)
     remote_api.action.package_delete(id=pkg_name)
+    
 
 # --------------------- Fixtures ----------------------
 
@@ -105,8 +106,15 @@ def get_resource_fixture(res_create_if_not_exists,
 @pytest.fixture
 def res_create_if_not_exists(package_create_if_not_exists,
                              remote_api_super_admin_auth,
-                             bcdc_resource_populator_single):
+                             populate_resource_single):
     '''
+response = '{"help": "https://cadi.data.gov.bc.ca/packages?ver=%2F1&name=resource_create&logic_function=help_show",
+  "success": fa... \\"\\""], "__type": "Validation Error", "spatial_datatype": ["Missing value"],
+   "projection_name": ["Missing value"]}}'
+   
+   
+   {'package_id': 'fdd23e01-3c73-4ccc-a42c-feb605498b89', 'revision_id': 'Clark', 'description': 'rouse', 'format': 'vitamin', 'hash': 'dimethyl', 'mimetype': 'inestimable', 'mimetype_inner': 'petty', 'cache_url': 'foamy', 'created': '2011-04-06', 'last_modified': '2012-07-07', 'cache_last_updated': '2016-05-29', 'bcdc_type': 'document', 'url': 'https://Sophie.com', 'json_table_schema': '{"schema": { "fields":[ { "mode": "nullable", "name": "placeName", "type": "string"  },  { "mode": "nullable", "name": "kind", "type": "string"  }  ] } }', 'name': 'zzztest_kjn_testresource', 'resource_description': 'mug', 'resource_update_cycle': 'quarterly', 'resource_storage_format': 'pdf', 'resource_type': 'abstraction', 'resource_storage_location': 'web or ftp site', 'resource_access_method': 'direct access', 'supplemental_information': 'venereal', 'temporal_extent': '[{"beginning_date": "Littleton", "end_date": "terrific"}]'}
+
     Checks to see if the resource exists and creates it if does not
 
     :param package_create_if_not_exists: creates the package if it doesn't exist
@@ -114,12 +122,12 @@ def res_create_if_not_exists(package_create_if_not_exists,
     :param remote_api_super_admin_auth:
     '''
     test_resource_name = testConfig.TEST_RESOURCE
-    LOGGER.debug(f"bcdc_resource_populator_single: {bcdc_resource_populator_single}")
+    LOGGER.debug(f"populate_resource_single: {populate_resource_single}")
     pkgid = package_create_if_not_exists['id']
     resource = get_resource(remote_api_super_admin_auth, test_resource_name,
                             pkgid)
     if not resource:
-        resource = remote_api_super_admin_auth.action.resource_create(**bcdc_resource_populator_single)
+        resource = remote_api_super_admin_auth.action.resource_create(**populate_resource_single)
         LOGGER.debug("created resource: %s", resource)
     yield resource
 
