@@ -20,7 +20,7 @@ import re
 import randomwordgenerator.randomwordgenerator
 
 import bcdc_apitests.config.testConfig as testConfig
-#import bcdc_apitests.helpers.data_config as data_config
+# import bcdc_apitests.helpers.data_config as data_config
 from bcdc_apitests.helpers.file_utils import FileUtils
 
 LOGGER = logging.getLogger(__name__)
@@ -28,6 +28,13 @@ WORDS = []
 
 # pylint: disable=logging-fstring-interpolation, logging-not-lazy
 
+
+def undefined_prefix(fld):
+
+    msg = f'prefix is set to: {fld.preset}.  There is no code to ' + \
+        'to accomodate this type.  Need to add a method definition for ' + \
+        'that type to this class'
+    raise UndefinedPreset(msg)
 
 
 class DataPopulation():
@@ -65,6 +72,9 @@ class DataPopulation():
         self.cache_dir = FileUtils().get_test_data_dir()
         self.cache = None
 
+        # this property can be set to disable cache usage
+        self.disable_cache = False
+
     def populate_randomized(self, overrides=None):
         '''
         Returns a single dataset, fields are all randomly populated, fields will
@@ -90,7 +100,7 @@ class DataPopulation():
         self.cache = DataCache(cache_file)
 
         data_iterable = None
-        if self.cache.cache_exists():
+        if self.cache.cache_exists() and not self.disable_cache:
             LOGGER.debug("loading a cached dataset")
             data_iterable = self.cache.load_cache_data(overrides)
         if data_iterable is None:
@@ -113,7 +123,7 @@ class DataPopulation():
         cache_file = os.path.join(self.cache_dir, file_name)
         self.cache = DataCache(cache_file)
 
-        coreData = self.pop_resource.populate_all(overrides=overrides)
+        core_data = self.pop_resource.populate_all(overrides=overrides)
 
         # get list of required field names
         required = []
@@ -121,13 +131,38 @@ class DataPopulation():
             if fld.required:
                 required.append(fld.field_name)
 
-        if self.cache.cache_exists():
+        if self.cache.cache_exists() and not self.disable_cache:
             data_iterable = self.cache.load_cache_data()
         else:
-            data_iterable = DataSetIterator(coreData)
+            data_iterable = DataSetIterator(core_data)
             data_iterable.flds_to_remove(required)
             self.cache.write_cache_data(data_iterable)
         return data_iterable
+
+    def populate_bcdc_types(self, overrides=None):
+        '''
+        :return: an iterator that returns each of the different datasets
+        '''
+        
+        file_name = f'{inspect.currentframe().f_code.co_name}_{self.data_type}.json'
+        cache_file = os.path.join(self.cache_dir, file_name)
+        self.cache = DataCache(cache_file)
+
+        if self.data_type != 'resource_fields':
+            msg = 'bcdc_types is a field for resources not datasets, the ' + \
+                  f'dataset this object is currently describing is a: {self.data_type}'
+            raise ValueError(msg)
+        bcdc_type_def = self.fields_schema.get_field('bcdc_type')
+        bcdc_type_choices = bcdc_type_def.choices.values
+        dataset_list = []
+        LOGGER.debug(f"overrides are: {overrides}")
+        for bcdc_type in bcdc_type_choices:
+            overrides['bcdc_type'] = bcdc_type
+            dataset = self.pop_resource.populate_all(overrides=overrides)
+            dataset_list.append(dataset)
+        data_iterable = DataSetIterator(dataset_list)
+        return data_iterable
+
 
 class DataCache():
     '''
@@ -216,6 +251,9 @@ class DataSetIterator():
         self.remove_flds = []
         self.ds_cnt = 0  # dataset count
         self.fld_cnt = 0  # field count
+
+    def add_dataset(self, dataset_dict):
+        self.core_data.append(dataset_dict)
 
     def flds_to_remove(self, fldname_list):
         '''
@@ -359,8 +397,14 @@ class DataPopulationResource():
                       'however that value is not defined in the domain: ' + \
                       f'{values}'
                 raise ValueError(msg)
-            LOGGER.debug(f" values: {values}")
-            value = values[random.randint(0, len(values) - 1)]
+            elif override:
+                # if previous conditional didn't raise an error then the override
+                # does not violate the domain, therefor use it, otherwise
+                # randomly populate
+                value = override
+            else:
+                LOGGER.debug(f" values: {values}")
+                value = values[random.randint(0, len(values) - 1)]
         elif (fld.choices_helper) and fld.choices_helper == 'edc_orgs_form':
             # TODO, example of this is the subfield for contacts...
             #   field_name = org
@@ -378,7 +422,7 @@ class DataPopulationResource():
         '''
         LOGGER.debug(f"{fld.field_name}: {testConfig.TEST_PACKAGE_TITLE}")
         return testConfig.TEST_PACKAGE_TITLE
-        
+
     def dataset_slug(self, fld, override=None):  # pylint: disable=no-self-use
         '''
         This is currently configured for the name of the dataset to just returning
@@ -404,7 +448,7 @@ class DataPopulationResource():
         # does the field name end with _email?
         if override:
             word = override
-        elif re.match('^\w+_+email$', fld.field_name):
+        elif re.match(r'^\w+_+email$', fld.field_name):
             domain = self.rand.getword()
             email = f'{word}@{domain}.com'
             word = email
@@ -430,6 +474,11 @@ class DataPopulationResource():
         subfields_values = []
         if flds2gen is None:
             flds2gen = random.randint(1, 3)
+
+        if override:
+            LOGGER.warning(f'override values supplied for the field: {fld.field_name} ' +
+                           'are being ignored.  Currently functionality to set ' +
+                           'overrides of subfields does not exist')
 
         # configured to generate randomly between 1 and 3 subfields the actual
         # range is never actually, just an easy way to create a loop
@@ -480,8 +529,8 @@ class DataPopulationResource():
         :return: gets a random string and then assembles into a url by appending
             https:// and .com
         '''
-        randomString = self.string(fld)
-        url = f'https://{randomString}.com' if not override else override
+        random_string = self.string(fld)
+        url = f'https://{random_string}.com' if not override else override
         return url
 
     def json_object(self, fld, override=None):  # pylint: disable=no-self-use, unused-argument
@@ -536,6 +585,44 @@ class DataPopulationResource():
         '''
         return self.select(fld, override)
 
+    def populate_overrides(self, overrides):
+        '''
+        When override / hard coded values are provided they get added to the
+        output dataset / resource using this method.  This method will
+         - verify that the overrides do not violate any of the data rules
+         - populate the overrides first, to address any possible conditional
+           validators that are dependent on these hard coded values.
+        '''
+        def undefined_prefix(fld):
+            msg = f'prefix is set to: {fld.preset}.  There is no code to ' + \
+                  'to accomodate this type.  Need to add a method definition for ' + \
+                  'that type to this class'
+            raise UndefinedPreset(msg)
+
+        for override_field_name in overrides:
+            # validate field def
+            LOGGER.debug(f"override_field_name: {override_field_name}")
+            override_fld_def = self.fields.get_field(override_field_name)
+            LOGGER.debug(f"override_fld_def: {override_fld_def}")
+            if override_fld_def is None:
+                fld_names = self.fields.get_field_names()
+                msg = f'an override property: "{override_field_name}" was specified ' + \
+                      'that does not exist in the schema definitions.  Possible ' + \
+                      f'values include: {fld_names}'
+                raise ValueError(msg)
+
+            # now test that the value complies with the field def.
+            LOGGER.debug(f"preset for override field {override_field_name} is {override_fld_def.preset}")
+            func = getattr(self, override_fld_def.preset, undefined_prefix)
+            field_value = func(override_fld_def, override=overrides[override_field_name])
+            LOGGER.debug(f'override value: {overrides[override_field_name]}, {field_value}')
+            if field_value != overrides[override_field_name]:
+                msg = f'override value was not correctly set for {override_field_name} '
+                msg = msg + f' and the corresponding value: {overrides[override_field_name]}'
+                LOGGER.error(msg)
+                raise ValueError(msg)
+            self.datastruct[override_fld_def.field_name] = field_value
+
     def populate_all(self, overrides=None):
         '''
         iterates over the fields object populating it with data.
@@ -566,6 +653,11 @@ class DataPopulationResource():
         if overrides is None:
             overrides = {}
 
+        # populate the overrides first, that way if there are dependencies on the
+        # overrides they will be processed second.
+        LOGGER.debug(f"overrides are set to: {overrides}")
+        self.populate_overrides(overrides)
+
         def undefined_prefix(fld):
             msg = f'prefix is set to: {fld.preset}.  There is no code to ' + \
                   'to accomodate this type.  Need to add a method definition for ' + \
@@ -579,8 +671,11 @@ class DataPopulationResource():
             LOGGER.debug(f'Fld is: {fld}')
             LOGGER.debug(f'Fld preset is: {fld.preset}')
 
+            # has field already been populated?
+            if fld.field_name in self.datastruct:
+                LOGGER.info("field: {fld.field_name} populated by override")
             # Does the field have a conditional property AND the conditional resolves as False...
-            if self.has_conditional(fld) and not self.conditional_satisfied(fld):
+            elif self.has_conditional(fld) and not self.conditional_satisfied(fld):
                 # condition is not met, add to deferred
                 LOGGER.debug(f"adding to the deferred list: {fld}")
                 self.deferred.append(fld)
@@ -688,62 +783,3 @@ class UndefinedPreset(AttributeError):
         # Call the base class constructor with the parameters it needs
         super().__init__(message)
 
-# TODO: Could move this to test - test code
-# if __name__ == '__main__':
-#     import os.path
-#     import json
-#     import bcdc_apitests.helpers.bcdc_dataset_schema as bcdc_dataset_schema
-#
-#     dataSchemaFile = os.path.join(os.path.dirname(__file__), '..', 'test_data',
-#                                   'data_schema.json')
-#     fh = open(dataSchemaFile, 'r')
-#     schematext = fh.read()
-#     fh.close()
-#     data_struct = json.loads(schematext)
-#
-#     # simple logging setup
-#     LOGGER = logging.getLogger(__name__)
-#     LOGGER.setLevel(logging.DEBUG)
-#     hndlr = logging.StreamHandler()
-#     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s -' +
-#                                   ' %(lineno)d - %(message)s')
-#     hndlr.setFormatter(formatter)
-#     LOGGER.addHandler(hndlr)
-#     LOGGER.debug("test")
-#
-#     # BCDC_Dataset Dataset Fields.
-#     bcdc_dataset = bcdc_dataset_schema.BCDCDataset(dataset_type='dataset_fields',
-#                                struct=data_struct['result'])
-#
-#     # # BCDC_Dataset  Resources Fields
-#     resources = bcdc_dataset_schema.BCDCDataset(dataset_type='resource_fields',
-#                             struct=data_struct['result'])
-#
-#     # summarize presets
-#     presets = bcdc_dataset.get_presets()
-#     resource_preset = resources.get_presets()
-#     presets.extend(resource_preset)  # combine presets
-#     presets = list(set(presets))
-#     presets.sort()
-#     LOGGER.debug(f'presets: {presets}')
-#
-#     # set up a filtered list, Filters at the moment remain untested
-#     # bcdc_dataset.set_field_type_filter('required', True)
-#     # for bcdc_dataset_fld in bcdc_dataset:
-#     #    fld_nm = bcdc_dataset_fld.get_value('field_name')
-#     #    LOGGER.debug(f"field_name: {fld_nm}, {bcdc_dataset_fld.preset}")
-#
-#     dataset_populator = DataPopulation(bcdc_dataset)
-#     bcdc_dataet = dataset_populator.populate_random()
-#
-#     resource_populator = DataPopulation(resources)
-#     resources_data = resource_populator.populate_random()
-#
-#     import pprint
-#     pp = pprint.PrettyPrinter(indent=4)
-#
-#     pp.pprint(bcdc_dataet)
-#
-#     print('*' * 80)
-#
-#     pp.pprint(resources_data)

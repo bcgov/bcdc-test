@@ -12,7 +12,6 @@ import ckanapi
 # from bcdc_apitests.fixtures.ckan import remote_api_super_admin_auth
 import bcdc_apitests.config.testConfig as testConfig
 
-
 LOGGER = logging.getLogger(__name__)
 
 # pylint: disable=redefined-outer-name
@@ -73,7 +72,6 @@ def resource_teardown(remote_api, pkg_name):
         remote_api.action.resource_delete(id=rsrc['id'])
     LOGGER.debug("deleting package: %s", pkg_name)
     remote_api.action.package_delete(id=pkg_name)
-    
 
 # --------------------- Fixtures ----------------------
 
@@ -91,7 +89,7 @@ def resource_get_id_fixture(get_resource_fixture):
 
 @pytest.fixture
 def get_resource_fixture(res_create_if_not_exists,
-                         remote_api_super_admin_auth ):
+                         remote_api_super_admin_auth):
     '''
     :param remote_api_admin_auth: a ckanapi remote object with auth
     :param test_resource_name: test resource name
@@ -108,11 +106,11 @@ def res_create_if_not_exists(package_create_if_not_exists,
                              remote_api_super_admin_auth,
                              populate_resource_single):
     '''
-response = '{"help": "https://cadi.data.gov.bc.ca/packages?ver=%2F1&name=resource_create&logic_function=help_show",
+response = '{"help": "https://cadi.data.gov.bc.ca/packages?ver=%2F1&name=resource_create&logic_function=help_show",  #pylint: disable=line-too-long
   "success": fa... \\"\\""], "__type": "Validation Error", "spatial_datatype": ["Missing value"],
    "projection_name": ["Missing value"]}}'
-   
-   
+
+
    {'package_id': 'fdd23e01-3c73-4ccc-a42c-feb605498b89', 'revision_id': 'Clark', 'description': 'rouse', 'format': 'vitamin', 'hash': 'dimethyl', 'mimetype': 'inestimable', 'mimetype_inner': 'petty', 'cache_url': 'foamy', 'created': '2011-04-06', 'last_modified': '2012-07-07', 'cache_last_updated': '2016-05-29', 'bcdc_type': 'document', 'url': 'https://Sophie.com', 'json_table_schema': '{"schema": { "fields":[ { "mode": "nullable", "name": "placeName", "type": "string"  },  { "mode": "nullable", "name": "kind", "type": "string"  }  ] } }', 'name': 'zzztest_kjn_testresource', 'resource_description': 'mug', 'resource_update_cycle': 'quarterly', 'resource_storage_format': 'pdf', 'resource_type': 'abstraction', 'resource_storage_location': 'web or ftp site', 'resource_access_method': 'direct access', 'supplemental_information': 'venereal', 'temporal_extent': '[{"beginning_date": "Littleton", "end_date": "terrific"}]'}
 
     Checks to see if the resource exists and creates it if does not

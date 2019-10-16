@@ -43,10 +43,7 @@ def test_resource_create(conf_fixture, ckan_url, ckan_rest_dir, ckan_auth_header
     LOGGER.debug(f'conf_fixture dataname: {conf_fixture.test_data }')
     func = getattr(bcdc_resource_populator, conf_fixture.test_data[0])
     overrides = {'name': testConfig.TEST_RESOURCE,
-                 'package_id': pkg['id'],
-                 "type": "DATA",
-                 "resource_type": "data"}
-
+                 'package_id': pkg['id']}
     populate_bcdc_resource = func(overrides)
 
     # define api call

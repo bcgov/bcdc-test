@@ -217,6 +217,17 @@ class CKANCorePackage(Fields):
             elif fld.has_fld('subfields'):
                 preset.extend(self.get_presets(fld['subfields']))
         return list(set(preset))
+    
+    def get_field_names(self):
+        '''
+        :return: a list of the field names that are defined for this schema.  Does
+                 not include subfields
+        '''
+        fld_names = []
+        for fld in self:
+            fld_names.append(fld.field_name)
+        return fld_names
+        
         
     def field_exists(self, field):
         exists = False
@@ -225,6 +236,18 @@ class CKANCorePackage(Fields):
                 exists = True
                 break
         return exists
+    
+    def field_name_exists(self, field_name):
+        '''
+        :param field_name: input field name
+        :return: boolean depending on whether the schema includes a definition
+            for the input field_name
+        '''
+        field_names = self.get_field_names()
+        ret_val = False
+        if field_name in field_names:
+            ret_val = True
+        return ret_val
     
     def remove_field(self, field):
         '''
@@ -249,6 +272,20 @@ class CKANCorePackage(Fields):
         was_removed = self.remove_field(field)
         LOGGER.debug(f"removed the field?: {was_removed}")
         self.all_flds.append(field)
+        
+    def get_field(self, field_name):
+        '''
+        :return: a field object for the field that corresponds with the field
+                 name provided... returns None if the field does not exist.
+        '''
+        field = None
+        for fld in self:
+            LOGGER.debug(f'field name: {fld.field_name}')
+            if fld.field_name == field_name:
+                field = fld
+                break
+        return field
+        
 
 class BCDCDataset(CKANCorePackage):
     '''
@@ -339,6 +376,7 @@ class CKANCoreField(Field):
 
     def __init__(self, fld):
         Field.__init__(self, fld)
+        self.default_preset = 'string'
 
     @property
     def required(self):
@@ -393,9 +431,13 @@ class CKANCoreField(Field):
     @property
     def preset(self):
         '''
-        :return: the value for the property preset, or None if its not defined
+        :return: the value for the property preset, if it is not defined it will
+                 be set to the default preset value defined in the class.
         '''
-        return self.get_value('preset')
+        preset_value = self.get_value('preset')
+        if not preset_value:
+            preset_value = self.default_preset
+        return preset_value
 
     @property
     def choices_helper(self):
