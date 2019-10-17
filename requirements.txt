@@ -6,4 +6,4 @@ pytest-check==0.3.5
 distlib==0.2.9
 pytest-md==0.2.0
 pytest-json==0.4.0
-random-word==1.0.4
+randomwordgenerator==1.0.0
