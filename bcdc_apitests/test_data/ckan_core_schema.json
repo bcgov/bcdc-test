@@ -22,35 +22,35 @@
       "field_name": "author",
       "label": "author",
       "preset": "string",
-      "form_placeholder":"the name of the dataset’s author (optional)",
+      "form_placeholder":"the name of the datasetï¿½s author (optional)",
       "required": false
     },
     {
       "field_name": "author_email",
       "label": "author email",
       "preset": "string",
-      "form_placeholder":" the email address of the dataset’s author (optional)",
+      "form_placeholder":" the email address of the datasetï¿½s author (optional)",
       "required": false
     },
     {
       "field_name": "maintainer",
       "label": "maintainer",
       "preset": "string",
-      "form_placeholder":"the name of the dataset’s maintainer (optional)",
+      "form_placeholder":"the name of the datasetï¿½s maintainer (optional)",
       "required": false
     },
     {
       "field_name": "maintainer_email",
       "label": "maintainers email",
       "preset": "string",
-      "form_placeholder":"the email address of the dataset’s maintainer (optional)",
+      "form_placeholder":"the email address of the datasetï¿½s maintainer (optional)",
       "required": false
     },
     {
       "field_name": "license_id",
       "label": "license_id",
       "preset": "string",
-      "form_placeholder":"the id of the dataset’s license, see license_list() for available values (optional)",
+      "form_placeholder":"the id of the datasetï¿½s license, see license_list() for available values (optional)",
       "required": false
     },
     {
@@ -64,7 +64,7 @@
       "field_name": "url",
       "label": "url",
       "preset": "string",
-      "form_placeholder":"a URL for the dataset’s source (optional)",
+      "form_placeholder":"a URL for the datasetï¿½s source (optional)",
       "required": false
     },
     {
@@ -78,7 +78,7 @@
       "field_name": "state",
       "label": "state",
       "preset": "select",
-      "form_placeholder":"a URL for the dataset’s source (optional)",
+      "form_placeholder":"a URL for the datasetï¿½s source (optional)",
       "required": false,
  	  "choices": [
         {

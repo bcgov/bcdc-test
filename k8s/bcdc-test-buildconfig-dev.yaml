@@ -17,18 +17,15 @@ spec:
       name: bcdc-test-dev:latest
   source:
     dockerfile: |-
-      FROM python:3-slim
-      ADD . /app
-      WORKDIR /app
-      RUN pip install pypandoc
-      RUN pip install --upgrade --force-reinstall bcdc-apitests-dev
-      #RUN pip install -I bcdc-apitests-dev
-      RUN pip install matterhook
-      ADD https://raw.githubusercontent.com/bcgov/bcdc-test/dev/pytest-run.py ./pytest-run.py
-      RUN ["chmod", "755", "/app/pytest-run.py"]
-      ENTRYPOINT [ "python", "/app/pytest-run.py" ]
-    type: Dockerfile
-  strategy:
+        FROM python:3-slim
+        ADD . /app
+        WORKDIR /app
+        RUN pip install pypandoc
+        RUN pip install --upgrade --force-reinstall bcdc-apitests-dev
+        RUN pip install matterhook
+        ADD https://raw.githubusercontent.com/bcgov/bcdc-test/dev/pytest-run.py ./pytest-run.py
+        RUN ["chmod", "755", "/app/pytest-run.py"]
+        ENTRYPOINT [ "python", "/app/pytest-run.py" ]  strategy:
     dockerStrategy:
       from:
         kind: DockerImage

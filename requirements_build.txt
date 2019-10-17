@@ -1,6 +1,6 @@
 # requirements for building the pypi package
 twine==1.13.0
-distlib==0.2.9
+distlib
 packaging==19.0
 pylint==1.9.4
 wheel==0.33.4
