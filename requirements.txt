@@ -7,3 +7,4 @@ distlib==0.2.9
 pytest-md==0.2.0
 pytest-json==0.4.0
 randomwordgenerator==1.0.0
+pypandoc==1.4
