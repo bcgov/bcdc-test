@@ -8,6 +8,7 @@ using date as versions to simplify
 import setuptools
 import datetime
 import version
+import bcdc_apitests
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -17,7 +18,8 @@ with open('requirements.txt') as f:
     print(f'requirements: {requires}')
 
 setuptools.setup(
-    name="bcdc_apitests_dev",
+    #name=bcdc_apitests.name,
+    name=version.pkg_name,
     # version=datetime.datetime.now().strftime('%Y.%m.%d'),
     version=version.next_version,
     author="Kevin Netherton",

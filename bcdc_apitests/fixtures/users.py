@@ -12,8 +12,8 @@ import time
 import ckanapi
 import pytest
 
-#from bcdc_apitests.fixtures.ckan import remote_api_super_admin_auth
-#from bcdc_apitests.fixtures.config_fixture import test_roles
+# from bcdc_apitests.fixtures.ckan import remote_api_super_admin_auth
+# from bcdc_apitests.fixtures.config_fixture import test_roles
 
 # adding imports here to allow ide code navigation even though they are already
 # declared in the conftest.py
@@ -89,7 +89,7 @@ def user_delete(remote_api_admin_auth, user):
         LOGGER.debug("delete user: %s", user)
     except ckanapi.errors.NotFound as err:
         LOGGER.debug("err: %s %s", type(err), err)
-
+        
 
 def assign_user_role(remote_api_admin_auth, user, org_id, role):
     '''
@@ -104,20 +104,25 @@ def assign_user_role(remote_api_admin_auth, user, org_id, role):
 
 
 @pytest.fixture(scope="session")
-def user_setup_fixture(org_setup_fixture, remote_api_super_admin_auth,
-                       test_roles, temp_user_password):
+def user_setup_fixture(group_setup_fixture, remote_api_super_admin_auth,
+                       test_roles, temp_user_password, cancel_user_teardown):
     '''
     Used in session setup and tear down.  Creates the 3 test users that are
     used by tests, then calls org setup that will create the test org.
     '''
-
+    # removed fixture dep org_setup_fixture
     users = test_roles.keys()
+    user_names = []
+    users_for_org = []
     for user in users:
         email = test_roles[user]['email']
         exists = check_if_user_exist(remote_api_super_admin_auth, user)
         role = test_roles[user]['role']
+        users_for_org.append({"capacity": role, "name": user})
+
         LOGGER.debug("user name: %s", user)
         LOGGER.debug("user role: %s", role)
+
         if exists:
             active = check_if_user_active(remote_api_super_admin_auth, user)
             if not active:
@@ -132,15 +137,16 @@ def user_setup_fixture(org_setup_fixture, remote_api_super_admin_auth,
                 name=user, email=email,
                 password=temp_user_password)
             LOGGER.debug("created user: %s", str(usr_data))
-        org_id = org_setup_fixture['id']
-        LOGGER.debug('org_id: %s', org_id)
-        assign_user_role(remote_api_super_admin_auth, user, org_id, role)
-        LOGGER.debug('user %s setup complete', user)
-    yield
-    for user in users:
-        user_delete(remote_api_super_admin_auth, user)
-
-
+        #org_id = org_setup_fixture['id']
+        #LOGGER.debug('org_id: %s', org_id)
+        #assign_user_role(remote_api_super_admin_auth, user, org_id, role)
+        #LOGGER.debug('user %s setup complete', user)
+    yield users_for_org
+    if not cancel_user_teardown:
+        for user in users:
+            LOGGER.debug(f"user {user} deleted")
+            user_delete(remote_api_super_admin_auth, user)
+            
 @pytest.fixture()
 def user_data_fixture(remote_api_super_admin_auth, user_label_fixture):
     '''
@@ -148,7 +154,7 @@ def user_data_fixture(remote_api_super_admin_auth, user_label_fixture):
     '''
     LOGGER.debug("user_label_fixture: %s", user_label_fixture)
     usr_data = get_user_data(remote_api_super_admin_auth, user_label_fixture[0])
-    return usr_data
+    yield usr_data
 
 
 @pytest.fixture(scope='session')
@@ -167,7 +173,7 @@ def user_data_fixture_session(remote_api_super_admin_auth, user_label_fixture):
             raise TooManyUsersException(msg)
         user_label_fixture = user_label_fixture[0]
     usr_data = get_user_data(remote_api_super_admin_auth, user_label_fixture)
-    return usr_data
+    yield usr_data
 
 
 class TooManyUsersException(Exception):

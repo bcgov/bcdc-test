@@ -164,3 +164,16 @@ load_data.test_pkg_data
 ```
 
 
+# ISSUES: 10-11-2019
+
+**Background**
+
+When test suite is run, the pytest conftest.py file is executed.  This conftest.py implements the hook 'pytest_generate_tests'.  The hook consumes the test configuration file test_data/testParams.json.  New test cases are generated for each combination of test_users and test_data defined in the test_data/testParams.json configuration file.
+
+The contents of the 'test_data' field used to refer to specific json files with test data.  DDM-910 modifies that so that test data now refer to method in the class bcdc_apitests.helpers.bcdc_dynamic_data_population.DataPopulation.
+
+When a package test runs the test receives a DataPopulation object from a fixture then calls the method of the object returned by the fixture with the name defined in the test configuration. 
+
+**Problem**
+Depending on the data type that is required for the tests: package vs resource the tests need different fixtures for the setup of the DataPopulation object.  It feels like this setup should be defined in the configuration file.  
+

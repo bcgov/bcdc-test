@@ -1,3 +1,4 @@
+# requirements for building the pypi package
 twine==1.13.0
 distlib==0.2.9
 packaging==19.0

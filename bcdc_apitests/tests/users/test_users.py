@@ -5,7 +5,7 @@ Created on Sep 09, 2019
 @author: crigdon
 
 '''
-# pylint: disable=invalid-name, unused-argument, too-many-arguments, unused-import
+# pylint: disable=invalid-name, unused-argument, too-many-arguments, unused-import, logging-format-interpolation
 import logging
 import requests
 import pytest  # @UnusedImport
@@ -13,13 +13,17 @@ import pytest  # @UnusedImport
 LOGGER = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
 
-def test_user_show(conf_fixture, user_label_fixture, remote_api_auth, ckan_url, ckan_auth_header,
-                   ckan_rest_dir, test_package_name, package_create_if_not_exists):
+def test_user_show(conf_fixture, user_label_fixture, remote_api_auth,
+                   ckan_url, ckan_auth_header, ckan_rest_dir,
+                   test_package_name, package_create_if_not_exists):
     '''
-    verify user_show can be retrieved for user that is calling including datasets attr and verify pkg
-    is returned in results
+    verify user_show can be retrieved for user that is calling including
+    datasets attr and verify pkg is returned in results
 
     :param param: remote_api_admin_auth
+
+    {"message": "Not found: Group was not found.", '
+     '"__type": "Not Found Error"}}')
     '''
 
     # return all fields

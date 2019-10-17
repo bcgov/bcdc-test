@@ -9,5 +9,5 @@ package metadata.
     hardcode the version in this file.
 '''
 
-name = 'bcdc_apitests_dev'
-version = '0.2.0'
+name = 'bcdc_apitests'
+version = '1.0.0'

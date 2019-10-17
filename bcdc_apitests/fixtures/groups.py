@@ -195,7 +195,7 @@ def group_id_fixture(remote_api_super_admin_auth, test_group):
 
 
 @pytest.fixture
-def group_teardown_fixture(remote_api_super_admin_auth, test_group):
+def group_teardown_fixture(remote_api_super_admin_auth, test_group, cancel_group_teardown):
     '''
     removes the test group at the conclusion of a test run.
     :param remote_api_super_admin_auth: remote ckanapi object with auth header
@@ -203,15 +203,17 @@ def group_teardown_fixture(remote_api_super_admin_auth, test_group):
         and purged
     '''
     yield
-    group_delete(remote_api_super_admin_auth, test_group)
-    LOGGER.debug("initial delete of group : %s", test_group)
-    group_purge(remote_api_super_admin_auth, test_group)
-    LOGGER.debug("initial purge of group : %s", test_group)
+    if not cancel_group_teardown:
+        group_delete(remote_api_super_admin_auth, test_group)
+        LOGGER.debug("initial delete of group : %s", test_group)
+        group_purge(remote_api_super_admin_auth, test_group)
+        LOGGER.debug("initial purge of group : %s", test_group)
 
 
 @pytest.fixture
 def group_setup_fixture(remote_api_super_admin_auth, test_session_group,
-                      group_exists_fixture, session_test_group_data):
+                      group_exists_fixture, session_test_group_data,
+                      cancel_group_teardown):
     '''
     at start of tests will test to see if the required test group
     exists.  if it does not it gets created.  At conclusion of testing
@@ -223,7 +225,12 @@ def group_setup_fixture(remote_api_super_admin_auth, test_session_group,
     :param group_exists_fixture: does the group used for testing exist
     :param session_test_group_data: data to use when creating the group
     '''
+    # was getting errors if this was not explicity set.
+    session_test_group_data['is_organization'] = False
+    session_test_group_data['type'] = "group"
+
     LOGGER.debug("Setup group: %s", test_session_group)
+    LOGGER.debug(f"group session data: {session_test_group_data}")
     group_data = None
     if not group_exists_fixture:
         group_data = remote_api_super_admin_auth.action.group_create(
@@ -234,7 +241,8 @@ def group_setup_fixture(remote_api_super_admin_auth, test_session_group,
             id=session_test_group_data['name'])
         LOGGER.debug("group_data from show: %s", group_data)
     yield group_data
-
-    LOGGER.debug("Cleanup group: %s", test_session_group)
-    group_delete(remote_api_super_admin_auth, test_session_group)
-    LOGGER.debug("group is purged: %s", test_session_group)
+    
+    if not cancel_group_teardown:
+        LOGGER.debug("Cleanup group: %s", test_session_group)
+        group_delete(remote_api_super_admin_auth, test_session_group)
+        LOGGER.debug("group is purged: %s", test_session_group)
