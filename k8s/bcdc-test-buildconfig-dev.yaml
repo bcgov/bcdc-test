@@ -20,8 +20,9 @@ spec:
       FROM python:3-slim
       ADD . /app
       WORKDIR /app
-      RUN pip install -I bcdc-apitests-dev
-      RUN pip install -I bcdc-apitests-dev
+      RUN pip install pypandoc
+      RUN pip install --upgrade --force-reinstall bcdc-apitests-dev
+      #RUN pip install -I bcdc-apitests-dev
       RUN pip install matterhook
       ADD https://raw.githubusercontent.com/bcgov/bcdc-test/dev/pytest-run.py ./pytest-run.py
       RUN ["chmod", "755", "/app/pytest-run.py"]
