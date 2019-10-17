@@ -18,8 +18,14 @@ pkg_name = bcdc_apitests.name
 
 if ('PKG_TYPE' in os.environ) and os.environ['PKG_TYPE'] in ['MASTER', 'PROD']:
     pkg_name = bcdc_apitests.name.replace('_', '-')
-else:
+elif ('PKG_TYPE' in os.environ) and os.environ['PKG_TYPE'] in ['DEV']:
     pkg_name = 'bcdc-apitests-dev'
+else:
+    msg = 'The package name is calculated based on the value of the environment' + \
+          ' variable, PKG_TYPE.  This environment variable is either not set ' + \
+          'or contains an unexpected value.  Valid values include: "MASTER", ' + \
+          '"PROD" and "DEV"'
+    raise EnvironmentError(msg)
 
 print(f'package name: {pkg_name}')
 
