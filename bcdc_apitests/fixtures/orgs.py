@@ -43,9 +43,10 @@ def org_purge(remote_api, test_organization):
         LOGGER.debug("purging the org: %s", test_organization)
         remote_api.action.organization_purge(id=test_organization)
     except:
-        
+
         org_delete(remote_api, test_organization)
         remote_api.action.organization_purge(id=test_organization)
+
 
 def org_exists(remote_api, test_organization):
     '''
@@ -97,8 +98,9 @@ def org_purge_if_exists(remote_api, test_organization):
         org_delete(remote_api, test_organization)
         org_purge(remote_api, test_organization)
 
+
 def org_un_delete(remote_api, test_organization):
-    update_val = {'state': 'active', 
+    update_val = {'state': 'active',
                   'id': test_organization}
     ret_val = remote_api.action.organization_patch(**update_val)
     LOGGER.debug("ret_val: %s", ret_val)
@@ -141,7 +143,7 @@ def org_create_if_not_exists_fixture(remote_api_super_admin_auth,
         organization
     '''
     test_org_data['users'] = user_setup_fixture
-    
+
     LOGGER.debug("test_org_exists: %s %s", org_exists_fixture,
                  type(org_exists_fixture))
     LOGGER.debug("test_organization: %s", test_organization)
@@ -221,7 +223,7 @@ def org_teardown_fixture(remote_api_super_admin_auth, test_organization,
 
 @pytest.fixture(scope="session", autouse=True)
 def org_setup_fixture(remote_api_super_admin_auth, test_session_organization,
-                      org_exists_fixture, session_test_org_data, 
+                      org_exists_fixture, session_test_org_data,
                       cancel_org_teardown, user_setup_fixture):
     '''
     at start of tests will test to see if the required test org
@@ -249,10 +251,14 @@ def org_setup_fixture(remote_api_super_admin_auth, test_session_organization,
             id=session_test_org_data['name'])
         LOGGER.debug("org_data from show: %s", org_data)
     yield org_data
-    
+
     if not cancel_org_teardown:
         LOGGER.debug("Cleanup Org: %s", test_session_organization)
-        org_delete(remote_api_super_admin_auth, test_session_organization)
-        LOGGER.debug("Org is deleted: %s", test_session_organization)
-        org_purge(remote_api_super_admin_auth, test_session_organization)
-        LOGGER.debug("Org is purged: %s", test_session_organization)
+        if org_exists(remote_api_super_admin_auth, test_session_organization):
+            org_delete(remote_api_super_admin_auth, test_session_organization)
+            LOGGER.debug("Org is deleted: %s", test_session_organization)
+        try:
+            org_purge(remote_api_super_admin_auth, test_session_organization)
+            LOGGER.debug("Org is purged: %s", test_session_organization)
+        except ckanapi.errors.NotFound:
+            LOGGER.warning(f'raised org. not found error for the org: {test_session_organization}, ignoring and assuming its been deleted')

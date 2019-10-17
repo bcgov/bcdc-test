@@ -3,20 +3,19 @@ Created on Jun. 11, 2019
 
 @author: crigdon
 '''
-
-import logging
-import requests
 import json
+import logging
+
+import requests
 
 import bcdc_apitests.config.testConfig as testConfig
 
-# pylint: disable=invalid-name,unused-argument
-
+# pylint: disable=invalid-name,unused-argument, logging-fstring-interpolation
 LOGGER = logging.getLogger(__name__)
 
 
 def test_resource_create(conf_fixture, ckan_url, ckan_rest_dir, ckan_auth_header,
-                         resource_delete_if_exists,
+                         package_create_if_not_exists, resource_delete_if_exists,
                          bcdc_resource_populator,
                          remote_api_super_admin_auth):
     '''
@@ -43,25 +42,28 @@ def test_resource_create(conf_fixture, ckan_url, ckan_rest_dir, ckan_auth_header
     LOGGER.debug(f'conf_fixture dataname: {conf_fixture.test_data }')
     func = getattr(bcdc_resource_populator, conf_fixture.test_data[0])
     overrides = {'name': testConfig.TEST_RESOURCE,
-                 'package_id': pkg['id']}
+                 'package_id': pkg['id']
+                 }
+
     populate_bcdc_resource = func(overrides)
 
     # define api call
     api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'resource_create')
     LOGGER.debug('api_call: %s', api_call)
-    LOGGER.debug('resource_data: %s', populate_bcdc_resource)
 
+    cnt = 1
     for resource_data in populate_bcdc_resource:
-        LOGGER.debug(f'resource data: {resource_data}')
+        resource_data['name'] = f'{testConfig.TEST_RESOURCE}_{cnt}'
+        LOGGER.debug(f'resource data: {json.dumps(resource_data)}')
 
         # fix the json_table_schema
         if 'json_table_schema' in resource_data:
             LOGGER.debug(f"json_table_schema: {resource_data['json_table_schema']}")
             LOGGER.debug(f"json_table_schema type {type(resource_data['json_table_schema'])}")
-    
             resource_data['json_table_schema'] = json.loads(resource_data['json_table_schema'])
 
         # create resource
+        LOGGER.debug(f"api_call: {api_call}")
         res_data = requests.post(api_call, headers=ckan_auth_header, json=resource_data)
         LOGGER.debug("resource_create: %s", res_data.text)
 
@@ -71,18 +73,20 @@ def test_resource_create(conf_fixture, ckan_url, ckan_rest_dir, ckan_auth_header
         LOGGER.debug('resp_json: %s', resp_json)
         test_status = res_data.status_code == 200
         LOGGER.debug("test status: %s", test_status)
-        assert test_status == conf_fixture.test_result
+        assert_msg = f'status_code: {res_data.status_code}, text from bcdc: {resp_json}'
+        assert test_status == conf_fixture.test_result, assert_msg
         if test_status:
             # if the we can successfully create the resource then make sure that
             # it shows up in a package_show
             # check is resource exist and shows up in resource_show
             # define remote api
-            api_call = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'resource_show')
+            api_call_status = '{0}{1}/{2}'.format(ckan_url, ckan_rest_dir, 'resource_show')
             res_id = resp_json['result']['id']
-            res_data = requests.get(api_call, headers=ckan_auth_header,
+            res_data = requests.get(api_call_status, headers=ckan_auth_header,
                                     params={'id':res_id})
             resp_json = res_data.json()
             assert resp_json['success'] == conf_fixture.test_result
+        cnt += 1
 
 
 # update resource

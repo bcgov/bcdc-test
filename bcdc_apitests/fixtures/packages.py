@@ -20,9 +20,6 @@ LOGGER = logging.getLogger(__name__)
 # pylint: disable=redefined-outer-name, logging-fstring-interpolation
 # --------------------- Supporting Functions ----------------------
 
-# def get_package_data(data_population_obj, method_name):
-#     func = getattr(data_population_obj, method_name)
-#     populate_bcdc_dataset = func()
 
 
 # need to be able to call directly... don't need to make this a fixture.

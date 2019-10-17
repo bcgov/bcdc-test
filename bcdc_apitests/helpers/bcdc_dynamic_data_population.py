@@ -143,21 +143,26 @@ class DataPopulation():
         '''
         :return: an iterator that returns each of the different datasets
         '''
-        
+        if overrides is None:
+            overrides = {}
         file_name = f'{inspect.currentframe().f_code.co_name}_{self.data_type}.json'
         cache_file = os.path.join(self.cache_dir, file_name)
         self.cache = DataCache(cache_file)
+
+        # cache isn't being used
 
         if self.data_type != 'resource_fields':
             msg = 'bcdc_types is a field for resources not datasets, the ' + \
                   f'dataset this object is currently describing is a: {self.data_type}'
             raise ValueError(msg)
         bcdc_type_def = self.fields_schema.get_field('bcdc_type')
-        bcdc_type_choices = bcdc_type_def.choices.values
+        choices = bcdc_type_def.choices
+        bcdc_type_choices = choices.values
+        LOGGER.debug(f"bcdc_types options: {bcdc_type_choices}")
         dataset_list = []
-        LOGGER.debug(f"overrides are: {overrides}")
         for bcdc_type in bcdc_type_choices:
             overrides['bcdc_type'] = bcdc_type
+            LOGGER.debug(f"bcdc_type overrides: {overrides}")
             dataset = self.pop_resource.populate_all(overrides=overrides)
             dataset_list.append(dataset)
         data_iterable = DataSetIterator(dataset_list)
@@ -176,6 +181,9 @@ class DataCache():
         LOGGER.debug(f"cache file: {self.cache_file}")
 
     def cache_exists(self):
+        '''
+        :return: boolean indicating if the cache exists or not
+        '''
         ret_val = True if os.path.exists(self.cache_file) else False
         LOGGER.debug(f"cache file exists? {ret_val}")
         return ret_val
@@ -593,6 +601,7 @@ class DataPopulationResource():
          - populate the overrides first, to address any possible conditional
            validators that are dependent on these hard coded values.
         '''
+
         def undefined_prefix(fld):
             msg = f'prefix is set to: {fld.preset}.  There is no code to ' + \
                   'to accomodate this type.  Need to add a method definition for ' + \
@@ -612,7 +621,8 @@ class DataPopulationResource():
                 raise ValueError(msg)
 
             # now test that the value complies with the field def.
-            LOGGER.debug(f"preset for override field {override_field_name} is {override_fld_def.preset}")
+            LOGGER.debug(f"preset for override field {override_field_name} " + 
+                         f"is {override_fld_def.preset}")
             func = getattr(self, override_fld_def.preset, undefined_prefix)
             field_value = func(override_fld_def, override=overrides[override_field_name])
             LOGGER.debug(f'override value: {overrides[override_field_name]}, {field_value}')
@@ -652,6 +662,11 @@ class DataPopulationResource():
         fld = None
         if overrides is None:
             overrides = {}
+
+        # reset the dataset for a new dataset in case was previously
+        # populated.
+        self.datastruct = {}
+        self.deferred = []
 
         # populate the overrides first, that way if there are dependencies on the
         # overrides they will be processed second.
@@ -782,4 +797,3 @@ class UndefinedPreset(AttributeError):
 
         # Call the base class constructor with the parameters it needs
         super().__init__(message)
-

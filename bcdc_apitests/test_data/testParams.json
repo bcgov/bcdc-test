@@ -78,9 +78,9 @@
         "test_module":"bcdc_apitests.tests.resources.test_resources",
         "test_function": "test_resource_create",
         "test_users": ["admin", "editor"],
-        "test_data": ["populate_bcdc_types"],
+        "test_data": ["populate_randomized", "populate_bcdc_types"],
         "test_result": true,
-        "comment": " populate_randomized only configure this test for admin/editor as only they can create data.  This test determines if it is possible to create a package with only the fields identified in the ckan docs.  Expected result should be false."
+        "comment": "only configure this test for admin/editor as only they can create data.  This test determines if it is possible to create a package with only the fields identified in the ckan docs.  Expected result should be false."
     }, 
     {
         "test_module":"bcdc_apitests.tests.resources.test_resources",

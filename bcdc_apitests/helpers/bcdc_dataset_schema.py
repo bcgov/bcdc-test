@@ -3,8 +3,8 @@ Created on Sept 13, 2019
 
 @author: KJNETHER
 
-This module contains functionality that can be used to consume the scheming 
-end points.  Population module will use 
+This module contains functionality that can be used to consume the scheming
+end points.  Population module will use
 
 uses the data from scheming end point to construct datasets
 
@@ -33,10 +33,8 @@ import json
 import logging
 import os
 
-
 import bcdc_apitests.config.testConfig as testConfig
 import bcdc_apitests.helpers.file_utils as file_utils
-
 
 # pylint: disable=logging-fstring-interpolation
 
@@ -127,7 +125,7 @@ class Fields():
         resets the iterator
         '''
         self.itercnt = 0
-    
+
 
 class CKANCorePackage(Fields):
     '''
@@ -151,7 +149,7 @@ class CKANCorePackage(Fields):
             msg = f'CKANCorePackage constructor dataset_type: {dataset_type}' + \
                   f'is an invalid, valid values include: {valid_data_types}'
             raise ValueError(msg)
-            
+
         if struct is None:
             struct = self.__get_ckan_core_schema(dataset_type)
         LOGGER.debug(f"CKANCorePackage core struct: {struct}")
@@ -176,7 +174,7 @@ class CKANCorePackage(Fields):
         schematext = fh.read()
         fh.close()
         data_struct = json.loads(schematext)
-        #if isinstance(data_struct, list):
+        # if isinstance(data_struct, list):
         #    return_value = data_struct
         if data_type in data_struct:
             return_value = data_struct[data_type]
@@ -193,7 +191,7 @@ class CKANCorePackage(Fields):
             fld = CKANCoreField(fld_data)
             # if fld.is_required():
             self.add_field(fld)
-            #self.all_flds.append(fld)
+            # self.all_flds.append(fld)
         self.current_list = None
 
     def get_presets(self, start_list=None):
@@ -217,7 +215,7 @@ class CKANCorePackage(Fields):
             elif fld.has_fld('subfields'):
                 preset.extend(self.get_presets(fld['subfields']))
         return list(set(preset))
-    
+
     def get_field_names(self):
         '''
         :return: a list of the field names that are defined for this schema.  Does
@@ -227,8 +225,7 @@ class CKANCorePackage(Fields):
         for fld in self:
             fld_names.append(fld.field_name)
         return fld_names
-        
-        
+
     def field_exists(self, field):
         exists = False
         for fld in self:
@@ -236,7 +233,7 @@ class CKANCorePackage(Fields):
                 exists = True
                 break
         return exists
-    
+
     def field_name_exists(self, field_name):
         '''
         :param field_name: input field name
@@ -248,7 +245,7 @@ class CKANCorePackage(Fields):
         if field_name in field_names:
             ret_val = True
         return ret_val
-    
+
     def remove_field(self, field):
         '''
         if the field exists it is removed
@@ -272,7 +269,7 @@ class CKANCorePackage(Fields):
         was_removed = self.remove_field(field)
         LOGGER.debug(f"removed the field?: {was_removed}")
         self.all_flds.append(field)
-        
+
     def get_field(self, field_name):
         '''
         :return: a field object for the field that corresponds with the field
@@ -285,7 +282,7 @@ class CKANCorePackage(Fields):
                 field = fld
                 break
         return field
-        
+
 
 class BCDCDataset(CKANCorePackage):
     '''
@@ -302,7 +299,7 @@ class BCDCDataset(CKANCorePackage):
         '''
         dumps fields into two lists one for required the other optional
         '''
-        #self.all_flds = []
+        # self.all_flds = []
         for fld in self.all_flds:
             LOGGER.debug(f"existing field: {fld.field_name}")
         LOGGER.debug(f'struct: {self.struct}')
@@ -312,7 +309,7 @@ class BCDCDataset(CKANCorePackage):
             fld = BCDCDatasetField(fld_data)
             LOGGER.debug(f"adding fields {fld.field_name}.")
             # if fld.is_required():
-            #self.all_flds.append(fld)
+            # self.all_flds.append(fld)
             self.add_field(fld)
 
 
@@ -422,7 +419,7 @@ class CKANCoreField(Field):
         '''
         :return: a 'Fields' object with the contents of the subfields
         '''
-        #return BCDCDataset(self.fld['subfields'], dataset_type='subfields')
+        # return BCDCDataset(self.fld['subfields'], dataset_type='subfields')
         LOGGER.debug(f"processing subfields: {self.fld['subfields']}")
         struct = {}
         struct['subfields'] = self.fld['subfields']
@@ -469,6 +466,7 @@ class BCDCDatasetField(CKANCoreField):
 
     def __init__(self, fld):
         CKANCoreField.__init__(self, fld)
+
 
 class Choices():
     '''
@@ -525,9 +523,3 @@ class Choice(Field):
         :return: the value for this choice
         '''
         return self.get_value('value')
-
-
-
-
-
-    
