@@ -11,7 +11,8 @@ import ckanapi
 import pytest
 
 LOGGER = logging.getLogger(__name__)
-# pylint: disable=redefined-outer-name
+# pylint: disable=redefined-outer-name, logging-fstring-interpolation
+
 
 # TODO: possibly move supporting functions to helper package
 # --------------------- Supporting Functions ----------------------
@@ -94,7 +95,11 @@ def group_purge_if_exists(remote_api, test_group):
 
 
 def group_un_delete(remote_api, test_group):
-    update_val = {'state': 'active', 
+    '''
+    :param remote_api: ckanapi remote with authentication
+    :param test_group: name of the test group to set state back to 'active'
+    '''
+    update_val = {'state': 'active',
                   'id': test_group}
     ret_val = remote_api.action.group_patch(**update_val)
     LOGGER.debug("ret_val: %s", ret_val)
@@ -119,8 +124,8 @@ def group_create_fixture(remote_api_super_admin_auth, test_group_data):
 
 @pytest.fixture
 def group_create_if_not_exists_fixture(remote_api_super_admin_auth,
-                                     test_group, group_exists_fixture,
-                                     test_group_data):
+                                       test_group, group_exists_fixture,
+                                       test_group_data):
     '''
     group may not show as existing even though it actually exists, its just in
     a state where it doesn't show up in either group_show or group_list.  To
@@ -212,8 +217,8 @@ def group_teardown_fixture(remote_api_super_admin_auth, test_group, cancel_group
 
 @pytest.fixture(scope='session')
 def group_setup_fixture(remote_api_super_admin_auth, test_session_group,
-                      group_exists_fixture, session_test_group_data,
-                      cancel_group_teardown):
+                        group_exists_fixture, session_test_group_data,
+                        cancel_group_teardown):
     '''
     at start of tests will test to see if the required test group
     exists.  if it does not it gets created.  At conclusion of testing
@@ -241,7 +246,7 @@ def group_setup_fixture(remote_api_super_admin_auth, test_session_group,
             id=session_test_group_data['name'])
         LOGGER.debug("group_data from show: %s", group_data)
     yield group_data
-    
+
     if not cancel_group_teardown:
         LOGGER.debug("Cleanup group: %s", test_session_group)
         group_delete(remote_api_super_admin_auth, test_session_group)
