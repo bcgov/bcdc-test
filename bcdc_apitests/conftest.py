@@ -24,7 +24,7 @@ from bcdc_apitests.fixtures.dynamic_data import *
 from bcdc_apitests.fixtures.scheming import *
 import bcdc_apitests.helpers.read_test_config as helper
 import bcdc_apitests.config.testConfig as DF_OPTS
- 
+import bcdc_apitests.helpers.bcdc_dynamic_data_population
 
 LOGGER = logging.getLogger(__name__)
 
@@ -92,4 +92,9 @@ def session_setup_teardown_mod(user_setup_fixture):
     This fixture only ensures that these fixtures get triggered.
     '''
     LOGGER.debug("called the session start up")
-    pass
+
+    # at startup and tear down make sure the cache dir is empty
+    cache = bcdc_apitests.helpers.bcdc_dynamic_data_population.DataCache('dummy')
+    cache.delete_all_caches()
+    yield
+    cache.delete_all_caches()

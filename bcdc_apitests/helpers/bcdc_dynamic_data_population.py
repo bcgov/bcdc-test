@@ -16,6 +16,7 @@ import logging
 import os.path
 import random
 import re
+import shutil
 
 import randomwordgenerator.randomwordgenerator
 
@@ -69,7 +70,7 @@ class DataPopulation():
         self.fields_schema = fields_schema
 
         # calculate cache file
-        self.cache_dir = FileUtils().get_test_data_dir()
+        # self.cache_dir = FileUtils().get_test_data_dir()
         self.cache = None
 
         # this property can be set to disable cache usage
@@ -96,8 +97,7 @@ class DataPopulation():
         # of a method that can be referenced in the test config file
         # 'testParams.json'
         file_name = f'{inspect.currentframe().f_code.co_name}_{self.data_type}.json'
-        cache_file = os.path.join(self.cache_dir, file_name)
-        self.cache = DataCache(cache_file)
+        self.cache = DataCache(file_name)
 
         data_iterable = None
         if self.cache.cache_exists() and not self.disable_cache:
@@ -120,8 +120,7 @@ class DataPopulation():
         '''
         # TODO: could add a metaclass that does the caching automatically
         file_name = f'{inspect.currentframe().f_code.co_name}.json'
-        cache_file = os.path.join(self.cache_dir, file_name)
-        self.cache = DataCache(cache_file)
+        self.cache = DataCache(file_name)
 
         core_data = self.pop_resource.populate_all(overrides=overrides)
 
@@ -145,9 +144,8 @@ class DataPopulation():
         '''
         if overrides is None:
             overrides = {}
-        file_name = f'{inspect.currentframe().f_code.co_name}_{self.data_type}.json'
-        cache_file = os.path.join(self.cache_dir, file_name)
-        self.cache = DataCache(cache_file)
+        # file_name = f'{inspect.currentframe().f_code.co_name}_{self.data_type}.json'
+        # self.cache = DataCache(file_name)
 
         # cache isn't being used
 
@@ -177,8 +175,37 @@ class DataCache():
     '''
 
     def __init__(self, cache_file):
-        self.cache_file = cache_file
+        '''
+        :param cache_file: just the file name to use to cache the data in a json
+            file, any directory info will be ignored
+        '''
+        cache_file = os.path.basename(cache_file)
+
+        self.cache_dir_name = 'bcdc_apitest_cache'
+        self.set_cache_paths()
+        self.cache_file = os.path.join(self.cache_dir, cache_file)
         LOGGER.debug(f"cache file: {self.cache_file}")
+
+    def set_cache_paths(self):
+        '''
+        The path to be used for temp files works through this order:
+           a) is there a TEMP or a TMP env var.
+           b) is there a /tmp folder
+           c) FAIL
+        '''
+        default_tmp_dir = r'/tmp'
+        if 'TEMP' in os.environ:
+            self.cache_dir = os.path.join(os.environ['TEMP'],
+                                          self.cache_dir_name)
+        elif 'TMP' in os.environ:
+            self.cache_dir = os.path.join(os.environ['TMP'],
+                                          self.cache_dir_name)
+        elif os.path.exists(default_tmp_dir):
+            self.cache_dir = os.path.join(default_tmp_dir,
+                              self.cache_dir_name)
+        else:
+            msg = 'unable to find a temp directory to cache data to.'
+            raise EnvironmentError(msg)
 
     def cache_exists(self):
         '''
@@ -195,15 +222,24 @@ class DataCache():
         '''
         # converts the iterable DataPopulation object to a list then
         # writes
+        if not os.path.exists(self.cache_dir):
+            LOGGER.info(f"creating the cache dir: {self.cache_dir}")
+            os.makedirs(self.cache_dir)
+
         LOGGER.debug(f"iter type: {type(iter_obj)}")
         bcdc_dataets = []
-        for ds in iter_obj:
-            LOGGER.debug(f'dataset in iterable: {ds}')
-            bcdc_dataets.append(ds)
+        for dataset in iter_obj:
+            LOGGER.debug(f'dataset in iterable: {dataset}')
+            bcdc_dataets.append(dataset)
 
-        with open(self.cache_file, 'w', encoding='utf8') as file_hand:
-            json.dump(bcdc_dataets, file_hand, ensure_ascii=False)
-        LOGGER.debug(f"cache has been written to: {self.cache_file}")
+        try:
+            with open(self.cache_file, 'w', encoding='utf8') as file_hand:
+                json.dump(bcdc_dataets, file_hand, ensure_ascii=False)
+            LOGGER.debug(f"cache has been written to: {self.cache_file}")
+        except PermissionError:
+            msg = f'cannot write to the location: {self.cache_file}, going to try tmp'
+            LOGGER.warning(msg)
+            raise
 
     def load_cache_data(self, overrides=None):
         '''
@@ -236,6 +272,14 @@ class DataCache():
         if self.cache_exists():
             LOGGER.info(f"removing the data cache file: {self.cache_file}")
             os.remove(self.cache_file)
+
+    def delete_all_caches(self):
+        '''
+        removes the cache directory
+        '''
+        if os.path.exists(self.cache_dir):
+            LOGGER.info(f"removing the existing cache dir: {self.cache_dir}")
+            shutil.rmtree(self.cache_dir)
 
 
 class DataSetIterator():
@@ -621,7 +665,7 @@ class DataPopulationResource():
                 raise ValueError(msg)
 
             # now test that the value complies with the field def.
-            LOGGER.debug(f"preset for override field {override_field_name} " + 
+            LOGGER.debug(f"preset for override field {override_field_name} " +
                          f"is {override_fld_def.preset}")
             func = getattr(self, override_fld_def.preset, undefined_prefix)
             field_value = func(override_fld_def, override=overrides[override_field_name])

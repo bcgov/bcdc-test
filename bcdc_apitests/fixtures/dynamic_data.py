@@ -157,4 +157,3 @@ def populate_resource_single(populate_resource, remote_api_super_admin_auth):
         resource = next(populate_resource)
     LOGGER.debug(f"Resource Retrieved from iterator: {resource}")
     yield resource
-
