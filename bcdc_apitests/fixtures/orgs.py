@@ -43,7 +43,7 @@ def org_purge(remote_api, test_organization):
         LOGGER.debug("purging the org: %s", test_organization)
         remote_api.action.organization_purge(id=test_organization)
     except:
-
+        LOGGER.debug("purge org failed, just deleting")
         org_delete(remote_api, test_organization)
         remote_api.action.organization_purge(id=test_organization)
 
@@ -107,13 +107,14 @@ def org_un_delete(remote_api, test_organization):
 
 # --------------------- Fixtures ----------------------
 
+
 def users_in_org(org, users):
     '''
     :param org:  an org data struct
     :param users: user data struct... ie a list of dicts with keys: capacity, name
-    
-    example users: 
-    
+
+    example users:
+
              {
                 "capacity": "admin",
                 "name": "phil_esposito"
@@ -131,7 +132,7 @@ def users_in_org(org, users):
     else:
         in_org = False
     return in_org
-        
+
 
 def org_add_users(remote_api, org, users):
     '''
@@ -141,6 +142,7 @@ def org_add_users(remote_api, org, users):
                    'users': users}
     ret_val = remote_api.action.organization_patch(**update_vals)
     LOGGER.debug("ret_val: %s", ret_val)
+
 
 @pytest.fixture
 def org_create_fixture(remote_api_super_admin_auth, test_org_data, user_setup_fixture):
@@ -183,6 +185,7 @@ def org_create_if_not_exists_fixture(remote_api_super_admin_auth,
     LOGGER.debug("test_organization: %s", test_organization)
     LOGGER.debug("test_org_data: %s", test_org_data)
     LOGGER.debug("org_exists_fixture: %s", org_exists_fixture)
+
     if org_exists_fixture:
         org_data = remote_api_super_admin_auth.action.organization_show(
             id=test_organization)
@@ -200,8 +203,14 @@ def org_create_if_not_exists_fixture(remote_api_super_admin_auth,
             org_data = remote_api_super_admin_auth.action.organization_create(
                 **test_org_data)
             LOGGER.debug("org_return: %s", org_data)
+
     # make sure that the org is not in a deleted state.
-    org_un_delete(remote_api_super_admin_auth, test_organization)
+    if org_data['state'] != 'active':
+        org_un_delete(remote_api_super_admin_auth, org_data['id'])
+
+    if not users_in_org(org_data, user_setup_fixture):
+        org_add_users(remote_api_super_admin_auth, org_data, user_setup_fixture)
+
     yield org_data
 
 
@@ -290,7 +299,7 @@ def org_setup_fixture(remote_api_super_admin_auth, test_session_organization,
         org_un_delete(remote_api_super_admin_auth, org_data['id'])
 
     # next need to verify that the users are part of the org
-    if not users_in_org:
+    if not users_in_org(org_data, user_setup_fixture):
         org_add_users(remote_api_super_admin_auth, org_data, user_setup_fixture)
 
     yield org_data
@@ -305,3 +314,5 @@ def org_setup_fixture(remote_api_super_admin_auth, test_session_organization,
             LOGGER.debug("Org is purged: %s", test_session_organization)
         except ckanapi.errors.NotFound:
             LOGGER.warning(f'raised org. not found error for the org: {test_session_organization}, ignoring and assuming its been deleted')
+        except ckanapi.errors.CKANAPIError:
+            LOGGER.warning(f'raised CKANAPIError. when trying to purge: {test_session_organization}, ignoring and assuming its been deleted')
