@@ -107,6 +107,40 @@ def org_un_delete(remote_api, test_organization):
 
 # --------------------- Fixtures ----------------------
 
+def users_in_org(org, users):
+    '''
+    :param org:  an org data struct
+    :param users: user data struct... ie a list of dicts with keys: capacity, name
+    
+    example users: 
+    
+             {
+                "capacity": "admin",
+                "name": "phil_esposito"
+            }
+    '''
+    in_org = True
+    org_user_names = []
+    for org_usr in org['users']:
+        org_user_names.append(org_usr['name'])
+    if org_user_names:
+        for user in users:
+            if not user['name'] in org_user_names:
+                in_org = False
+                break
+    else:
+        in_org = False
+    return in_org
+        
+
+def org_add_users(remote_api, org, users):
+    '''
+    adds the users to the org if they do not already exist
+    '''
+    update_vals = {'id': org['id'],
+                   'users': users}
+    ret_val = remote_api.action.organization_patch(**update_vals)
+    LOGGER.debug("ret_val: %s", ret_val)
 
 @pytest.fixture
 def org_create_fixture(remote_api_super_admin_auth, test_org_data, user_setup_fixture):
@@ -250,6 +284,15 @@ def org_setup_fixture(remote_api_super_admin_auth, test_session_organization,
         org_data = remote_api_super_admin_auth.action.organization_show(
             id=session_test_org_data['name'])
         LOGGER.debug("org_data from show: %s", org_data)
+
+    # if org is not active make it active
+    if org_data['state'] != 'active':
+        org_un_delete(remote_api_super_admin_auth, org_data['id'])
+
+    # next need to verify that the users are part of the org
+    if not users_in_org:
+        org_add_users(remote_api_super_admin_auth, org_data, user_setup_fixture)
+
     yield org_data
 
     if not cancel_org_teardown:
