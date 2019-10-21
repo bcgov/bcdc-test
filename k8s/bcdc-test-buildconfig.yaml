@@ -26,7 +26,7 @@ spec:
         ADD https://raw.githubusercontent.com/bcgov/bcdc-test/dev/pytest-run.py ./pytest-run.py
         RUN ["chmod", "755", "/app/pytest-run.py"]
         RUN ["ls","-la"]
-        ENTRYPOINT [ "python", "/app/pytest-run.py" ]    type: Dockerfile
+        ENTRYPOINT [ "python", "/app/pytest-run.py"]
   strategy:
     dockerStrategy:
       from:
