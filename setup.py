@@ -32,6 +32,7 @@ setuptools.setup(
     python_requires='>=2.6, !=3.0.*, !=3.1.*, !=3.2.*, <4',
     install_requires=requires,
     include_package_data=True,
+    scripts=['bcdc_apitests/pytest-run.py'],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Framework :: Pytest",
