@@ -22,8 +22,9 @@ spec:
         WORKDIR /app
         RUN pip install pypandoc
         RUN pip install --upgrade --force-reinstall bcdc-apitests-dev
+        RUN pip install -I bcdc-apitests-dev
         RUN pip install matterhook
-        ENTRYPOINT [ "python", "pytest-run.py" ]
+        ENTRYPOINT [ "pytest-run.py" ]
     dockerStrategy:
       from:
         kind: DockerImage
