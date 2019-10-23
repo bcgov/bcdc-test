@@ -44,16 +44,22 @@ try:
         custom_results.append(result)
         print(result)
 
+    # ---------- Pass/Fail Logic ----------------
+
     # check summary for errors or failed, then set if pass/fail to use later.
     # currently set to Fail if any errors or failed.
     summary = json_report['report']['summary']
     print(summary)
-    if 'error' or 'failed' in summary.keys():
-        print('Failed')
+
+    if any(k in summary for k in ("error", "failed")):
+        print("Failed as found either error or failed values")
         pass_all = False
-    else:
-        print('Passed')
+    elif "passed" in summary:
+        print("Passed with no Error or Failed Values")
         pass_all = True
+    else:
+        print("Failed to find a Passed Value")
+        pass_all = False
 
     # ---------- Update Markdown File ----------------
 
