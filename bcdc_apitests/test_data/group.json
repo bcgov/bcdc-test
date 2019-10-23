@@ -1,0 +1,8 @@
+{
+            "approval_status": "approved",
+            "state": "active",
+            "title": "Automated Testing Group",
+            "name": "automated-testing-group",
+            "type": "group",
+            "description": "test group description"
+}

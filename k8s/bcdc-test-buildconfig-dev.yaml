@@ -1,0 +1,33 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    app:
+  name: bcdc-test-dev
+spec:
+  triggers:
+    - type: Generic
+      generic:
+        secretReference:
+          name: bcdc-test-dev-webhook-secret
+  failedBuildsHistoryLimit: 5
+  output:
+    to:
+      kind: ImageStreamTag
+      name: bcdc-test-dev:latest
+  source:
+    dockerfile: |-
+        FROM python:3-slim
+        ADD . /app
+        WORKDIR /app
+        RUN pip install pypandoc
+        RUN pip install --upgrade --force-reinstall bcdc-apitests-dev
+        RUN pip install -I bcdc-apitests-dev
+        RUN pip install matterhook
+        ENTRYPOINT [ "pytest-run.py" ]
+    dockerStrategy:
+      from:
+        kind: DockerImage
+        name: python:3-slim
+    type: Docker
+  successfulBuildsHistoryLimit: 5

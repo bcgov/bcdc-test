@@ -10,7 +10,16 @@ import getpass
 # first three initials of the current test user, using this to keep
 # test objects unique allowing multiple dev's to work on test developemnt
 # without encountering object naming conflicts
-TEST_USER = getpass.getuser()[0:3].lower()
+
+#When run in openshift getuser will fail.  Put the exception in here to use
+# ocp as default when this fails.
+try:
+    TEST_USER = getpass.getuser()[0:3].lower()
+except:
+    TEST_USER = 'oc'
+    
+BCDC_TMP_USER_PASSWORD = 'BCDC_TMP_USER_PASSWORD'
+    
 
 # all test objects created in ckan should have this prefix appended to them
 TEST_PREFIX = "zzztest"
@@ -20,12 +29,19 @@ TEST_PREFIX = "zzztest"
 TEST_DATA_DIRECTORY = "test_data"
 TEST_PARAMETERS_FILE = 'testParams.json'
 TEST_USER_CONFIG = "userConfig.json"
+TEST_CKAN_CORE_SCHEMA_DEF = 'ckan_core_schema.json'
 
 # test org name
 TEST_ORGANIZATION = '{0}_{1}_testorg'.format(TEST_PREFIX, TEST_USER)
 
+# test group name
+TEST_GROUP = '{0}_{1}_testgroup'.format(TEST_PREFIX, TEST_USER)
+
 # test package name
 TEST_PACKAGE = '{0}_{1}_testpkg'.format(TEST_PREFIX, TEST_USER)
+
+# test package title
+TEST_PACKAGE_TITLE = '{0} {1} testpkg title'.format(TEST_PREFIX, TEST_USER)
 
 # test resource name
 TEST_RESOURCE = '{0}_{1}_testresource'.format(TEST_PREFIX, TEST_USER)
@@ -60,3 +76,12 @@ TEST_VISIBILITY = 'IDIR'  # PUBLIC, IDIR
 
 TEST_PACKAGE_STATE = TEST_STATE
 TEST_PACKAGE_VISIBILITY = TEST_VISIBILITY
+
+# these are the options that can be sent to the --df flag. The --df flag
+# allows you to disable the teardown associated with certain object types
+DF_OPTS = ['orgs', 'groups', 'packages', 'resources', 'users', 'other', 'cache', 'ALL', 'none']
+
+# The name of the environment variable that the tests are expecting to retrieve
+# api keys from
+BCDC_API_KEY = 'BCDC_API_KEY'
+BCDC_URL = 'BCDC_URL'

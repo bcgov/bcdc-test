@@ -22,6 +22,7 @@ def test_user():
     return TEST_USER
 
 
+
 @pytest.fixture
 def test_prefix():
     '''
@@ -29,6 +30,12 @@ def test_prefix():
     '''
     return TEST_PREFIX
 
+@pytest.fixture(scope='session')
+def test_disable_teardown_opts():
+    '''
+    :return: the test object naming prefix
+    '''
+    return DF_OPTS
 
 @pytest.fixture(scope='session')
 def test_organization():
@@ -37,6 +44,12 @@ def test_organization():
     '''
     return TEST_ORGANIZATION
 
+@pytest.fixture(scope='session')
+def test_group():
+    '''
+    :return: the name of the organization that should be owned by tests
+    '''
+    return TEST_GROUP
 
 @pytest.fixture(scope='session')
 def test_package_name():
@@ -44,6 +57,14 @@ def test_package_name():
     :return: the name of the package to be used for the testing.
     '''
     return TEST_PACKAGE
+
+@pytest.fixture(scope='session')
+def test_package_title():
+    '''
+    :return: the title of the package to be used for the testing.
+    '''
+    return TEST_PACKAGE_TITLE
+
 
 @pytest.fixture
 def test_package_state():
@@ -124,3 +145,11 @@ def test_session_organization():
     :return: the name of the organization that should be owned by tests
     '''
     return TEST_ORGANIZATION
+
+@pytest.fixture(scope="session")
+def test_session_group():
+    '''
+    :return: the name of the organization that should be owned by tests
+    '''
+    return TEST_GROUP
+

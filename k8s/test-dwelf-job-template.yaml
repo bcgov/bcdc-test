@@ -1,0 +1,54 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: test-dwelf
+objects:
+- apiVersion: batch/v1
+  kind: Job
+  metadata:
+    generateName: test-dwelf
+  spec:
+    template:
+      metadata:
+        name: test-dwelf
+      spec:
+        containers:
+        - name: test-dwelf
+          image: docker-registry.default.svc:5000/databcdc/bcdc-test
+          env:
+            - name: BCDC_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: BCDC_URL
+                  name: cadi-bcdc-url
+            - name: BCDC_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: BCDC_API_KEY
+                  name: cadi-bcdc-api-key
+            - name: BCDC_TMP_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: BCDC_TMP_USER_PASSWORD
+                  name: bcdc-tmp-user-pass
+            - name: MATT_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: MATT_API_KEY
+                  name: mattermost-bot-api-key
+            - name: MATT_CHANNEL
+              valueFrom:
+                configMapKeyRef:
+                  key: MATT_CHANNEL
+                  name: bcdc-test-mat-channel
+            - name: MATT_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  key: MATT_USERNAME
+                  name: bcdc-test-mat-username
+            - name: MATT_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: MATT_URL
+                  name: bcdc-test-mat-url
+        restartPolicy: Never

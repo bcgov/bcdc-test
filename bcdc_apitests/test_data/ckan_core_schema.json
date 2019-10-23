@@ -1,0 +1,202 @@
+{
+  "scheming_version": 1,
+  "dataset_type": "package",
+  "about": "Dataset for BC Data Catalogue",
+  "about_url": "http://github.com/bcgov/ckanext-bcgov",
+  "dataset_fields": [
+      {
+      "field_name": "name",
+      "label": "Package name",
+      "preset": "string",
+      "form_placeholder": " the name of the new dataset, must be between 2 and 100 characters long and contain only lowercase alphanumeric characters, - and _, e.g. 'warandpeace'",
+      "required": true
+    },
+      {
+      "field_name": "title",
+      "label": "title ",
+      "preset": "string",
+      "form_placeholder": "he title of the dataset (optional, default: same as name) ",
+      "required": false
+    },
+    {
+      "field_name": "author",
+      "label": "author",
+      "preset": "string",
+      "form_placeholder":"the name of the dataset�s author (optional)",
+      "required": false
+    },
+    {
+      "field_name": "author_email",
+      "label": "author email",
+      "preset": "string",
+      "form_placeholder":" the email address of the dataset�s author (optional)",
+      "required": false
+    },
+    {
+      "field_name": "maintainer",
+      "label": "maintainer",
+      "preset": "string",
+      "form_placeholder":"the name of the dataset�s maintainer (optional)",
+      "required": false
+    },
+    {
+      "field_name": "maintainer_email",
+      "label": "maintainers email",
+      "preset": "string",
+      "form_placeholder":"the email address of the dataset�s maintainer (optional)",
+      "required": false
+    },
+    {
+      "field_name": "license_id",
+      "label": "license_id",
+      "preset": "string",
+      "form_placeholder":"the id of the dataset�s license, see license_list() for available values (optional)",
+      "required": false
+    },
+    {
+      "field_name": "notes",
+      "label": "notes",
+      "preset": "string",
+      "form_placeholder":"a description of the dataset (optional)",
+      "required": false
+    },
+    {
+      "field_name": "url",
+      "label": "url",
+      "preset": "string",
+      "form_placeholder":"a URL for the dataset�s source (optional)",
+      "required": false
+    },
+    {
+      "field_name": "version",
+      "label": "version",
+      "preset": "string",
+      "form_placeholder":"string, no longer than 100 characters",
+      "required": false
+    },
+    {
+      "field_name": "state",
+      "label": "state",
+      "preset": "select",
+      "form_placeholder":"a URL for the dataset�s source (optional)",
+      "required": false,
+ 	  "choices": [
+        {
+          "value": "active",
+          "label": "active"
+        },    
+        {
+          "value": "deleted",
+          "label": "deleted"
+        }
+      ]
+    },
+    {
+      "field_name": "type",
+      "label": "type",
+      "preset": "string",
+      "form_placeholder":"the type of the dataset (optional), IDatasetForm plugins associate themselves with different dataset types and provide custom dataset handling behaviour for these types",
+      "required": false
+    }
+  ],
+  "resource_fields": [
+    {
+      "field_name": "package_id",
+      "label": "package_id",
+      "form_placeholder": "id of package that the resource should be added to.",
+      "required": true
+    },    
+    {
+      "field_name": "url",
+      "label": "url",
+      "preset": "string",
+      "form_placeholder":"url of resource",
+      "required": false
+    },
+    {
+      "field_name": "revision_id",
+      "label": "revision_id",
+      "preset": "string",
+      "form_placeholder":"",
+      "required": false
+    },
+    {
+      "field_name": "description",
+      "label": "description",
+      "preset": "string",
+      "form_placeholder":"",
+      "required": false
+    },
+    {
+      "field_name": "format",
+      "label": "format",
+      "preset": "string",
+      "form_placeholder":"",
+      "required": false
+    },
+    {
+      "field_name": "hash",
+      "label": "hash",
+      "preset": "string",
+      "form_placeholder":"",
+      "required": false
+    },
+    {
+      "field_name": "name",
+      "label": "name",
+      "preset": "string",
+      "form_placeholder":"",
+      "required": false
+    },
+    {
+      "field_name": "resource_type",
+      "label": "resource_type",
+      "preset": "string",
+      "form_placeholder":"",
+      "required": false
+    },
+    {
+      "field_name": "mimetype",
+      "label": "mimetype",
+      "preset": "string",
+      "form_placeholder":"",
+      "required": false
+    },
+    {
+      "field_name": "mimetype_inner",
+      "label": "mimetype_inner",
+      "preset": "string",
+      "form_placeholder":"",
+      "required": false
+    },
+    {
+      "field_name": "cache_url",
+      "label": "cache_url",
+      "preset": "string",
+      "form_placeholder":"",
+      "required": false
+    },
+    {
+      "field_name": "created",
+      "label": "created",
+      "preset": "date",
+      "form_placeholder":"",
+      "required": false
+    },
+    {
+      "field_name": "last_modified",
+      "label": "last_modified",
+      "preset": "date",
+      "form_placeholder":"",
+      "required": false
+    },
+    {
+      "field_name": "cache_last_updated",
+      "label": "cache_last_updated",
+      "preset": "date",
+      "form_placeholder":"",
+      "required": false
+    }
+  ]
+}
+  
