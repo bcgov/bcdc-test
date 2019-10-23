@@ -14,7 +14,7 @@ new OC build triggered by github actions on commit to master branch
 how to create new build from build config
   
 ```
-oc create -f https://raw.githubusercontent.com/bcgov/bcdc-test/k8s/bcdc-test-buildconfig.yaml
+oc create -f https://raw.githubusercontent.com/bcgov/bcdc-test/master/k8s/bcdc-test-buildconfig.yaml
 ```
 
 start build 
@@ -33,11 +33,11 @@ each environment will have its own defined .yaml file within the k8s dir.
 how to run job from yaml as template, so we can change the name using a generated value appended to name
 * CADI
 ```
-oc process -f https://raw.githubusercontent.com/bcgov/bcdc-test/k8s/test-dwelf-job-template.yaml | oc create -f -
+oc process -f https://raw.githubusercontent.com/bcgov/bcdc-test/master/k8s/test-dwelf-job-template.yaml | oc create -f -
 ```
 * CATI
 ```
-oc process -f https://raw.githubusercontent.com/bcgov/bcdc-test/k8s/test-toyger-job-template.yaml | oc create -f -
+oc process -f https://raw.githubusercontent.com/bcgov/bcdc-test/master/k8s/test-toyger-job-template.yaml | oc create -f -
 ```
 
 
@@ -47,17 +47,17 @@ pulls from https://pypi.org/project/bcdc-apitests-dev/
 new OC build triggered by github actions on push to dev branch
 
 ```
-oc create -f https://raw.githubusercontent.com/bcgov/bcdc-test/k8s/bcdc-test-buildconfig-dev.yaml
+oc create -f https://raw.githubusercontent.com/bcgov/bcdc-test/master/k8s/bcdc-test-buildconfig-dev.yaml
 ```
 
 # OC Developmnet Jobs for BCDC-TEST-DEV
 * CADI
 ```
-oc process -f https://raw.githubusercontent.com/bcgov/bcdc-test/k8s/test-dwelf-job-template-dev.yaml | oc create -f -
+oc process -f https://raw.githubusercontent.com/bcgov/bcdc-test/master/k8s/test-dwelf-job-template-dev.yaml | oc create -f -
 ```
 * CATI
 ```
-oc process -f https://raw.githubusercontent.com/bcgov/bcdc-test/k8s/test-toyger-job-template-dev.yaml | oc create -f -
+oc process -f https://raw.githubusercontent.com/bcgov/bcdc-test/master/k8s/test-toyger-job-template-dev.yaml | oc create -f -
 ```
 
 # Run Tests locally
