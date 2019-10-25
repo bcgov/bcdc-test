@@ -3,7 +3,7 @@ kind: Template
 metadata:
   name: test-dwelf-dev
 labels:
-  name: test
+  name: bcdc-api-test
 objects:
 - apiVersion: batch/v1
   kind: Job
