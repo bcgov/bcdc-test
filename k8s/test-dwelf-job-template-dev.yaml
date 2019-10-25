@@ -8,7 +8,7 @@ objects:
   metadata:
     generateName: test-dwelf-dev
   labels:
-    name: bcdc-api-test
+    name: test
   spec:
     template:
       metadata:
