@@ -13,8 +13,6 @@ objects:
     template:
       metadata:
         name: test-dwelf-dev
-      labels:
-        name: test
       spec:
         containers:
         - name: test-dwelf-dev
