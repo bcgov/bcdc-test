@@ -9,6 +9,8 @@ objects:
   kind: Job
   metadata:
     generateName: test-dwelf-dev
+  labels:
+    name: test
   spec:
     template:
       metadata:
