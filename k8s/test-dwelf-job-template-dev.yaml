@@ -9,6 +9,7 @@ objects:
     generateName: test-dwelf-dev
   labels:
     name: test
+    type: api
   spec:
     template:
       metadata:
