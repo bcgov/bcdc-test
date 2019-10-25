@@ -2,6 +2,7 @@ apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
   name: test-dwelf-dev
+  label: test
 objects:
 - apiVersion: batch/v1
   kind: Job
@@ -11,7 +12,6 @@ objects:
     template:
       metadata:
         name: test-dwelf-dev
-        label: test
       spec:
         containers:
         - name: test-dwelf-dev
