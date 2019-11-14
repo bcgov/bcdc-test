@@ -53,4 +53,14 @@ objects:
                 configMapKeyRef:
                   key: MATT_URL
                   name: bcdc-test-mat-url
+            - name: BOT_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: BOT_KEY
+                  name: pipeline-bot-gateway-key
+            - name: BOT_URL
+              valueFrom:
+                secretKeyRef:
+                  key: BOT_URL
+                  name: pipeline-bot-url
         restartPolicy: Never
