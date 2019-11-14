@@ -99,7 +99,7 @@ try:
     print(contents)
 
     # ------------Send Output to Hubot ------------------
-    # WIP
+    # TODO: try catch and update payload to be full test json output.
     print("Sending Output to Hubot")
     botPath = bot_url+'/hubot/apitest'
     print(botPath)
