@@ -3,6 +3,7 @@ import os
 import pytest
 import sys
 import json
+import requests
 from matterhook import Webhook
 
 md_report_path = "/tmp/md-report.md"
@@ -14,6 +15,8 @@ mat_api_key = str(os.getenv('MATT_API_KEY'))
 mat_channel = str(os.getenv('MATT_CHANNEL'))
 mat_username = str(os.getenv('MATT_USERNAME'))
 mat_url = str(os.getenv('MATT_URL'))
+bot_url = str(os.getenv('BOT_URL'))
+bot_key = str(os.getenv('BOT_KEY'))
 
 # ---------- Start Process ------------
 
@@ -54,12 +57,15 @@ try:
     if any(k in summary for k in ("error", "failed")):
         print("Failed as found either error or failed values")
         pass_all = False
+        status = 'Failed'
     elif "passed" in summary:
         print("Passed with no Error or Failed Values")
         pass_all = True
+        status = 'Passed'
     else:
         print("Failed to find a Passed Value")
         pass_all = False
+        status = 'Failed'
 
     # ---------- Update Markdown File ----------------
 
@@ -91,6 +97,16 @@ try:
     inFile = open(md_report_path, 'r')
     contents = inFile.read()
     print(contents)
+
+    # ------------Send Output to Hubot ------------------
+
+    botPath = bot_url+'/hubot/apitest'
+    response = requests.post(
+        botPath,
+        params={'q': 'requests+language:python'},
+        headers={'Content-Type': 'application/json'},
+        data={"status": status, "env": bcdc_url, "results": summary}
+    )
 
     # ------------Send Output to Mattermost-------------
 
