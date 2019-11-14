@@ -106,7 +106,7 @@ try:
     response = requests.post(
         botPath,
         headers={'Content-Type': 'application/json', 'apikey': bot_key},
-        data={"status": status, "env": bcdc_url, "results": summary}
+        json={"status": status, "env": bcdc_url, "results": summary}
     )
     print(response)
 
