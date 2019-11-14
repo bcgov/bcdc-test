@@ -99,14 +99,17 @@ try:
     print(contents)
 
     # ------------Send Output to Hubot ------------------
-
+    # WIP
+    print("Sending Output to Hubot")
     botPath = bot_url+'/hubot/apitest'
+    print(botPath)
     response = requests.post(
         botPath,
         params={'q': 'requests+language:python'},
         headers={'Content-Type': 'application/json'},
         data={"status": status, "env": bcdc_url, "results": summary}
     )
+    print(response)
 
     # ------------Send Output to Mattermost-------------
 
