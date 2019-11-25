@@ -17,6 +17,7 @@ mat_username = str(os.getenv('MATT_USERNAME'))
 mat_url = str(os.getenv('MATT_URL'))
 bot_url = str(os.getenv('BOT_URL'))
 bot_key = str(os.getenv('BOT_KEY'))
+deploy_uid = str(os.getenv('DEPLOY_UID'))
 
 # ---------- Start Process ------------
 
@@ -106,7 +107,7 @@ try:
     response = requests.post(
         botPath,
         headers={'Content-Type': 'application/json', 'apikey': bot_key},
-        json={"status": status, "env": bcdc_url, "results": summary}
+        json={"status": status, "env": bcdc_url, "results": summary, "id": deploy_uid}
     )
     print(response)
 
