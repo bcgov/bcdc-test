@@ -60,6 +60,17 @@ oc process -f https://raw.githubusercontent.com/bcgov/bcdc-test/master/k8s/test-
 oc process -f https://raw.githubusercontent.com/bcgov/bcdc-test/master/k8s/test-toyger-job-template-dev.yaml | oc create -f -
 ```
 
+# OC Job Cleanup 
+* to be performed on a regular basis to cleanup old pods created by jobs
+
+to view all jobs
+```
+oc get job
+```
+to delete all jobs by label
+```
+oc delete job -l name=bcdc-api-test
+```
 # Run Tests locally
 
 ```

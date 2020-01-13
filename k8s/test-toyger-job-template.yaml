@@ -2,6 +2,8 @@ apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
   name: test-toyger
+labels:
+  name: bcdc-api-test
 objects:
 - apiVersion: batch/v1
   kind: Job
