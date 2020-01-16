@@ -23,7 +23,7 @@ deploy_uid = str(os.getenv('DEPLOY_UID'))
 
 try:
     # run pytest cmd
-    pytest.main(['--tb=line', '--pyargs', 'bcdc_apitests', '--md', md_report_path,
+    pytest.main(['-o cache_dir=/tmp', '--tb=line', '--pyargs', 'bcdc_apitests', '--md', md_report_path,
                  ('--junitxml={0}'.format(xml_report_path)), ('--json={0}'.format(json_report_path))])
     print("Running pytest")
     # ---------- Check XML Output ----------
