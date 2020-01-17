@@ -9,6 +9,8 @@ objects:
   kind: Job
   metadata:
     generateName: test-toyger-dev
+  labels:
+    name: bcdc-api-test
   spec:
     template:
       metadata:
