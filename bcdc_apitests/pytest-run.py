@@ -18,6 +18,7 @@ mat_url = str(os.getenv('MATT_URL'))
 bot_url = str(os.getenv('BOT_URL'))
 bot_key = str(os.getenv('BOT_KEY'))
 deploy_uid = str(os.getenv('DEPLOY_UID'))
+os.environ['TEMP'] = "/tmp"
 
 # ---------- Start Process ------------
 
