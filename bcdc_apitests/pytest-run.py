@@ -25,8 +25,9 @@ try:
     # ---------- start pytest ----------
     # run pytest cmd
     print("Running pytest")
+    # '-o', 'log_cli=true', '--log-cli-level=DEBUG',
     # pytest with both xml and json output, only using json output at this time.
-    pytest.main(['--tb=line', '-o', 'log_cli=true', '--log-cli-level=DEBUG', '--pyargs', 'bcdc_apitests',
+    pytest.main(['--tb=line', '--pyargs', 'bcdc_apitests',
                  ('--junitxml={0}'.format(xml_report_path)), ('--json={0}'.format(json_report_path))])
 
     # ---------- Check JSON Output ----------
