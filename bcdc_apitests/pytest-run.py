@@ -4,7 +4,7 @@ import pytest
 import sys
 import json
 import requests
-from matterhook import Webhook
+# from matterhook import Webhook
 
 xml_report_path = "/tmp/xml-report.xml"
 json_report_path = "/tmp/json-report.json"
@@ -26,7 +26,7 @@ try:
     # run pytest cmd
     print("Running pytest")
     # pytest with both xml and json output, only using json output at this time.
-    pytest.main(['--tb=short', '--pyargs', 'bcdc_apitests',
+    pytest.main(['-o', 'log_cli=true', '--log-cli-level=DEBUG', '--pyargs', 'bcdc_apitests',
                  ('--junitxml={0}'.format(xml_report_path)), ('--json={0}'.format(json_report_path))])
 
     # ---------- Check JSON Output ----------
