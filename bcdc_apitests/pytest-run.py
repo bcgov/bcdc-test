@@ -4,7 +4,7 @@ import pytest
 import sys
 import json
 import requests
-# from matterhook import Webhook
+from matterhook import Webhook
 
 xml_report_path = "/tmp/xml-report.xml"
 json_report_path = "/tmp/json-report.json"
