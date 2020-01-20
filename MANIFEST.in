@@ -1,2 +1,3 @@
 include README.md
 include bcdc_apitests/test_data/*
+include bcdc_apitests/pytest.ini
