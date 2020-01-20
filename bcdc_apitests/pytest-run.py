@@ -4,12 +4,10 @@ import pytest
 import sys
 import json
 import requests
-from matterhook import Webhook
+# from matterhook import Webhook
 
-md_report_path = "/tmp/md-report.md"
 xml_report_path = "/tmp/xml-report.xml"
 json_report_path = "/tmp/json-report.json"
-find_str = "[pytest-md]: https://github.com/hackebrot/pytest-md"
 bcdc_url = str(os.getenv('BCDC_URL'))
 mat_api_key = str(os.getenv('MATT_API_KEY'))
 mat_channel = str(os.getenv('MATT_CHANNEL'))
@@ -18,36 +16,34 @@ mat_url = str(os.getenv('MATT_URL'))
 bot_url = str(os.getenv('BOT_URL'))
 bot_key = str(os.getenv('BOT_KEY'))
 deploy_uid = str(os.getenv('DEPLOY_UID'))
-os.environ['TEMP'] = "/tmp"
+
 
 # ---------- Start Process ------------
 
 try:
-    # run pytest cmd
-    pytest.main(['--tb=line', '--pyargs', 'bcdc_apitests', '--md', md_report_path,
-                 ('--junitxml={0}'.format(xml_report_path)), ('--json={0}'.format(json_report_path))])
-    print("Running pytest")
-    # ---------- Check XML Output ----------
 
-    print("Check xml output")
-    print(open(xml_report_path).read())
+    # ---------- start pytest ----------
+    # run pytest cmd
+    print("Running pytest")
+    # pytest with both xml and json output, only using json output at this time.
+    pytest.main(['--tb=short', '--pyargs', 'bcdc_apitests',
+                 ('--junitxml={0}'.format(xml_report_path)), ('--json={0}'.format(json_report_path))])
 
     # ---------- Check JSON Output ----------
 
-    print("Check json output")
+    # get json test results
+    print("Test Results as json output")
     with open(json_report_path, 'r') as f:
         json_report = json.load(f)
     print(json.dumps(json_report, indent=4, sort_keys=True))
 
-    # testing other outputs
-    # playing around with creating custom outputs. testing for now.
     tests = json_report['report']['tests']
     custom_results = []
-    print(tests)
+
+    # get test results name and outcome as list
     for test in tests:
-        result = test['name'] + test['outcome']
+        result = test['outcome'] + ' ' + test['name']
         custom_results.append(result)
-        print(result)
 
     # ---------- Pass/Fail Logic ----------------
 
@@ -69,36 +65,18 @@ try:
         pass_all = False
         status = 'Failed'
 
-    # ---------- Update Markdown File ----------------
+    # ---------- create markdown output to send ---------------
 
-    print("update markdown output")
-    # cleanup markdown output
-    with open(md_report_path, "r") as f:
-        modified_output = []
-        lines = f.readlines()
-        if pass_all:
-            lines[0] = "## Passed\n"
-        else:
-            lines[0] = "## Failed\n"
-
-        for line in lines:
-            modified_output.append(line.replace(find_str, bcdc_url))
-
-    # add custom_results to end of md output
+    markdown = 'BCDC API Test Results' + '\n'
+    markdown += status + ' ' + bcdc_url + '\n'
+    markdown += str(summary) + '\n'
+    markdown += '\n'
     for result in custom_results:
-        modified_output.extend(result + '\n')
+        to_add = result + '\n'
+        markdown += to_add
+    markdown += "\n"
 
-    print("write to markdown file")
-    # re-write file.
-    with open(md_report_path, "w") as f:
-        for line in modified_output:
-            f.writelines(line)
-
-    print("Get markdown file to send to mattermost")
-    # read file and store
-    inFile = open(md_report_path, 'r')
-    contents = inFile.read()
-    print(contents)
+    print(markdown)
 
     # ------------Send Output to Hubot ------------------
     # TODO: try catch and update payload to be full test json output.
@@ -115,7 +93,7 @@ try:
     # ------------Send Output to Mattermost-------------
 
     # get message to send
-    mat_message = contents
+    mat_message = markdown
 
     # mandatory parameters are url and your webhook API key
     mwh = Webhook(mat_url, mat_api_key)
