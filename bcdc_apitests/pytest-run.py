@@ -6,8 +6,11 @@ import json
 import requests
 from matterhook import Webhook
 
+# output paths
 xml_report_path = "/tmp/xml-report.xml"
 json_report_path = "/tmp/json-report.json"
+
+# env vars
 bcdc_url = str(os.getenv('BCDC_URL'))
 mat_api_key = str(os.getenv('MATT_API_KEY'))
 mat_channel = str(os.getenv('MATT_CHANNEL'))
@@ -17,6 +20,14 @@ bot_url = str(os.getenv('BOT_URL'))
 bot_key = str(os.getenv('BOT_KEY'))
 deploy_uid = str(os.getenv('DEPLOY_UID'))
 
+# set logging level to INFO if not set
+
+if os.getenv('LOG_LEVEL') is None:
+    log_level = "INFO"
+    print("log level was NOT set, setting to: " + log_level)
+else:
+    log_level = str( os.getenv('LOG_LEVEL'))
+    print("log level set to: " + log_level)
 
 # ---------- Start Process ------------
 
@@ -25,9 +36,8 @@ try:
     # ---------- start pytest ----------
     # run pytest cmd
     print("Running pytest")
-    # '-o', 'log_cli=true', '--log-cli-level=DEBUG',
     # pytest with both xml and json output, only using json output at this time.
-    pytest.main(['-o', 'log_cli=true', '--log-cli-level=DEBUG', '--pyargs', 'bcdc_apitests',
+    pytest.main(['-o', 'log_cli=true', ('--log-cli-level={0}'.format(log_level)), '--pyargs', 'bcdc_apitests',
                  ('--junitxml={0}'.format(xml_report_path)), ('--json={0}'.format(json_report_path))])
 
     # ---------- Check JSON Output ----------
