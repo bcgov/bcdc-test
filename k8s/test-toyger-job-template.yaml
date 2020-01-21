@@ -67,4 +67,9 @@ objects:
                 secretKeyRef:
                   key: BOT_URL
                   name: pipeline-bot-url
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  key: LOG_LEVEL
+                  name: bcdc-api-test-log-level
         restartPolicy: Never
