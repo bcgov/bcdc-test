@@ -4,7 +4,7 @@ import pytest
 import sys
 import json
 import requests
-from matterhook import Webhook
+# from matterhook import Webhook
 
 # output paths
 xml_report_path = "/tmp/xml-report.xml"
@@ -58,13 +58,13 @@ try:
 
     # ---------- Pass/Fail Logic ----------------
 
-    # check summary for errors or failed, then set if pass/fail to use later.
+    # check summary for failed, then set if pass/fail to use later.
     # currently set to Fail if any errors or failed.
     summary = json_report['report']['summary']
     print(summary)
 
-    if any(k in summary for k in ("error", "failed")):
-        print("Failed as found either error or failed values")
+    if any(k in summary for k in ("failed")):
+        print("Failed as found either failed values")
         pass_all = False
         status = 'Failed'
     elif "passed" in summary:
