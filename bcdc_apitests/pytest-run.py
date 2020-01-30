@@ -63,18 +63,18 @@ try:
     summary = json_report['report']['summary']
     print(summary)
 
-    if any(k in summary for k in ("failed")):
+    if any(k in summary for k in ("failed", "null")):
         print("Failed as found either failed values")
         pass_all = False
-        status = 'Failed'
+        status = 'failed'
     elif "passed" in summary:
         print("Passed with no Error or Failed Values")
         pass_all = True
-        status = 'Passed'
+        status = 'success'
     else:
         print("Failed to find a Passed Value")
         pass_all = False
-        status = 'Failed'
+        status = 'failed'
 
     # ---------- create markdown output to send ---------------
 
