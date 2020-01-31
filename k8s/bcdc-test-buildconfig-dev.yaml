@@ -25,6 +25,7 @@ spec:
         RUN pip install -I bcdc-apitests-dev
         RUN pip install matterhook
         ENTRYPOINT [ "pytest-run.py" ]
+  strategy:
     dockerStrategy:
       from:
         kind: DockerImage

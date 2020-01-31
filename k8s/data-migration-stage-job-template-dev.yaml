@@ -1,0 +1,75 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: data-migration-stage-dev
+labels:
+  name: bcdc-data-migration
+objects:
+- apiVersion: batch/v1
+  kind: Job
+  metadata:
+    generateName: data-migration-stage-dev
+  labels:
+    name: bcdc-data-migration
+  spec:
+    template:
+      metadata:
+        name: data-migration-stage-dev
+      labels:
+        name: bcdc-data-migration
+      spec:
+        containers:
+        - name: data-migration-stage-dev
+          image: docker-registry.default.svc:5000/databcdc/bcdc-data-migration-dev
+          env:
+            - name: BCDC_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: BCDC_URL
+                  name: cati-bcdc-url
+            - name: BCDC_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: BCDC_API_KEY
+                  name: cati-bcdc-api-key
+            - name: BCDC_TMP_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: BCDC_TMP_USER_PASSWORD
+                  name: bcdc-tmp-user-pass
+            - name: MATT_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: MATT_API_KEY
+                  name: mattermost-bot-api-key
+            - name: MATT_CHANNEL
+              valueFrom:
+                configMapKeyRef:
+                  key: MATT_CHANNEL
+                  name: bcdc-test-mat-channel
+            - name: MATT_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  key: MATT_USERNAME
+                  name: bcdc-test-mat-username
+            - name: MATT_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: MATT_URL
+                  name: bcdc-test-mat-url
+            - name: BOT_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: BOT_KEY
+                  name: pipeline-bot-gateway-key
+            - name: BOT_URL
+              valueFrom:
+                secretKeyRef:
+                  key: BOT_URL
+                  name: pipeline-bot-url
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  key: LOG_LEVEL
+                  name: bcdc-api-test-log-level
+        restartPolicy: Never

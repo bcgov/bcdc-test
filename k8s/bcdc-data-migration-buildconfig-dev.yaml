@@ -1,0 +1,36 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    app:
+  name: bcdc-data-migration-dev
+spec:
+  triggers:
+  failedBuildsHistoryLimit: 5
+  output:
+    to:
+      kind: ImageStreamTag
+      name: bcdc-data-migration-dev:latest
+  source:
+    dockerfile: |-
+        FROM python:3-slim
+        ADD . /app
+        WORKDIR /app
+
+        RUN apt-get update
+        RUN apt-get -y install git
+        RUN pip install matterhook
+        RUN pip install requests
+        RUN git clone https://github.com/craigrigdon/test.git
+
+        RUN pwd
+        RUN ls -l
+
+        ENTRYPOINT [ "python", "./data-run.py" ]
+  strategy:
+    dockerStrategy:
+      from:
+        kind: DockerImage
+        name: python:3-slim
+    type: Docker
+  successfulBuildsHistoryLimit: 5
