@@ -43,7 +43,7 @@ try:
 
     # For Development Work only , to run one module
     pytest.main(['-o', 'log_cli=true', ('--log-cli-level={0}'.format(log_level)),
-                 '/usr/local/lib/python3.8/site-packages/bcdc_apitest/tests/other/test-other.py',
+                 '/usr/local/lib/python3.8/site-packages/bcdc_apitests/tests/other',
                  ('--junitxml={0}'.format(xml_report_path)), ('--json={0}'.format(json_report_path))])
 
     # ---------- Check JSON Output ----------
