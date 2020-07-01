@@ -4,6 +4,10 @@ metadata:
   name: test-dwelf-dev
 labels:
   name: bcdc-api-test
+parameters:
+  - name: JENKINS_CALLBACK_URL
+    description: "Call back url created by jenkins cicdi pipeline in ocp"
+    value: callback
 objects:
 - apiVersion: batch/v1
   kind: Job
@@ -22,6 +26,8 @@ objects:
         - name: test-dwelf-dev
           image: docker-registry.default.svc:5000/databcdc/bcdc-test-dev
           env:
+            - name: JENKINS_CALLBACK_URL
+              value: ${JENKINS_CALLBACK_URL}
             - name: BCDC_URL
               valueFrom:
                 configMapKeyRef:
