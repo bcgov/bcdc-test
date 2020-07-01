@@ -43,36 +43,6 @@ objects:
                 secretKeyRef:
                   key: BCDC_TMP_USER_PASSWORD
                   name: bcdc-tmp-user-pass
-            - name: MATT_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  key: MATT_API_KEY
-                  name: mattermost-bot-api-key
-            - name: MATT_CHANNEL
-              valueFrom:
-                configMapKeyRef:
-                  key: MATT_CHANNEL
-                  name: bcdc-test-mat-channel
-            - name: MATT_USERNAME
-              valueFrom:
-                configMapKeyRef:
-                  key: MATT_USERNAME
-                  name: bcdc-test-mat-username
-            - name: MATT_URL
-              valueFrom:
-                configMapKeyRef:
-                  key: MATT_URL
-                  name: bcdc-test-mat-url
-            - name: BOT_KEY
-              valueFrom:
-                secretKeyRef:
-                  key: BOT_KEY
-                  name: pipeline-bot-gateway-key
-            - name: BOT_URL
-              valueFrom:
-                secretKeyRef:
-                  key: BOT_URL
-                  name: pipeline-bot-url
             - name: LOG_LEVEL
               valueFrom:
                 configMapKeyRef:
