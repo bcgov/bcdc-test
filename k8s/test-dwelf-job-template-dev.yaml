@@ -6,8 +6,8 @@ labels:
   name: bcdc-api-test
 parameters:
   - name: JENKINS_CALLBACK_URL
-    description: "Call back url created by jenkins cicdi pipeline in ocp"
-    value: callback
+    description: "Call back url created by jenkins cicd pipeline in ocp, must override"
+    value: callback_url
 objects:
 - apiVersion: batch/v1
   kind: Job
@@ -28,6 +28,16 @@ objects:
           env:
             - name: JENKINS_CALLBACK_URL
               value: ${JENKINS_CALLBACK_URL}
+            - name: JENKINS_CALLBACK_USERNAME
+                valueFrom:
+                  secretKeyRef:
+                    key: JENKINS_CALLBACK_USERNAME
+                    name: jenkins-callback-username
+            - name: JENKINS_CALLBACK_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    key: JENKINS_CALLBACK_TOKEN
+                    name: jenkins-callback-token
             - name: BCDC_URL
               valueFrom:
                 configMapKeyRef:
