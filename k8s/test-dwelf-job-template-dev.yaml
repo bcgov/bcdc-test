@@ -29,15 +29,15 @@ objects:
             - name: JENKINS_CALLBACK_URL
               value: ${JENKINS_CALLBACK_URL}
             - name: JENKINS_CALLBACK_USERNAME
-                valueFrom:
-                  secretKeyRef:
-                    key: JENKINS_CALLBACK_USERNAME
-                    name: jenkins-callback-username
+              valueFrom:
+                secretKeyRef:
+                  key: JENKINS_CALLBACK_USERNAME
+                  name: jenkins-callback-username
             - name: JENKINS_CALLBACK_TOKEN
-                valueFrom:
-                  secretKeyRef:
-                    key: JENKINS_CALLBACK_TOKEN
-                    name: jenkins-callback-token
+              valueFrom:
+                secretKeyRef:
+                  key: JENKINS_CALLBACK_TOKEN
+                  name: jenkins-callback-token
             - name: BCDC_URL
               valueFrom:
                 configMapKeyRef:
