@@ -1,29 +1,41 @@
 apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
-  name: test-dwelf-dev
+  name: ${Name}-${ENV}
 labels:
-  name: bcdc-api-test
+  name: ${Name}
 parameters:
   - name: JENKINS_CALLBACK_URL
     description: "Call back url created by jenkins cicd pipeline in ocp, must override"
     value: callback_url
+  - name: ENV
+    description: "App Env to run in"
+    value: dev
+  - name: NAME
+    description: "Name of Object"
+    value: Ckan-Api-Test
+  - name: BCDC_URL_CONFIG_NAME
+    description: "Config Name to get Url of ckan instance to run against"
+    value: cadi-bcdc-url
+  - name: BCDC_API_SECRET_NAME
+    description: "Secret Name to get ckan api key"
+    value: cadi-bcdc-api-key
 objects:
 - apiVersion: batch/v1
   kind: Job
   metadata:
-    generateName: test-dwelf-dev
+    generateName: ${Name}-${ENV}-
   labels:
-    name: bcdc-api-test
+    name: ${Name}
   spec:
     template:
       metadata:
-        name: test-dwelf-dev
+        name: ${Name}-${ENV}
       labels:
-        name: bcdc-api-test
+        name: ${Name}
       spec:
         containers:
-        - name: test-dwelf-dev
+        - name: ${Name}-${ENV}
           image: docker-registry.default.svc:5000/databcdc/bcdc-test-dev
           env:
             - name: JENKINS_CALLBACK_URL
@@ -42,12 +54,12 @@ objects:
               valueFrom:
                 configMapKeyRef:
                   key: BCDC_URL
-                  name: cadi-bcdc-url
+                  name: ${BCDC_URL_CONFIG_NAME}
             - name: BCDC_API_KEY
               valueFrom:
                 secretKeyRef:
                   key: BCDC_API_KEY
-                  name: cadi-bcdc-api-key
+                  name: ${BCDC_API_SECRET_NAME}
             - name: BCDC_TMP_USER_PASSWORD
               valueFrom:
                 secretKeyRef:
