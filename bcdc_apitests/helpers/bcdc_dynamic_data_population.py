@@ -815,7 +815,21 @@ class RandomWords():
         if not WORDS:
             LOGGER.debug("getting words from network")
             self.get_words_from_network()
-        return WORDS.pop()
+
+        word = WORDS.pop()
+
+        # loop and check words for non alphanumerics
+        while not word.isalnum():
+            # get new word by calling getword again
+            word = self.getword()
+            # check if string contains non alphanumeric characters
+            if word.isalnum():
+                LOGGER.debug('word is alphanumeric: ' + word)
+            else:
+                LOGGER.debug('word is NOT alphanumeric: ' + word)
+
+        LOGGER.debug('getword will return: ' + word)
+        return word
 
     def get_words_from_network(self):
         '''

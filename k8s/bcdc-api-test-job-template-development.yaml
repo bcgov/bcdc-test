@@ -1,0 +1,73 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: ${NAME}-${ENV}
+labels:
+  name: ${NAME}
+parameters:
+  - name: JENKINS_CALLBACK_URL
+    description: "Call back url created by jenkins cicd pipeline in ocp, must override"
+    value: callback_url
+  - name: ENV
+    description: "App Env to run in"
+    value: dev
+  - name: NAME
+    description: "Name of Object"
+    value: ckan-api-test
+  - name: BCDC_URL_CONFIG_NAME
+    description: "Config Name to get Url of ckan instance to run against"
+    value: cadi-bcdc-url
+  - name: BCDC_API_SECRET_NAME
+    description: "Secret Name to get ckan api key"
+    value: cadi-bcdc-api-key
+objects:
+- apiVersion: batch/v1
+  kind: Job
+  metadata:
+    generateName: ${NAME}-${ENV}-
+  labels:
+    name: ${NAME}
+  spec:
+    template:
+      metadata:
+        name: ${NAME}-${ENV}
+      labels:
+        name: ${NAME}
+      spec:
+        containers:
+        - name: ${NAME}-${ENV}
+          image: docker-registry.default.svc:5000/databcdc/bcdc-test-dev
+          env:
+            - name: JENKINS_CALLBACK_URL
+              value: ${JENKINS_CALLBACK_URL}
+            - name: JENKINS_CALLBACK_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: JENKINS_CALLBACK_USERNAME
+                  name: jenkins-callback-username
+            - name: JENKINS_CALLBACK_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  key: JENKINS_CALLBACK_TOKEN
+                  name: jenkins-callback-token
+            - name: BCDC_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: BCDC_URL
+                  name: ${BCDC_URL_CONFIG_NAME}
+            - name: BCDC_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: BCDC_API_KEY
+                  name: ${BCDC_API_SECRET_NAME}
+            - name: BCDC_TMP_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: BCDC_TMP_USER_PASSWORD
+                  name: bcdc-tmp-user-pass
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  key: LOG_LEVEL
+                  name: bcdc-api-test-log-level
+        restartPolicy: Never

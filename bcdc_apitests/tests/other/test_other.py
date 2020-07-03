@@ -14,7 +14,7 @@ import pytest  # @UnusedImport
 
 LOGGER = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
-
+@pytest.mark.xfail
 def test_dashboard_activity_list(conf_fixture, user_label_fixture,
                                  remote_api_auth, populate_bcdc_dataset_single,
                                  test_package_name, ckan_url, ckan_rest_dir,
@@ -51,10 +51,10 @@ def test_dashboard_activity_list(conf_fixture, user_label_fixture,
     # check if newly created pkg is in activity list
     activity_found = False
     for activity in activity_data['result']:
-        LOGGER.debug('object_id: %s', activity['object_id'])
+        # LOGGER.debug('object_id: %s', activity['object_id'])
         if new_pkg_id == activity['object_id']:
             revision_id = activity['object_id']
-            LOGGER.debug('object_id: %s', revision_id)
+            LOGGER.debug('found object_id: %s', revision_id)
             activity_found = True
 
     fail_msg = "did not find the activity in user_activity_list when " + \

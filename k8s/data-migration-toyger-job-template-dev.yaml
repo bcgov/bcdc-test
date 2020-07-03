@@ -1,33 +1,37 @@
 apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
-  name: test-dwelf-dev
+  name: data-migration-toyger-dev
 labels:
-  name: bcdc-api-test
+  name: bcdc-data-migration
 objects:
 - apiVersion: batch/v1
   kind: Job
   metadata:
-    generateName: test-dwelf-dev
+    generateName: data-migration-toyger-dev
+  labels:
+    name: bcdc-data-migration
   spec:
     template:
       metadata:
-        name: test-dwelf-dev
+        name: data-migration-toyger-dev
+      labels:
+        name: bcdc-data-migration
       spec:
         containers:
-        - name: test-dwelf-dev
-          image: docker-registry.default.svc:5000/databcdc/bcdc-test-dev
+        - name: data-migration-toyger-dev
+          image: docker-registry.default.svc:5000/databcdc/bcdc-data-migration-dev
           env:
             - name: BCDC_URL
               valueFrom:
                 configMapKeyRef:
                   key: BCDC_URL
-                  name: cadi-bcdc-url
+                  name: cati-bcdc-url
             - name: BCDC_API_KEY
               valueFrom:
                 secretKeyRef:
                   key: BCDC_API_KEY
-                  name: cadi-bcdc-api-key
+                  name: cati-bcdc-api-key
             - name: BCDC_TMP_USER_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -63,4 +67,9 @@ objects:
                 secretKeyRef:
                   key: BOT_URL
                   name: pipeline-bot-url
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  key: LOG_LEVEL
+                  name: bcdc-api-test-log-level
         restartPolicy: Never
