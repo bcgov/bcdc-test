@@ -6,7 +6,7 @@ Current tests include:
  - verification of preconfigured orgs required for testing
  - CRUD tests for packages.
  
-# OC Build for BCDC-TEST
+# OCP Build for BCDC-TEST
 
 pulls package from https://pypi.org/project/bcdc-apitests/
 new OC build triggered by github actions on commit to master branch
@@ -23,25 +23,22 @@ start build
 oc start-build bcdc-test -n databcdc
 ```
 
-# OC Jobs for BCDC-TEST
+# OCP Job Template for BCDC-TEST
 
-each environment will have its own defined .yaml file within the k8s dir. 
+example how to run job from template
 
-* test-dwelf-job-template.yaml
-* test-toyger-job-template.yaml
+```
+oc process -f https://raw.githubusercontent.com/bcgov/bcdc-test/master/k8s/bcdc-api-test-job-template.yaml -p BCDC_URL_CONFIG_NAME='cadi-bcdc-url' -p BCDC_API_SECRET_NAME='cadi-bcdc-api-key' -p ENV=dev | oc create -f -"
 
-how to run job from yaml as template, so we can change the name using a generated value appended to name
-* CADI
 ```
-oc process -f https://raw.githubusercontent.com/bcgov/bcdc-test/master/k8s/test-dwelf-job-template.yaml | oc create -f -
+Required parameters to override in template
 ```
-* CATI
-```
-oc process -f https://raw.githubusercontent.com/bcgov/bcdc-test/master/k8s/test-toyger-job-template.yaml | oc create -f -
+BCDC_URL_CONFIG_NAME = <Config Name in OCP to get URL of ckan instance to run against>
+BCDC_API_SECRET_NAME = <Secret Name in OCP to get ckan api key>
+ENV = <App Env to run in>
 ```
 
-
-# OC Development Build for BCDC-TEST-DEV
+# OCP Build for BCDC-TEST-DEV
 
 pulls from https://pypi.org/project/bcdc-apitests-dev/
 new OC build triggered by github actions on push to dev branch
@@ -50,14 +47,17 @@ new OC build triggered by github actions on push to dev branch
 oc create -f https://raw.githubusercontent.com/bcgov/bcdc-test/master/k8s/bcdc-test-buildconfig-dev.yaml
 ```
 
-# OC Developmnet Jobs for BCDC-TEST-DEV
-* CADI
+# OC Job Template for BCDC-TEST-DEV
+
 ```
-oc process -f https://raw.githubusercontent.com/bcgov/bcdc-test/master/k8s/test-dwelf-job-template-dev.yaml | oc create -f -
+oc process -f https://raw.githubusercontent.com/bcgov/bcdc-test/master/k8s/bcdc-api-test-job-template-development.yaml -p BCDC_URL_CONFIG_NAME='cadi-bcdc-url' -p BCDC_API_SECRET_NAME='cadi-bcdc-api-key' -p ENV=dev | oc create -f -"
 ```
-* CATI
 ```
-oc process -f https://raw.githubusercontent.com/bcgov/bcdc-test/master/k8s/test-toyger-job-template-dev.yaml | oc create -f -
+Required parameters to override in template
+```
+BCDC_URL_CONFIG_NAME = <Config Name in OCP to get URL of ckan instance to run against>
+BCDC_API_SECRET_NAME = <Secret Name in OCP to get ckan api key>
+ENV = <App Env to run in>
 ```
 
 # OC Job Cleanup 
@@ -69,7 +69,7 @@ oc get job
 ```
 to delete all jobs by label
 ```
-oc delete job -l name=bcdc-api-test
+oc delete job -l name=ckan-api-test
 ```
 # Run Tests locally
 
