@@ -13,7 +13,7 @@ parameters:
     value: dev
   - name: NAME
     description: "Name of Object"
-    value: Ckan-Api-Test
+    value: ckan-api-test
   - name: BCDC_URL_CONFIG_NAME
     description: "Config Name to get Url of ckan instance to run against"
     value: cadi-bcdc-url
