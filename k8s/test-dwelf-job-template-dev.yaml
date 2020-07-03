@@ -1,9 +1,9 @@
 apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
-  name: ${Name}-${ENV}
+  name: ${NAME}-${ENV}
 labels:
-  name: ${Name}
+  name: ${NAME}
 parameters:
   - name: JENKINS_CALLBACK_URL
     description: "Call back url created by jenkins cicd pipeline in ocp, must override"
@@ -24,18 +24,18 @@ objects:
 - apiVersion: batch/v1
   kind: Job
   metadata:
-    generateName: ${Name}-${ENV}-
+    generateName: ${NAME}-${ENV}-
   labels:
-    name: ${Name}
+    name: ${NAME}
   spec:
     template:
       metadata:
-        name: ${Name}-${ENV}
+        name: ${NAME}-${ENV}
       labels:
-        name: ${Name}
+        name: ${NAME}
       spec:
         containers:
-        - name: ${Name}-${ENV}
+        - name: ${NAME}-${ENV}
           image: docker-registry.default.svc:5000/databcdc/bcdc-test-dev
           env:
             - name: JENKINS_CALLBACK_URL
