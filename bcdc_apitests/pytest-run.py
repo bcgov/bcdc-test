@@ -89,7 +89,6 @@ try:
     }
     response = requests.post(url=jenkins_callback_url, files=payload,
                              auth=(jenkins_callback_username, jenkins_callback_token))
-    print("Jenkins response: " + response.status_code)
 
 
     print("script completed")
