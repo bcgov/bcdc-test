@@ -3,5 +3,5 @@ twine==1.13.0
 distlib
 packaging==19.0
 pylint==1.9.4
-wheel==0.33.4
+wheel==0.38.1
 requests==2.22.0
